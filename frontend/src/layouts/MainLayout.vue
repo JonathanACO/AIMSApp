@@ -1,4 +1,9 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { IonRouterOutlet, IonContent } from "@ionic/vue";
+</script>
 <template>
-  <div></div>
+  <div class="w-full h-16 bg-primary"></div>
+  <IonContent>
+    <IonRouterOutlet />
+  </IonContent>
 </template>
