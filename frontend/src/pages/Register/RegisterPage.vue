@@ -13,13 +13,8 @@ const form = ref({
 })
 
 async function submit() {
-    try{
-    await auth.login(form)
+    await auth.register(form)
     router.push({ name: 'home' })
-    } catch (error) {
-        console.error('Error durante el login', error)
-    }
-
 }
 
 </script>
@@ -29,7 +24,7 @@ async function submit() {
         <IonContent>
             <form @submit.prevent="submit">
                 <label>
-                    <span class="text-red-500">Email</span>
+                    <span>Email</span>
                     <input type="email" v-model="form.email"/>
                 </label>
 
@@ -38,7 +33,7 @@ async function submit() {
                     <input type="password" v-model="form.password"/>
                 </label>
 
-                <button type="submit">Login</button>
+                <button type="submit">Register</button>
 
             </form>
         </IonContent>
