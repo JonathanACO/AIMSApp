@@ -3,3 +3,9 @@ http://ionicframework.com/docs/theming/ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.title {
+  font-size: 2rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
