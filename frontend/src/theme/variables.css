@@ -4,8 +4,19 @@ http://ionicframework.com/docs/theming/ */
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ion-background-color: #ffffff;
+  --ion-text-color: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root.md {
+    --ion-background-color: #ffffff;
+    --ion-text-color: #000000;
+  }
+}
+
 .title {
   font-size: 2rem;
-  line-height: 2rem;
-  font-weight: 700;
+  font-weight: 400;
 }
