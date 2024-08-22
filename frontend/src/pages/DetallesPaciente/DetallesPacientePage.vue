@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { IonContent } from "@ionic/vue";
+import { IonButton, IonContent, IonIcon } from "@ionic/vue";
+import {
+  starOutline,
+  chatboxEllipsesOutline,
+  readerOutline,
+} from "ionicons/icons";
 </script>
 
 <template>
@@ -25,23 +30,29 @@ import { IonContent } from "@ionic/vue";
     </div>
     <div class="">
       <h2 class="title">Historial de consultas</h2>
-
       <!-- TODO: Agregar v-for y lógica de mostrarlos -->
       <section class="grid gap-4 mt-8">
-        <div class="border border-tertiary p-3 flex justify-between">
+        <div
+          class="border border-tertiary p-1 flex justify-between items-center"
+        >
           <p>INFO DE CONSULTA</p>
-          <div class="flex">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-          </div>
-        </div>
-        <div class="border border-tertiary p-3 flex justify-between">
-          <p>INFO DE CONSULTA</p>
-          <div class="flex">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
+          <div class="flex gap-x-1">
+            <IonButton size="small" class="text-white" aria-label="valoracion">
+              <IonIcon slot="icon-only" :icon="starOutline"></IonIcon>
+            </IonButton>
+            <IonButton size="small" class="text-white" aria-label="sugerencias">
+              <IonIcon
+                slot="icon-only"
+                :icon="chatboxEllipsesOutline"
+              ></IonIcon>
+            </IonButton>
+            <IonButton
+              size="small"
+              class="text-white"
+              aria-label="plan-de-cuidados"
+            >
+              <IonIcon slot="icon-only" :icon="readerOutline"></IonIcon>
+            </IonButton>
           </div>
         </div>
       </section>
