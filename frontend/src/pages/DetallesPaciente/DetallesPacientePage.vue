@@ -1,9 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { IonContent } from "@ionic/vue";
+</script>
 
 <template>
-  <main class="w-full overflow-y-auto">
+  <IonContent class="w-full">
     <h1 class="title">Detalles de paciente</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+    <div class="grid grid-cols-2 gap-4 my-8">
       <section class="bg-secondary rounded-md min-h-64">
         <p>Información completa del paciente, habitación, fechas, etc.</p>
       </section>
@@ -44,5 +46,5 @@
         </div>
       </section>
     </div>
-  </main>
+  </IonContent>
 </template>
