@@ -40,7 +40,7 @@ import { chevronBackOutline, personCircleSharp } from "ionicons/icons";
         </IonButtons>
       </IonToolbar>
     </IonHeader>
-    <IonContent>
+    <IonContent class="font-sans">
       <IonRouterOutlet />
     </IonContent>
   </ion-page>
