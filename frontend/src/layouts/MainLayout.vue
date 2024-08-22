@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { Staff } from "@/entities/Staff";
 import {
   IonButtons,
   IonHeader,
   IonIcon,
+  IonContent,
   IonMenu,
   IonMenuToggle,
   IonPage,
@@ -40,6 +40,8 @@ import { chevronBackOutline, personCircleSharp } from "ionicons/icons";
         </IonButtons>
       </IonToolbar>
     </IonHeader>
-    <IonRouterOutlet />
+    <IonContent>
+      <IonRouterOutlet />
+    </IonContent>
   </ion-page>
 </template>
