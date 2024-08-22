@@ -1,51 +1,58 @@
 <script lang="ts" setup>
-import StaffDetails from "@/components/StaffDetails.vue";
+import { Staff } from "@/entities/Staff";
 import {
-  IonRouterOutlet,
-  IonContent,
-  IonIcon,
-  IonPage,
+  IonButtons,
   IonHeader,
+  IonIcon,
+  IonMenu,
+  IonMenuToggle,
+  IonPage,
+  IonRouterOutlet,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/vue";
-import { personCircleSharp } from "ionicons/icons";
+import { chevronBackOutline, personCircleSharp } from "ionicons/icons";
 import { ref } from "vue";
 
-const areStaffDetailVisisble = ref(false);
-
-function toggleStaffDetails() {
-  areStaffDetailVisisble.value = !areStaffDetailVisisble.value;
-}
+const nurse = ref<Staff>({
+  id: 1,
+  name: "J. Cano O.",
+  sex: "Masculino",
+  age: 19,
+  shift: "Matutino",
+  experience: "Nula",
+  roomId: 1,
+  createdAt: new Date(),
+  modifiedAt: null,
+});
 </script>
 <template>
-  <IonPage>
-    <IonContent>
-      <IonHeader>
-        <nav class="w-full h-16 bg-primary flex justify-center">
-          <div
-            class="h-full w-full max-w-5xl flex justify-between px-5 relative"
-          >
-            <div class="flex items-center">
-              <img class="h-16" src="../assets/images/Blanco.png" alt="" />
-              <h1>Hospital Angeles</h1>
-            </div>
-            <div class="flex items-center">
-              <!-- TODO: poner nombre del enfermero -->
-              <!-- TODO: al hacer click desplegar tarjeta con datos del enfermero -->
-              <ion-icon
-                @click="toggleStaffDetails()"
-                class="h-12 w-12 text-white"
-                :icon="personCircleSharp"
-              ></ion-icon>
-            </div>
-            <div
-              v-if="areStaffDetailVisisble"
-              class="absolute right-0 top-full overflow-hidden"
-            >
-              <StaffDetails />
-            </div>
-          </div></nav
-      ></IonHeader>
-
-      <IonRouterOutlet /> </IonContent
-  ></IonPage>
+  <IonMenu side="end" content-id="main-content">
+    <IonHeader mode="md">
+      <ion-toolbar>
+        <IonMenuToggle class="flex items-center">
+          <IonIcon
+            class="h-8 w-8 text-black cursor-pointer"
+            :icon="chevronBackOutline"
+          ></IonIcon
+        ></IonMenuToggle>
+      </ion-toolbar>
+    </IonHeader>
+  </IonMenu>
+  <ion-page id="main-content">
+    <IonHeader mode="md">
+      <IonToolbar color="primary">
+        <IonTitle size="large">AIMS</IonTitle>
+        <IonButtons slot="end">
+          <IonMenuToggle class="flex items-center">
+            <IonIcon
+              class="h-12 w-12 text-white cursor-pointer"
+              :icon="personCircleSharp"
+            ></IonIcon>
+          </IonMenuToggle>
+        </IonButtons>
+      </IonToolbar>
+    </IonHeader>
+    <IonRouterOutlet />
+  </ion-page>
 </template>
