@@ -12,19 +12,6 @@ import {
   IonToolbar,
 } from "@ionic/vue";
 import { chevronBackOutline, personCircleSharp } from "ionicons/icons";
-import { ref } from "vue";
-
-const nurse = ref<Staff>({
-  id: 1,
-  name: "J. Cano O.",
-  sex: "Masculino",
-  age: 19,
-  shift: "Matutino",
-  experience: "Nula",
-  roomId: 1,
-  createdAt: new Date(),
-  modifiedAt: null,
-});
 </script>
 <template>
   <IonMenu side="end" content-id="main-content">
