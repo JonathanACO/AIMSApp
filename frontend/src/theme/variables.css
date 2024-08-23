@@ -4,18 +4,6 @@ http://ionicframework.com/docs/theming/ */
 @tailwind components;
 @tailwind utilities;
 
-.fade-enter-active {
-  transition: opacity 0.55s ease;
-}
-
-.fade-leave-active {
-  transition: opacity 0.35s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
 /* LIGHT -----------------------------------------------------------------------------------------------------*/
 :root {
   --ion-color-primary: #1264a8;
