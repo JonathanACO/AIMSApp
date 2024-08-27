@@ -87,13 +87,13 @@ const formattedName = nameFormatter(nurse.value.name);
   </IonMenu>
   <ion-page id="main-content">
     <IonHeader mode="md">
-      <IonToolbar class="h-16 flex items-center" color="primary">
+      <IonToolbar class="h-16 flex items-center pr-5" color="primary">
         <IonTitle class="font-semibold text-2xl">AIMS</IonTitle>
         <IonButtons slot="end">
           <h3 class="mr-2">{{ formattedName }}</h3>
           <IonMenuToggle class="flex items-center">
             <IonIcon
-              class="h-12 w-12 pr-2 text-white cursor-pointer"
+              class="h-12 w-12 text-white cursor-pointer"
               :icon="personCircleSharp"
             ></IonIcon>
           </IonMenuToggle>
