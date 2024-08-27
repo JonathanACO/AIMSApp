@@ -20,10 +20,10 @@ import {
             <p>Texto informativo para iniciar el proceso de consulta.</p>
           </article>
           <div class="grid gap-4 mt-4">
-            <button class="text-white bg-primary rounded-2xl p-4">
+            <button class="text-white bg-primary rounded-2xl p-4 hover:bg-tertiary transition-all">
               Iniciar consulta
             </button>
-            <button class="text-white rounded-2xl bg-black p-4">
+            <button class="text-white rounded-2xl bg-black p-4 hover:bg-tertiary transition-all">
               Ver última consulta
             </button>
           </div>
