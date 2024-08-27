@@ -16,7 +16,7 @@ const routes = [
       },
       {
         path: "detalles-paciente",
-        name: "detalles-paciente",
+        name: "details-patient",
         component: () =>
           import("@/pages/DetallesPaciente/DetallesPacientePage.vue"),
       },
