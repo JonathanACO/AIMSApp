@@ -1,5 +1,6 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,7 +13,7 @@ http://ionicframework.com/docs/theming/ */
 
 .btn {
   background-color: #1264a8;
-  border-radius: 0.375rem;
+  border-radius: 15px;
 }
 
 .border {
@@ -21,4 +22,10 @@ http://ionicframework.com/docs/theming/ */
 
 .custom-margin {
   margin-left: 124px;
+}
+
+.dfont {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 300;
 }
