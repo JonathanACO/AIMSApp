@@ -1,43 +1,37 @@
-import { ref, unref } from 'vue'
-import {defineStore} from 'pinia'
-import {api} from "@/helpers/apiBackend"
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { AuthRepository } from "@/repositories/authRepository";
 
-export const useAuthStore = defineStore('auth', () => 
-    {
-    const user = ref(null)
-    const token = ref(localStorage.getItem('token'))
+const authRepository = new AuthRepository();
 
-    function authenticate(result: any) {
-        token.value = result.token;
-        if (token.value) localStorage.setItem('token', token.value)
-    }
+export const useAuthStore = defineStore("auth", () => {
+  const staff = ref(null);
+  const token = ref(localStorage.getItem("token"));
 
-    async function login(payload: any) {
-        const result = await api('POST', '/login', payload)
-        authenticate(result)
-        
-        return result
-    }
+  function authenticate(result: any) {
+    token.value = result.token;
+    if (token.value) localStorage.setItem("token", token.value);
+  }
 
-    async function register(payload: any) {
-        const result = await api('POST', '/register', payload)
-        authenticate(result)
-        return result
-    }
+  async function login(payload: any) {
+    const result = await authRepository.login(payload);
+    authenticate(result);
 
-    async function logout() {
-        await api('DELETE', '/logout')
-        token.value = null
-        user.value = null
-        localStorage.removeItem('token')
-    }
+    return result;
+  }
 
-    async function me() {
-        const result = await api('GET', '/me')
-        user.value = result.user
-        return user.value
-    }
+  async function logout() {
+    await authRepository.logout();
+    token.value = null;
+    staff.value = null;
+    localStorage.removeItem("token");
+  }
 
-    return {user, token, login, register, logout, me}
-})
+  async function me() {
+    const result = await authRepository.me();
+    staff.value = result.staff;
+    return staff.value;
+  }
 
+  return { staff, token, login, logout, me };
+});
