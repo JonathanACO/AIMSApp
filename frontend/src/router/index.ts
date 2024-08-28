@@ -2,13 +2,12 @@ import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { routes } from "./routes";
 import { useAuthStore } from "@/stores/auth";
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routes
+  routes: routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const token = useAuthStore().token;
   const toRouteName = to.name?.toString();
 
