@@ -23,7 +23,7 @@ const togglePasswordVisibility = () => {
 
 <template>
   <div class="z-0">
-    <label class="capitalize text-base">{{ labelText }}</label>
+    <label class="capitalize block text-base mb-2">{{ labelText }}</label>
     <div class="flex">
       <input
         :type="isPassword ? 'password' : 'text'"
@@ -32,7 +32,7 @@ const togglePasswordVisibility = () => {
         v-bind="$attrs"
         :disabled="isDisabled"
         :class="{ 'text-base': isDisabled }"
-        class="rounded-lg w-full p-2 pr-10"
+        class="py-3 px-4 block w-full border border-blue-800 rounded-2xl text-sm focus:outline-none focus:border-blue-600 focus:border-2 transition-colors duration-300"
       />
       <button
         v-if="showEye"

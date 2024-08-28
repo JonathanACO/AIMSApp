@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import VLoader from "@/components/VLoader.vue";
 import { authErrorHandler } from "@/helpers/authErrorsHandler";
+import VInput from "@/components/VInput.vue";
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -50,7 +51,7 @@ async function login() {
   <IonPage>
     <IonContent>
       <div
-        class="flex flex-col w-full overflow-hidden relative min-h-screen items-center justify-center g-0 px-4"
+        class="flex flex-col w-full overflow-hidden relative min-h-screen items-center justify-center g-0 px-4 dfont"
       >
         <div
           class="justify-center items-center w-full card lg:flex max-w-md border"
@@ -62,41 +63,20 @@ async function login() {
             />
             <form @submit.prevent="login()" class="m-8">
               <div class="mb-4">
-                <label
-                  for="forUsername"
-                  class="block text-sm font-semibold mb-2 text-gray-600"
-                  >Name</label
-                >
-                <input
-                  type="text"
-                  placeholder="Name"
-                  id="forUsername"
-                  v-model="form.name"
-                  :class="{ 'border-red-500': hasNameError }"
-                  class="py-3 px-4 block w-full border border-blue-800 rounded-md text-sm focus:border-blue-700 focus:ring-0"
-                  aria-describedby="hs-input-helper-text"
-                />
+                <VInput type="text" v-model="form.name" labelText="Username" />
               </div>
               <div class="mb-6">
-                <label
-                  for="forPassword"
-                  class="block text-sm font-semibold mb-2 text-gray-600"
-                  >Password</label
-                >
-                <input
+                <VInput
                   type="password"
-                  placeholder="Password"
-                  id="forPassword"
                   v-model="form.password"
-                  :class="{ 'border-red-500': hasPasswordError }"
-                  class="py-3 px-4 block w-full border border-blue-800 rounded-md text-sm focus:border-blue-700 focus:ring-0"
-                  aria-describedby="hs-input-helper-text"
+                  labelText="password"
+                  :hasEye="true"
                 />
               </div>
               <div class="flex">
                 <input
                   type="checkbox"
-                  class="shrink-0 mt-0.5 border-gray-200 rounded-[4px] text-blue-600 focus:ring-blue-500"
+                  class="shrink-0 mt-0.5 border-gray-200 rounded-[4px] text-blue-600 focus:ring-blue-500 btn"
                   id="hs-default-checkbox"
                   checked
                 />
@@ -110,7 +90,7 @@ async function login() {
               <div class="grid my-6">
                 <Button
                   type="submit"
-                  class="btn py-[10px] text-base text-white font-medium hover:bg-blue-700"
+                  class="btn py-[10px] text-base text-white font-medium hover:bg-blue-700 mb-4"
                   :disabled="isLoading"
                 >
                   <template v-if="!isLoading"> Login </template>
