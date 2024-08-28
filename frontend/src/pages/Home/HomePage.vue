@@ -1,46 +1,37 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import { IonContent } from '@ionic/vue';
-import { IonPage } from '@ionic/vue';
-import { useRouter } from 'vue-router'
-import { User } from '@/entities/user';
+import { onMounted, ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { IonContent, IonPage } from "@ionic/vue";
+import { useRouter } from "vue-router";
+import { Staff } from "@/entities/Staff";
 
-const auth = useAuthStore()
-const router = useRouter()
-const user = ref<User>()
-const loading = ref(true)
+const auth = useAuthStore();
+const router = useRouter();
+const user = ref<Staff | null>(null);
 
 async function logout() {
-  await auth.logout()
-  router.push({ name: 'login' })
+  await auth.logout();
+  router.push({ name: "login" });
 }
 
-async function getUser(){
-  const response = await auth.me()
-  if(!response) return;
-  user.value = response
-  }
+async function getUser() {
+  const response = await auth.me();
+  if (!response) return;
+  user.value = response;
+}
 
 onMounted(async () => {
- await getUser()
-})
+  await getUser();
+});
 </script>
 
 <template>
   <IonPage>
-    <IonContent>
-      <div v-if="user">
-        <span>
-          Welcome. {{ user.email  }}!
-        </span>
-
+    <IonContent :fullscreen="true">
+      <div class="pt-20">
         <form @submit.prevent="logout">
           <button type="submit">Logout</button>
         </form>
-      </div>
-      <div v-else>
-
       </div>
     </IonContent>
   </IonPage>
