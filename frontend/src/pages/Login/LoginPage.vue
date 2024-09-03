@@ -4,8 +4,8 @@ import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import VLoader from "@/components/VLoader.vue";
-import { authErrorHandler } from "@/helpers/authErrorsHandler";
 import VInput from "@/components/VInput.vue";
+import { authErrorHandler } from "@/helpers/authErrorsHandler";
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -37,6 +37,7 @@ async function login() {
     if (result.errors) return;
     router.push({ name: "home" });
   } catch (error: any) {
+    console.log(error);
     authErrorHandler(error);
   } finally {
     isLoading.value = false;
@@ -73,19 +74,7 @@ async function login() {
                   :hasEye="true"
                 />
               </div>
-              <div class="flex">
-                <input
-                  type="checkbox"
-                  class="shrink-0 mt-0.5 border-gray-200 rounded-[4px] text-blue-600 focus:ring-blue-500 btn"
-                  id="hs-default-checkbox"
-                  checked
-                />
-                <label
-                  for="hs-default-checkbox"
-                  class="text-sm text-gray-600 ms-3"
-                  >Remember me</label
-                >
-              </div>
+              <div class="flex"></div>
 
               <div class="grid my-6">
                 <Button
