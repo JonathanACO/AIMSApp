@@ -6,6 +6,7 @@ export async function api(method: string, url: string, payload = {}) {
   const response = await fetch(`http://localhost:3333/api${url}`, {
     method,
     headers: {
+      Accept: "application/json",
       "Content-Type": "application/json",
       Authorization: `Bearer ${token.value}`,
     },
