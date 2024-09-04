@@ -2,3 +2,27 @@
   font-size: 2rem;
   font-weight: 400;
 }
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  border-color: #1264a8;
+}
+
+.btn {
+  background-color: #1264a8;
+  border-radius: 15px;
+}
+
+.border {
+  border-width: 1px;
+}
+
+.custom-margin {
+  margin-left: 124px;
+}
+
+.dfont {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 300;
+}
