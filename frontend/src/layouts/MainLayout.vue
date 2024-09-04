@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ShiftEnum, RoleEnum, SexEnum, Staff } from "@/entities/Staff";
 import { nameFormatter } from "@/helpers/nameFormatter";
+import { useAuthStore } from "@/stores/auth";
 import {
   IonButtons,
   IonHeader,
@@ -18,7 +19,8 @@ import {
   personCircleOutline,
   personCircleSharp,
 } from "ionicons/icons";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
 const nurse = ref<Staff>({
   id: 1,
@@ -35,6 +37,15 @@ const nurse = ref<Staff>({
   patientId: 1,
 });
 const formattedName = nameFormatter(nurse.value.name);
+
+const auth = useAuthStore();
+const router = useRouter();
+const user = ref<Staff | null>(null);
+
+async function logout() {
+  await auth.logout();
+  router.push({ name: "login" });
+}
 </script>
 <template>
   <IonPage>
@@ -84,11 +95,14 @@ const formattedName = nameFormatter(nurse.value.name);
         <IonButtons
           class="flex justify-center absolute bottom-0 inset-x-0 mb-10"
         >
-          <button
-            class="text-white rounded-2xl bg-black py-3 px-16 font-semibold"
-          >
-            Cerrar sesión
-          </button>
+          <form @submit.prevent="logout">
+            <button
+              type="submit"
+              class="text-white rounded-2xl bg-black py-3 px-16 font-semibold"
+            >
+              Cerrar sesión
+            </button>
+          </form>
         </IonButtons>
       </IonContent>
     </IonMenu>
