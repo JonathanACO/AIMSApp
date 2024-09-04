@@ -35,7 +35,7 @@ async function login() {
     const result = await auth.login(form);
     if (result.errors) throw result;
     if (result.errors) return;
-    router.push({ name: "home" });
+    router.push({ name: "main-layout" });
   } catch (error: any) {
     console.log(error);
     authErrorHandler(error);
