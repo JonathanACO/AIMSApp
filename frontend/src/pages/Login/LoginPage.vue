@@ -64,13 +64,13 @@ async function login() {
             />
             <form @submit.prevent="login()" class="m-8">
               <div class="mb-4">
-                <VInput type="text" v-model="form.name" labelText="Username" />
+                <VInput type="text" v-model="form.name" labelText="Nombre" />
               </div>
               <div class="mb-6">
                 <VInput
                   type="password"
                   v-model="form.password"
-                  labelText="password"
+                  labelText="Contraseña"
                   :hasEye="true"
                 />
               </div>
@@ -82,7 +82,7 @@ async function login() {
                   class="btn py-[10px] text-base text-white font-medium hover:bg-blue-700 mb-4"
                   :disabled="isLoading"
                 >
-                  <template v-if="!isLoading"> Login </template>
+                  <template v-if="!isLoading"> Iniciar Sesión </template>
                   <VLoader v-show="isLoading" />
                 </Button>
               </div>
