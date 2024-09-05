@@ -40,7 +40,7 @@ const formattedName = nameFormatter(nurse.value.name);
   <IonMenu side="end" content-id="main-content">
     <IonHeader mode="md">
       <ion-toolbar color="light" class="h-16 flex items-center">
-        <IonMenuToggle class="ml-2.5 flex items-center">
+        <IonMenuToggle class="ml-2.5 flex w-max items-center">
           <IonIcon
             class="h-8 w-8 text-black cursor-pointer"
             :icon="chevronBackOutline"
