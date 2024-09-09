@@ -20,10 +20,14 @@ import {
             <p>Texto informativo para iniciar el proceso de consulta.</p>
           </article>
           <div class="grid gap-4 mt-4">
-            <button class="text-white bg-primary rounded-2xl p-4 hover:bg-tertiary transition-all">
+            <button
+              class="text-white bg-primary rounded-2xl p-4 hover:bg-tertiary transition-all"
+            >
               Iniciar consulta
             </button>
-            <button class="text-white rounded-2xl bg-black p-4 hover:bg-tertiary transition-all">
+            <button
+              class="text-white rounded-2xl bg-black p-4 hover:bg-tertiary transition-all"
+            >
               Ver última consulta
             </button>
           </div>
@@ -63,7 +67,8 @@ import {
                 <IonIcon slot="icon-only" :icon="readerOutline"></IonIcon>
               </IonButton>
             </div>
-          </div><div
+          </div>
+          <div
             class="border border-tertiary p-1 flex justify-between items-center"
           >
             <p>INFO DE CONSULTA</p>
