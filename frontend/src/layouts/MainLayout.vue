@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ShiftEnum, RoleEnum, SexEnum, Staff } from "@/entities/Staff";
+import { ShiftEnum, RoleEnum, SexEnum, Nurse } from "@/entities/Nurse";
 import { nameFormatter } from "@/helpers/nameFormatter";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/useAuthStore";
 import {
   IonButtons,
   IonHeader,
@@ -19,10 +19,10 @@ import {
   personCircleOutline,
   personCircleSharp,
 } from "ionicons/icons";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-const nurse = ref<Staff>({
+const nurse = ref<Nurse>({
   id: 1,
   name: "Jonathan Andrés Cano Ornelas",
   password: "password",
@@ -37,10 +37,9 @@ const nurse = ref<Staff>({
   patientId: 1,
 });
 const formattedName = nameFormatter(nurse.value.name);
-
+//TODO: Cambiar estos datos...
 const auth = useAuthStore();
 const router = useRouter();
-const user = ref<Staff | null>(null);
 
 async function logout() {
   await auth.logout();
