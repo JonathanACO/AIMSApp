@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { IonContent, IonPage } from "@ionic/vue";
+import { IonContent, IonPage, IonCard, IonButtons } from "@ionic/vue";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
-import VLoader from "@/components/VLoader.vue";
+import { useAuthStore } from "@/stores/useAuthStore";
 import VInput from "@/components/VInput.vue";
-import { authErrorHandler } from "@/helpers/authErrorsHandler";
+import { errorHandler } from "@/helpers/authErrorsHandler";
+import VLoader from "@/components/VLoader.vue";
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -32,13 +32,10 @@ watch(
 async function login() {
   try {
     isLoading.value = true;
-    const result = await auth.login(form);
-    if (result.errors) throw result;
-    if (result.errors) return;
+    await auth.login(form.value);
     router.push({ name: "main-layout" });
-  } catch (error: any) {
-    console.log(error);
-    authErrorHandler(error);
+  } catch (error) {
+    errorHandler(error);
   } finally {
     isLoading.value = false;
   }
@@ -54,12 +51,12 @@ async function login() {
       <div
         class="flex flex-col w-full overflow-hidden relative min-h-screen items-center justify-center g-0 px-4 dfont"
       >
-        <div
-          class="justify-center items-center w-full card lg:flex max-w-md border"
+        <IonCard
+          class="justify-center items-center w-full card lg:flex max-w-md border rounded-[15px] border-blue-800 shadow-none bg-white"
         >
           <div class="w-full card-body">
             <img
-              src="../../assets/images/rectangle.jpg"
+              src="../../assets/images/AIMA.png"
               class="mx-auto py-3 mt-12"
             />
             <form @submit.prevent="login()" class="m-8">
@@ -77,18 +74,22 @@ async function login() {
               <div class="flex"></div>
 
               <div class="grid my-6">
-                <Button
+                <IonButtons
                   type="submit"
-                  class="btn py-[10px] text-base text-white font-medium hover:bg-blue-700 mb-4"
+                  class="flex justify-center py-[10px]"
                   :disabled="isLoading"
                 >
-                  <template v-if="!isLoading"> Iniciar Sesión </template>
-                  <VLoader v-show="isLoading" />
-                </Button>
+                  <button
+                    class="w-full text-base text-white hover:bg-blue-700 mb-4 bg-blue-800 py-3 font-light rounded-[15px] font-sans"
+                  >
+                    <template v-if="!isLoading"> Iniciar Sesión </template>
+                    <VLoader v-show="isLoading" />
+                  </button>
+                </IonButtons>
               </div>
             </form>
           </div>
-        </div>
+        </IonCard>
       </div>
     </IonContent>
   </IonPage>
