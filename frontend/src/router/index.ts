@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { routes } from "./routes";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
