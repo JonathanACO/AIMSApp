@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { eyeOffOutline, eyeOutline } from "ionicons/icons";
 import { ref } from "vue";
+import { IonIcon } from "@ionic/vue";
 
 const props = defineProps<{
   modelValue: string | null;
@@ -9,7 +10,7 @@ const props = defineProps<{
   type: "text" | "email" | "password";
   hasEye?: boolean;
 }>();
-const emit = defineEmits<{
+defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>();
 
@@ -32,7 +33,7 @@ const togglePasswordVisibility = () => {
         v-bind="$attrs"
         :disabled="isDisabled"
         :class="{ 'text-base': isDisabled }"
-        class="py-3 px-4 block w-full border border-blue-800 rounded-2xl text-sm focus:outline-none focus:border-blue-600 focus:border-2 transition-colors duration-300"
+        class="bg-white py-3 px-4 block w-full border border-blue-800 rounded-md text-sm focus:outline-none focus:border-blue-600 focus:border-2 transition-colors duration-300"
       />
       <button
         v-if="showEye"
