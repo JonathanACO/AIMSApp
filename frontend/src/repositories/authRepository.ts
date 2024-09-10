@@ -1,15 +1,15 @@
-import { api } from "@/helpers/apiBackend";
+import { api } from "@/services/api";
 
 export class AuthRepository {
-  public async login(payload: any) {
-    return await api("POST", "/login", payload);
+  public static async login(credentials: { name: string; password: string }) {
+    return await api("POST", "/login", credentials);
   }
 
-  public async logout() {
+  public static async logout() {
     await api("DELETE", "/logout");
   }
 
-  public async me() {
+  public static async me() {
     return await api("GET", "/me");
   }
 }
