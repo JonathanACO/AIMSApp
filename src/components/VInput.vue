@@ -29,7 +29,9 @@ const togglePasswordVisibility = () => {
       <input
         :type="isPassword ? 'password' : 'text'"
         :value="modelValue"
-        @input="$emit('update:modelValue', ($event.target as any).value)"
+        @input="
+          $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+        "
         v-bind="$attrs"
         :disabled="isDisabled"
         :class="{ 'text-base': isDisabled }"
@@ -41,10 +43,10 @@ const togglePasswordVisibility = () => {
         @click="togglePasswordVisibility"
         class="-ml-8 flex items-center"
       >
-        <ion-icon
+        <IonIcon
           :icon="isPassword ? eyeOffOutline : eyeOutline"
           class="text-2xl"
-        ></ion-icon>
+        />
       </button>
     </div>
   </div>
