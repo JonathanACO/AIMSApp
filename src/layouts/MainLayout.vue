@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ShiftEnum, RoleEnum, SexEnum, Nurse } from "@/entities/Nurse";
+import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
 import { nameFormatter } from "@/helpers/nameFormatter";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -28,13 +28,10 @@ const nurse = ref<Nurse>({
   password: "password",
   sex: SexEnum.masculino,
   ageInYears: 19,
-  shift: ShiftEnum.morning,
+  workshift: ShiftEnum.morning,
   workExperienceInMonths: 10,
-  role: RoleEnum.nurse,
   createdAt: new Date(),
   modifiedAt: new Date(),
-  roomId: 1,
-  patientId: 1,
 });
 const formattedName = nameFormatter(nurse.value.name);
 //TODO: Cambiar estos datos...
@@ -76,16 +73,16 @@ async function logout() {
               </div>
               <div class="w-max my-1.5">
                 <div class="w-36 inline-block font-bold">Turno:</div>
-                <p class="inline-block font-medium">{{ nurse.shift }}</p>
+                <p class="inline-block font-medium">{{ nurse.workshift }}</p>
               </div>
               <div class="w-max my-1.5">
                 <div class="w-36 inline-block font-bold">Habitación:</div>
-                <p class="inline-block font-medium">{{ nurse.roomId }}</p>
+                <p class="inline-block font-medium">8</p>
               </div>
               <div class="w-max my-1.5">
                 <div class="w-36 inline-block font-bold">Paciente:</div>
                 <p class="inline-block font-medium">
-                  {{ `P00${nurse.patientId}` }}
+                  {{ `P00 89` }}
                 </p>
               </div>
             </div>
