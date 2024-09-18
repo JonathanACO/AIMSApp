@@ -1,31 +1,25 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { AuthRepository } from "@/repositories/authRepository";
+import { AuthRepository } from "@/repositories/AuthRepository";
 import { Nurse } from "@/entities/Nurse";
 
 export const useAuthStore = defineStore("auth", () => {
   const nurse = ref<Nurse | null>(null);
   const token = ref(localStorage.getItem("token"));
 
-  type partialTokenValue = {
-    token: string;
-  };
-
-  function authenticate(tokenValue: partialTokenValue | null) {
-    if (tokenValue === null) return;
-    token.value = tokenValue.token;
-    if (token.value) {
-      localStorage.setItem("token", token.value);
-    } else {
+  function authenticate(tokenValue: string | null) {
+    if (tokenValue === null) {
       localStorage.removeItem("token");
+    } else {
+      localStorage.setItem("token", tokenValue);
     }
   }
 
   async function login(credentials: { name: string; password: string }) {
-    const result = await AuthRepository.login(credentials);
-    authenticate(result);
+    const token = await AuthRepository.login(credentials);
+    authenticate(token);
 
-    return result;
+    return token;
   }
 
   async function logout() {
@@ -37,7 +31,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function me() {
     const result = await AuthRepository.me();
-    nurse.value = result.nurse;
+    nurse.value = result;
     return nurse.value;
   }
 
