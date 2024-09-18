@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonContent, IonPage, IonCard, IonButtons } from "@ionic/vue";
+import { IonContent, IonPage, IonCard, IonButtons, IonTitle } from "@ionic/vue";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -52,13 +52,13 @@ async function login() {
         class="flex flex-col w-full overflow-hidden relative min-h-screen items-center justify-center g-0 px-4 dfont"
       >
         <IonCard
-          class="justify-center items-center w-full card lg:flex max-w-md border rounded-[15px] border-blue-800 shadow-none bg-white"
+          class="justify-center items-center w-full card lg:flex max-w-md border rounded-2xl border-blue-800 shadow-none bg-white"
         >
-          <div class="w-full card-body">
-            <img
-              src="../../assets/images/AIMA.png"
-              class="mx-auto py-3 mt-12"
-            />
+          <div class="w-full card-body center">
+            <IonTitle
+              class="font-semibold text-5xl pt-10 px-20 text-center text-blue-800"
+              >AIMS</IonTitle
+            >
             <form @submit.prevent="login()" class="m-8">
               <div class="mb-4">
                 <VInput type="text" v-model="form.name" labelText="Nombre" />
@@ -76,11 +76,11 @@ async function login() {
               <div class="grid my-6">
                 <IonButtons
                   type="submit"
-                  class="flex justify-center py-[10px]"
+                  class="flex justify-center py-3"
                   :disabled="isLoading"
                 >
                   <button
-                    class="w-full text-base text-white hover:bg-blue-700 mb-4 bg-blue-800 py-3 font-light rounded-[15px] font-sans"
+                    class="w-full text-base text-white hover:bg-blue-700 mb-4 bg-blue-800 py-3 font-light rounded-2xl font-sans"
                   >
                     <template v-if="!isLoading"> Iniciar Sesión </template>
                     <VLoader v-show="isLoading" />
