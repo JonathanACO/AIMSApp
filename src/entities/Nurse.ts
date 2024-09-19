@@ -1,4 +1,4 @@
-export type Staff = {
+export type Nurse = {
   id: number;
   name: string;
   password: string;
