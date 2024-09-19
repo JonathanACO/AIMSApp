@@ -4,9 +4,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#1265a8",
-        secondary: "#f3f7fe",
-        tertiary: "#666667",
+        primaryColor: "#1264a8",
+        secondaryColor: "#f3f7fe",
+        tertiaryColor: "#666667",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "-apple-system", "Arial", "sans-serif"],
