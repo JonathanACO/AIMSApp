@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import { IonRow, IonCol, IonLabel, IonGrid } from "@ionic/vue";
-import PatientItem from "./PatientItem.vue";
+import { IonRow, IonCol, IonLabel, IonGrid, IonSpinner } from "@ionic/vue";
+import { useRouter } from "vue-router";
+import { generateId } from "@/helpers/formatPatientId";
 
-const items = <
-  | {
-      patient: string;
-      room: string;
-      lastAppointment: Date;
-    }[]
->[];
+defineProps<{
+  items: {
+    patient: string;
+    room: string;
+    lastAppointment: Date;
+    isCompleted: boolean;
+  }[];
+}>();
 
-const item = {
-  patient: "P001",
-  room: "Cardiología",
-  lastAppointment: new Date(),
-};
+const router = useRouter();
 
-items.push(item);
+const dateFormat = Intl.DateTimeFormat("es-MX", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+});
 </script>
 <template>
   <IonGrid>
@@ -31,10 +33,71 @@ items.push(item);
         <ion-label class="text-stone-500">ULTIMA FECHA DE CONSULTA </ion-label>
       </ion-col>
     </ion-row>
-    <div v-for="(item, index) in items" :key="index">
-      <PatientItem
-        :item="item"
+    <div
+      v-for="(item, index) in items"
+      :key="index"
+      @click="
+        router.push({
+          name: 'patient-details',
+          params: { property: item.patient },
+        })
+      "
+    >
+      <ion-row
+        class="border border-black border-t-transparent p-2 cursor-pointer"
         :class="{ 'rounded-b-md': index === items.length - 1 }"
-      /></div
-  ></IonGrid>
+      >
+        <ion-col size="4">
+          <ion-label>{{ generateId(item.patient.toString()) }}</ion-label>
+        </ion-col>
+        <ion-col size="3">
+          <ion-label>{{ item.room }}</ion-label>
+        </ion-col>
+        <ion-col size="5">
+          <div class="flex justify-between items-end max-w-[230px]">
+            <ion-label
+              >{{
+                item.lastAppointment
+                  ? dateFormat.format(new Date(item.lastAppointment))
+                  : null
+              }}
+            </ion-label>
+            <div
+              v-if="!item.isCompleted && item.lastAppointment"
+              class="text-xs text-blue-600 h-max pb-0.5"
+            >
+              En progreso
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </IonGrid>
 </template>
+<style scoped>
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 3px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: l5 1s infinite linear alternate;
+}
+@keyframes l5 {
+  0% {
+    box-shadow: 6px 0 #0002, -6px 0 #000;
+    background: #0002;
+  }
+  33% {
+    box-shadow: 6px 0 #0002, -6px 0 #000;
+    background: #000;
+  }
+  66% {
+    box-shadow: 6px 0 #000, -6px 0 #0002;
+    background: #000;
+  }
+  100% {
+    box-shadow: 6px 0 #000, -6px 0 #0002;
+    background: #0002;
+  }
+}
+</style>
