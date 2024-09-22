@@ -11,25 +11,26 @@ import { PatientRespository } from "../../repositories/PatientRepository";
 import { AppointmetsRespository } from "../../repositories/AppointmentsRepository";
 import { RoomsRespository } from "@/repositories/RoomsRepository";
 import { generateId } from "../../helpers/formatPatientId";
-import { dateFormat } from "../../utilities/dateFormat";
+import { dateFormat } from "../../utilis/dateFormat";
 import { type Patient } from "../../entities/Patient";
 import { type Appointment } from "../../entities/Appointment";
 import { type Room } from "@/entities/Room";
-import { getDaysDifference } from "@/utilities/getDaysDifference";
+import { getDaysDifference } from "@/utilis/getDaysDifference";
 
 const patientRepository = new PatientRespository();
 const appointmentsRepository = new AppointmetsRespository();
 const roomsRepository = new RoomsRespository();
 const route = useRoute();
-const patientId: number = Number(route.params.id);
-const patientDetails = ref<Patient[] | null>(null);
-const appointmentsHistory = ref<Appointment[] | null>(null);
-const formattedPatientId: string = generateId(patientId.toString());
-const roomDetails = ref<Room[] | null>(null);
+const patientId = Number(route.params.id);
+const patient = ref<Patient | null>(null);
+const appointments = ref<Appointment[] | null>(null);
+const patientIdentifier = generateId(patientId.toString());
+const room = ref<Room | null>(null);
 
-async function getPatientDetails() {
+async function getPatient() {
+  if (!patientId) return null;
   try {
-    patientDetails.value = await patientRepository.getDetails(patientId ?? 0);
+    patient.value = await patientRepository.getDetails(patientId);
   } catch (e) {
     console.error(e);
   }
@@ -37,19 +38,20 @@ async function getPatientDetails() {
 
 async function getAppointmentsHistory() {
   try {
-    appointmentsHistory.value =
-      await appointmentsRepository.getAppointmentsHistory(Number(patientId));
+    appointments.value = await appointmentsRepository.getAppointmentsHistory(
+      patientId
+    );
   } catch (e) {
     console.error(e);
   }
 }
 
-async function getRoomDetails() {
+async function getRoom() {
   try {
-    if (!patientDetails.value) return;
-    const roomId = patientDetails.value.find((value) => value.roomId)?.roomId;
+    if (!patient.value) return;
+    const roomId = patient.value.roomId;
     if (roomId) {
-      roomDetails.value = await roomsRepository.find(roomId);
+      room.value = await roomsRepository.find(roomId);
     }
   } catch (e) {
     console.error(e);
@@ -57,9 +59,9 @@ async function getRoomDetails() {
 }
 
 onMounted(async () => {
-  await getPatientDetails();
+  await getPatient();
   await getAppointmentsHistory();
-  await getRoomDetails();
+  await getRoom();
 });
 </script>
 
@@ -69,32 +71,43 @@ onMounted(async () => {
       <h1 class="title">Detalles de paciente</h1>
       <div class="grid grid-cols-2 gap-4 my-8">
         <section
-          v-for="patientDetails in patientDetails"
+          v-if="patient"
           class="bg-secondary grid rounded-md min-h-64 p-3 text-lg"
         >
           <p class="text-center font-semibold text-2xl">
-            {{ formattedPatientId }}
+            {{
+              patientIdentifier ??
+              "Error al obtener identificador del paciente."
+            }}
           </p>
           <span>
             <p class="font-semibold">Fecha de entrada</p>
             <p>
-              {{ dateFormat(patientDetails.createdAt) }}
+              {{
+                dateFormat(patient.createdAt) ??
+                "Error al obtener fecha de entrada."
+              }}
             </p>
           </span>
-          <span v-for="room in roomDetails">
+          <span v-if="room">
             <p class="font-semibold">Habitación:</p>
             <p>
-              {{ room.name }}
+              {{ room.name ?? "Error al obtener nombre de habitación." }}
             </p>
           </span>
           <span>
             <p class="font-semibold">Número de consultas:</p>
-            <p>{{ appointmentsHistory?.length }}</p>
+            <p>
+              {{ appointments?.length ?? "Error al obtener consultas" }}
+            </p>
           </span>
           <span>
             <p class="font-semibold">Días en el hospital</p>
             <p>
-              {{ getDaysDifference(patientDetails.createdAt) }}
+              {{
+                getDaysDifference(patient.createdAt) ??
+                "Error al obtener días en hospital."
+              }}
             </p>
           </span>
         </section>
@@ -128,13 +141,13 @@ onMounted(async () => {
       </div>
       <div class="">
         <h2 class="title">Historial de consultas</h2>
-        <!-- TODO: Agregar v-for y lógica de mostrarlos -->
         <section
-          v-if="appointmentsHistory"
+          v-if="appointments"
           class="grid gap-4 mt-8 border overflow-y-auto"
         >
           <div
-            v-for="appointments in appointmentsHistory"
+            v-if="appointments"
+            v-for="appointments in appointments"
             :key="appointments.id"
             class="border border-tertiary p-1 flex justify-between items-center"
           >
