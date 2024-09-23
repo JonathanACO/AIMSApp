@@ -4,6 +4,7 @@ import { AuthRepository } from "@/repositories/authRepository";
 import { Nurse, SexEnum, ShiftEnum } from "@/entities/Nurse";
 
 export const useAuthStore = defineStore("auth", () => {
+  //const nurse = ref<Nurse | null>(getNurse());
   const nurse = ref<Nurse | null>({
     id: 1,
     name: "Jonathan Andrés Cano Ornelas",
@@ -35,15 +36,37 @@ export const useAuthStore = defineStore("auth", () => {
   async function logout() {
     await AuthRepository.logout();
     token.value = null;
-    nurse.value = null;
     localStorage.removeItem("token");
+    clearNurse();
   }
 
   async function me() {
     const result = await AuthRepository.me();
-    nurse.value = result;
-    return nurse.value;
+    setNurse(result);
+    return result;
   }
 
-  return { nurse, token, login, logout, me };
+  function setNurse(_nurse: Nurse) {
+    localStorage.setItem("nurse", JSON.stringify(_nurse));
+    nurse.value = _nurse;
+  }
+
+  function getNurse() {
+    const localNurse = localStorage.getItem("nurse");
+    return localNurse ? JSON.parse(localNurse) : me();
+  }
+
+  function clearNurse() {
+    nurse.value = null;
+    localStorage.removeItem("nurse");
+  }
+
+  return {
+    nurse,
+    token,
+    login,
+    logout,
+    setNurse,
+    getNurse,
+  };
 });
