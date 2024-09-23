@@ -1,7 +1,14 @@
 import { api } from "@/services/api";
 
 export class PatientRepository {
-  public async getNursePatients(nurseId: number): Promise<any> {
+  public static async getNursePatients(nurseId: number): Promise<
+    {
+      patient: number;
+      room: string;
+      lastAppointment: Date;
+      isCompleted: boolean;
+    }[]
+  > {
     return await api("GET", `/nurse-patients/${nurseId}`);
   }
 }
