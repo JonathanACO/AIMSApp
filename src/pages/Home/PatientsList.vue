@@ -7,7 +7,6 @@ import { showErrorToast } from "@/helpers/swalFunctions";
 import HeaderLoader from "@/components/HeaderLoader.vue";
 import { useAuthStore } from "@/stores/useAuthStore";
 
-const patientRepository = new PatientRepository();
 const authStore = useAuthStore();
 
 const isLoading = ref(false);
@@ -15,7 +14,7 @@ const isError = ref(false);
 
 const items = ref<
   {
-    patient: string;
+    patient: number;
     room: string;
     lastAppointment: Date;
     isCompleted: boolean;
@@ -25,10 +24,16 @@ const items = ref<
 async function getPatients() {
   isLoading.value = true;
   try {
-    const nurseId = authStore.nurse!.id;
-    items.value = await patientRepository.getNursePatients(nurseId);
+    const nurseId = authStore.nurse?.id;
+    if (!nurseId) throw new Error("Cierre sesión y vuelva a intentarlo");
+    items.value = await PatientRepository.getNursePatients(nurseId);
   } catch (error) {
-    showErrorToast("Ha ocurrido un error obteniendo los datos");
+    if (
+      error instanceof Error &&
+      error.message == "Cierre sesión y vuelva a intentarlo"
+    )
+      showErrorToast(error.message);
+    else showErrorToast("Ha ocurrido un error obteniendo los datos");
     isError.value = true;
   } finally {
     isLoading.value = false;
