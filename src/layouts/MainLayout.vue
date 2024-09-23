@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
-import { generateId } from "@/helpers/formatPatientId";
+import { generateNurseId } from "@/helpers/formatNurseId";
 import { nameFormatter } from "@/helpers/nameFormatter";
+import { useAuthStore } from "@/stores/useAuthStore";
 import {
   IonButtons,
   IonHeader,
@@ -21,27 +21,16 @@ import {
   personCircleOutline,
   personCircleSharp,
 } from "ionicons/icons";
-import { ref } from "vue";
 
-const nurse = ref<Nurse & { roomId: string[]; patientId: number[] }>({
-  id: 1,
-  name: "Jonathan Andrés Cano Ornelas",
-  password: "password",
-  sex: SexEnum.masculino,
-  ageInYears: 19,
-  workshift: ShiftEnum.morning,
-  workExperienceInMonths: 10,
-  createdAt: new Date(),
-  modifiedAt: new Date(),
-  roomId: ["Cardiología"],
-  patientId: [1],
-});
-const formattedName = nameFormatter(nurse.value.name);
+const authStore = useAuthStore();
+
+const nurse = authStore.nurse;
 
 function handleRefresh() {
   location.reload();
 }
 </script>
+
 <template>
   <IonPage>
     <IonMenu side="end" content-id="main-content">
@@ -60,37 +49,22 @@ function handleRefresh() {
           <div>
             <IonIcon class="h-20 w-20" :icon="personCircleOutline"></IonIcon>
           </div>
-          <div></div>
-          <h1 class="-mt-2 text-xl mb-10 font-semibold">{{ formattedName }}</h1>
+          <h1 v-if="nurse" class="-mt-2 text-xl mb-10 font-semibold">
+            {{ nameFormatter(nurse.name) }}
+          </h1>
           <hr />
           <h2 class="text-xl font-bold mt-8 mb-4">Información</h2>
           <div class="flex w-full justify-center">
-            <div class="text-left w-max">
+            <div v-if="nurse" class="text-left w-max">
               <div class="w-max my-1.5">
                 <div class="w-36 inline-block font-bold">ID:</div>
-                <p class="inline-block font-medium">{{ `PF00${nurse.id}` }}</p>
+                <p class="inline-block font-medium">
+                  {{ generateNurseId(nurse.id.toString()) }}
+                </p>
               </div>
               <div class="w-max my-1.5">
                 <div class="w-36 inline-block font-bold">Turno:</div>
                 <p class="inline-block font-medium">{{ nurse.workshift }}</p>
-              </div>
-              <div class="w-max my-1.5">
-                <div class="w-36 inline-block font-bold">Habitación:</div>
-                <p
-                  v-for="room in nurse.roomId"
-                  class="inline-block font-medium"
-                >
-                  {{ room }}
-                </p>
-              </div>
-              <div class="w-max my-1.5">
-                <div class="w-36 inline-block font-bold">Paciente:</div>
-                <p
-                  v-for="patients in nurse.patientId"
-                  class="inline-block font-medium"
-                >
-                  {{ generateId(patients.toString()) }}
-                </p>
               </div>
             </div>
           </div>
@@ -111,7 +85,9 @@ function handleRefresh() {
         <IonToolbar class="h-16 flex items-center pr-5" color="primary">
           <IonTitle class="font-semibold text-2xl">AIMS</IonTitle>
           <IonButtons slot="end">
-            <h3 class="mr-2 -mb-0.5 font-medium">{{ formattedName }}</h3>
+            <h3 v-if="nurse" class="mr-2 -mb-0.5 font-medium">
+              {{ nameFormatter(nurse.name) }}
+            </h3>
             <IonMenuToggle class="flex items-center">
               <IonIcon
                 class="h-12 w-12 text-white cursor-pointer"
