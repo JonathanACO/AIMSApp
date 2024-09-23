@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { IonRow, IonCol, IonLabel, IonGrid, IonSpinner } from "@ionic/vue";
 import { useRouter } from "vue-router";
-import { generateId } from "@/helpers/formatPatientId";
+import { generatePatientId } from "@/helpers/formatPatientId";
 
 defineProps<{
   items: {
-    patient: string;
+    patient: number;
     room: string;
     lastAppointment: Date;
     isCompleted: boolean;
@@ -48,7 +48,9 @@ const dateFormat = Intl.DateTimeFormat("es-MX", {
         :class="{ 'rounded-b-md': index === items.length - 1 }"
       >
         <ion-col size="4">
-          <ion-label>{{ generateId(item.patient.toString()) }}</ion-label>
+          <ion-label>{{
+            generatePatientId(item.patient.toString())
+          }}</ion-label>
         </ion-col>
         <ion-col size="3">
           <ion-label>{{ item.room }}</ion-label>
@@ -74,30 +76,3 @@ const dateFormat = Intl.DateTimeFormat("es-MX", {
     </div>
   </IonGrid>
 </template>
-<style scoped>
-/* HTML: <div class="loader"></div> */
-.loader {
-  width: 3px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  animation: l5 1s infinite linear alternate;
-}
-@keyframes l5 {
-  0% {
-    box-shadow: 6px 0 #0002, -6px 0 #000;
-    background: #0002;
-  }
-  33% {
-    box-shadow: 6px 0 #0002, -6px 0 #000;
-    background: #000;
-  }
-  66% {
-    box-shadow: 6px 0 #000, -6px 0 #0002;
-    background: #000;
-  }
-  100% {
-    box-shadow: 6px 0 #000, -6px 0 #0002;
-    background: #0002;
-  }
-}
-</style>
