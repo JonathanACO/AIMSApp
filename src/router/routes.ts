@@ -18,7 +18,7 @@ const routes = [
         path: "detalles-paciente/:id",
         name: "details-patient",
         component: () =>
-          import("@/pages/DetallesPaciente/DetallesPacientePage.vue"),
+          import("@/pages/PatientDetailsPage/PatientDetailsPage.vue"),
       },
     ],
   },
