@@ -1,4 +1,4 @@
-export function generateId(id: string): string {
+export function generatePatientId(id: string): string {
   if (id.length < 4) {
     id = id.padStart(3, "0");
   }
