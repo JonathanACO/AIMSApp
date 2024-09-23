@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { IonButton, IonContent, IonIcon } from "@ionic/vue";
 import {
@@ -11,11 +11,12 @@ import { PatientRespository } from "../../repositories/PatientRepository";
 import { AppointmetsRespository } from "../../repositories/AppointmentsRepository";
 import { RoomsRespository } from "@/repositories/RoomsRepository";
 import { generateId } from "../../helpers/formatPatientId";
-import { dateFormat } from "../../utilis/dateFormat";
+import { formatDateToLong } from "../../utils/formatDates";
 import { type Patient } from "../../entities/Patient";
 import { type Appointment } from "../../entities/Appointment";
 import { type Room } from "@/entities/Room";
-import { getDaysDifference } from "@/utilis/getDaysDifference";
+import { getDaysDifference } from "@/utils/getDaysDifference";
+import { showErrorToast } from "@/helpers/swalFunctions";
 
 const patientRepository = new PatientRespository();
 const appointmentsRepository = new AppointmetsRespository();
@@ -26,13 +27,18 @@ const patient = ref<Patient | null>(null);
 const appointments = ref<Appointment[] | null>(null);
 const patientIdentifier = generateId(patientId.toString());
 const room = ref<Room | null>(null);
+const daysInHospital = computed(() => {
+  if (!patient.value) return;
+  const days = getDaysDifference(patient.value.createdAt);
+  return `${days} días`;
+});
 
 async function getPatient() {
   if (!patientId) return null;
   try {
     patient.value = await patientRepository.getDetails(patientId);
   } catch (e) {
-    console.error(e);
+    showErrorToast("Error al obtener paciente.");
   }
 }
 
@@ -41,8 +47,10 @@ async function getAppointmentsHistory() {
     appointments.value = await appointmentsRepository.getAppointmentsHistory(
       patientId
     );
+
+    if (!appointments.value) return;
   } catch (e) {
-    console.error(e);
+    showErrorToast("Error al obtener consultas previas.");
   }
 }
 
@@ -54,7 +62,7 @@ async function getRoom() {
       room.value = await roomsRepository.find(roomId);
     }
   } catch (e) {
-    console.error(e);
+    showErrorToast("Error al obtener habitación.");
   }
 }
 
@@ -84,7 +92,7 @@ onMounted(async () => {
             <p class="font-semibold">Fecha de entrada</p>
             <p>
               {{
-                dateFormat(patient.createdAt) ??
+                formatDateToLong(patient.createdAt) ??
                 "Error al obtener fecha de entrada."
               }}
             </p>
@@ -95,7 +103,7 @@ onMounted(async () => {
               {{ room.name ?? "Error al obtener nombre de habitación." }}
             </p>
           </span>
-          <span>
+          <span v-if="appointments">
             <p class="font-semibold">Número de consultas:</p>
             <p>
               {{ appointments?.length ?? "Error al obtener consultas" }}
@@ -104,10 +112,7 @@ onMounted(async () => {
           <span>
             <p class="font-semibold">Días en el hospital</p>
             <p>
-              {{
-                getDaysDifference(patient.createdAt) ??
-                "Error al obtener días en hospital."
-              }}
+              {{ daysInHospital ?? "Error al obtener días en hospital." }}
             </p>
           </span>
         </section>
@@ -152,7 +157,7 @@ onMounted(async () => {
             class="border border-tertiary p-1 flex justify-between items-center"
           >
             <p class="font-semibold">
-              {{ dateFormat(appointments.createdAt) }}
+              {{ formatDateToLong(appointments.createdAt) }}
             </p>
             <div class="flex gap-x-1">
               <IonButton
