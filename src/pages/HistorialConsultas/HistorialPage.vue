@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ShiftEnum, RoleEnum, SexEnum, Staff } from "@/entities/Staff";
+import Swiper from "swiper";
+import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
 import { nameFormatter } from "@/helpers/nameFormatter";
 import {
   IonLabel,
@@ -22,13 +23,9 @@ import {
   personCircleOutline,
   personCircleSharp,
 } from "ionicons/icons";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 import { ref } from "vue";
 
-const nurse = ref<Staff>({
+const nurse = ref<Nurse>({
   id: 1,
   name: "Jonathan Andrés Cano Ornelas",
   password: "password",
@@ -36,23 +33,10 @@ const nurse = ref<Staff>({
   ageInYears: 19,
   shift: ShiftEnum.morning,
   workExperienceInMonths: 10,
-  role: RoleEnum.nurse,
   createdAt: new Date(),
   modifiedAt: new Date(),
-  roomId: 1,
-  patientId: 1,
 });
 const formattedName = nameFormatter(nurse.value.name);
-const appointments = ref([]);
-
-onMounted(async () => {
-  try {
-    const response = await axios.get("/api/appointments");
-    appointments.value = response.data;
-  } catch (error) {
-    console.error("Error fetching appointments:", error);
-  }
-});
 </script>
 <template>
   <IonMenu side="end" content-id="main-content">
@@ -86,13 +70,11 @@ onMounted(async () => {
             </div>
             <div class="w-max my-1.5">
               <div class="w-36 inline-block font-bold">Habitación:</div>
-              <p class="inline-block font-medium">{{ nurse.roomId }}</p>
+              <p class="inline-block font-medium">1008</p>
             </div>
             <div class="w-max my-1.5">
               <div class="w-36 inline-block font-bold">Paciente:</div>
-              <p class="inline-block font-medium">
-                {{ `P00${nurse.patientId}` }}
-              </p>
+              <p class="inline-block font-medium">P0098</p>
             </div>
           </div>
         </div>
@@ -106,7 +88,7 @@ onMounted(async () => {
       </IonButtons>
     </IonContent>
   </IonMenu>
-  <ion-page id="main-content">
+  <IonPage id="main-content">
     <IonHeader class="shadow-none" mode="md">
       <IonToolbar
         class="h-16 flex items-center pr-5 shadow-none"
@@ -135,51 +117,44 @@ onMounted(async () => {
             {{ formattedName }}
           </h3>
         </div>
-        <Swiper>
-          <SwiperSlide class="py-8 px-10 flex">
-            <IonButtons class="flex flex-col items-center w-1/3 h-[160px]">
-              <button
-                class="w-24 h-24 rounded-full bg-sky-400 hover:bg-blue-400 flex items-center justify-center cursor-pointer"
+        <div class="py-8 px-10 flex">
+          <IonButtons class="flex flex-col items-center w-1/3 h-[160px]">
+            <button
+              class="w-24 h-24 rounded-full bg-sky-400 hover:bg-blue-400 flex items-center justify-center cursor-pointer"
+            >
+              <IonIcon
+                :icon="clipboardOutline"
+                class="text-white size-14"
+              ></IonIcon>
+            </button>
+            <IonLabel class="mt-2 text-sm text-center">Valoración</IonLabel>
+          </IonButtons>
+          <IonButtons class="flex flex-col items-center w-1/3 h-[160px]">
+            <button
+              class="w-24 h-24 rounded-full bg-sky-400 hover:bg-blue-400 flex items-center justify-center cursor-pointer"
+            >
+              <IonIcon :icon="bulbOutline" class="text-white size-14"></IonIcon>
+            </button>
+            <IonLabel class="mt-2 text-sm text-center">Sugerencias</IonLabel>
+          </IonButtons>
+          <IonButtons class="flex flex-col items-center w-1/3 h-[160px]">
+            <button
+              class="w-24 h-24 rounded-full bg-sky-400 hover:bg-blue-400 flex items-center justify-center cursor-pointer"
+            >
+              <IonIcon
+                :icon="heartOutline"
+                class="text-white size-14"
+              ></IonIcon>
+            </button>
+            <div class="h-[60px] flex items-start">
+              <IonLabel class="mt-2 text-sm text-center"
+                >Plan de cuidados individualizados</IonLabel
               >
-                <ion-icon
-                  :icon="clipboardOutline"
-                  class="text-white size-14"
-                ></ion-icon>
-              </button>
-              <ion-label class="mt-2 text-sm text-center">Valoración</ion-label>
-            </IonButtons>
-            <IonButtons class="flex flex-col items-center w-1/3 h-[160px]">
-              <button
-                class="w-24 h-24 rounded-full bg-sky-400 hover:bg-blue-400 flex items-center justify-center cursor-pointer"
-              >
-                <ion-icon
-                  :icon="bulbOutline"
-                  class="text-white size-14"
-                ></ion-icon>
-              </button>
-              <ion-label class="mt-2 text-sm text-center"
-                >Sugerencias</ion-label
-              >
-            </IonButtons>
-            <IonButtons class="flex flex-col items-center w-1/3 h-[160px]">
-              <button
-                class="w-24 h-24 rounded-full bg-sky-400 hover:bg-blue-400 flex items-center justify-center cursor-pointer"
-              >
-                <ion-icon
-                  :icon="heartOutline"
-                  class="text-white size-14"
-                ></ion-icon>
-              </button>
-              <div class="h-[60px] flex items-start">
-                <ion-label class="mt-2 text-sm text-center"
-                  >Plan de cuidados individualizados</ion-label
-                >
-              </div>
-            </IonButtons>
-          </SwiperSlide>
-        </Swiper>
+            </div>
+          </IonButtons>
+        </div>
       </div>
       <IonRouterOutlet />
     </IonContent>
-  </ion-page>
+  </IonPage>
 </template>
