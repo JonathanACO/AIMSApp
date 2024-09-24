@@ -1,4 +1,4 @@
-export type Staff = {
+export type Nurse = {
   id: number;
   name: string;
   password: string;
@@ -6,11 +6,8 @@ export type Staff = {
   ageInYears: number;
   shift: ShiftEnum;
   workExperienceInMonths: number;
-  role: RoleEnum;
   createdAt: Date;
   modifiedAt: Date;
-  roomId: number;
-  patientId: number;
 };
 
 export enum SexEnum {
@@ -22,9 +19,4 @@ export enum ShiftEnum {
   morning = "Matutino",
   afternoon = "Vespertino",
   night = "Nocturno",
-}
-
-export enum RoleEnum {
-  nurse = "Nurse",
-  administrator = "Administrator",
 }
