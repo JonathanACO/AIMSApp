@@ -6,8 +6,7 @@ export class AuthRepository {
     name: string;
     password: string;
   }): Promise<string> {
-    const data = await api("POST", "/login", credentials);
-    return data.token;
+    return await api("POST", "/login", credentials);
   }
 
   public static async logout() {
@@ -15,7 +14,6 @@ export class AuthRepository {
   }
 
   public static async me(): Promise<Nurse> {
-    const data = await api("GET", "/me");
-    return data.nurse;
+    return await api("GET", "/me");
   }
 }
