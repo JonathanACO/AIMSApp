@@ -34,7 +34,11 @@ const togglePasswordVisibility = () => {
         "
         v-bind="$attrs"
         :disabled="isDisabled"
-        :class="{ 'text-base': isDisabled }"
+        :class="{
+          'text-base': isDisabled,
+          'bg-gray-300': isDisabled,
+          'border-gray-400': isDisabled,
+        }"
         class="bg-white py-3 px-4 block w-full border border-blue-800 rounded-md text-sm focus:outline-none focus:border-blue-600 focus:border-2 transition-colors duration-300"
       />
       <button
