@@ -11,12 +11,12 @@ export type Nurse = {
 };
 
 export enum SexEnum {
-  masculino = "Masculino",
-  femenino = "Femenino",
+  Masculino = "Masculino",
+  Femenino = "Femenino",
 }
 
 export enum ShiftEnum {
-  morning = "Matutino",
-  afternoon = "Vespertino",
-  night = "Nocturno",
+  Morning = "Matutino",
+  Afternoon = "Vespertino",
+  Night = "Nocturno",
 }
