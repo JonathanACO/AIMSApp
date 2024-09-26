@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ShiftEnum, RoleEnum, SexEnum, Staff } from "@/entities/Staff";
+import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
 import { nameFormatter } from "@/helpers/nameFormatter";
 import {
   IonButtons,
@@ -20,7 +20,7 @@ import {
 } from "ionicons/icons";
 import { ref } from "vue";
 
-const nurse = ref<Staff>({
+const nurse = ref<Nurse>({
   id: 1,
   name: "Jonathan Andrés Cano Ornelas",
   password: "password",
@@ -28,11 +28,8 @@ const nurse = ref<Staff>({
   ageInYears: 19,
   shift: ShiftEnum.morning,
   workExperienceInMonths: 10,
-  role: RoleEnum.nurse,
   createdAt: new Date(),
   modifiedAt: new Date(),
-  roomId: 1,
-  patientId: 1,
 });
 const formattedName = nameFormatter(nurse.value.name);
 </script>
@@ -69,13 +66,11 @@ const formattedName = nameFormatter(nurse.value.name);
             </div>
             <div class="w-max my-1.5">
               <div class="w-36 inline-block font-bold">Habitación:</div>
-              <p class="inline-block font-medium">{{ nurse.roomId }}</p>
+              <p class="inline-block font-medium">007</p>
             </div>
             <div class="w-max my-1.5">
               <div class="w-36 inline-block font-bold">Paciente:</div>
-              <p class="inline-block font-medium">
-                {{ `P00${nurse.patientId}` }}
-              </p>
+              <p class="inline-block font-medium">P0098</p>
             </div>
           </div>
         </div>
