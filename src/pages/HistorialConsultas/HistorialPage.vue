@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import Swiper from "swiper";
 import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
 import { nameFormatter } from "@/helpers/nameFormatter";
 import {
-  IonLabel,
   IonButtons,
   IonHeader,
   IonIcon,
@@ -16,10 +14,7 @@ import {
   IonToolbar,
 } from "@ionic/vue";
 import {
-  heartOutline,
-  bulbOutline,
   chevronBackOutline,
-  clipboardOutline,
   personCircleOutline,
   personCircleSharp,
 } from "ionicons/icons";
@@ -116,42 +111,6 @@ const formattedName = nameFormatter(nurse.value.name);
             Fecha de la consulta: 9/11/2024<br />Enfermero(a):
             {{ formattedName }}
           </h3>
-        </div>
-        <div class="py-8 px-10 flex">
-          <IonButtons class="flex flex-col items-center w-1/3 h-[160px]">
-            <button
-              class="w-24 h-24 rounded-full bg-sky-400 hover:bg-blue-400 flex items-center justify-center cursor-pointer"
-            >
-              <IonIcon
-                :icon="clipboardOutline"
-                class="text-white size-14"
-              ></IonIcon>
-            </button>
-            <IonLabel class="mt-2 text-sm text-center">Valoración</IonLabel>
-          </IonButtons>
-          <IonButtons class="flex flex-col items-center w-1/3 h-[160px]">
-            <button
-              class="w-24 h-24 rounded-full bg-sky-400 hover:bg-blue-400 flex items-center justify-center cursor-pointer"
-            >
-              <IonIcon :icon="bulbOutline" class="text-white size-14"></IonIcon>
-            </button>
-            <IonLabel class="mt-2 text-sm text-center">Sugerencias</IonLabel>
-          </IonButtons>
-          <IonButtons class="flex flex-col items-center w-1/3 h-[160px]">
-            <button
-              class="w-24 h-24 rounded-full bg-sky-400 hover:bg-blue-400 flex items-center justify-center cursor-pointer"
-            >
-              <IonIcon
-                :icon="heartOutline"
-                class="text-white size-14"
-              ></IonIcon>
-            </button>
-            <div class="h-[60px] flex items-start">
-              <IonLabel class="mt-2 text-sm text-center"
-                >Plan de cuidados individualizados</IonLabel
-              >
-            </div>
-          </IonButtons>
         </div>
       </div>
       <IonRouterOutlet />
