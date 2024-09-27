@@ -1,11 +1,12 @@
 import { Nurse } from "@/entities/Nurse";
 import { api } from "@/services/api";
+import { AccessToken } from "@/entities/AccessToken";
 
 export class AuthRepository {
   public static async login(credentials: {
     name: string;
     password: string;
-  }): Promise<string> {
+  }): Promise<AccessToken> {
     return await api("POST", "/login", credentials);
   }
 
