@@ -6,4 +6,5 @@ export type AccessToken = {
   abilities: Text;
   createdAt: Date;
   modifiedAt: Date;
+  token: string;
 };
