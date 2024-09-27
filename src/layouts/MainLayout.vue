@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
+import { errorHandler } from "@/helpers/authErrorsHandler";
 import { nameFormatter } from "@/helpers/nameFormatter";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -26,9 +27,9 @@ const nurse = ref<Nurse>({
   id: 1,
   name: "Jonathan Andrés Cano Ornelas",
   password: "password",
-  sex: SexEnum.masculino,
+  sex: SexEnum.Masculino,
   ageInYears: 19,
-  workshift: ShiftEnum.morning,
+  workshift: ShiftEnum.Morning,
   workExperienceInMonths: 10,
   createdAt: new Date(),
   modifiedAt: new Date(),
@@ -39,8 +40,13 @@ const auth = useAuthStore();
 const router = useRouter();
 
 async function logout() {
-  await auth.logout();
-  router.push({ name: "login" });
+  try {
+    await auth.logout();
+  } catch (error) {
+    errorHandler(error);
+  } finally {
+    router.push({ name: "login" });
+  }
 }
 </script>
 <template>
