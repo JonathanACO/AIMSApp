@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { AuthRepository } from "@/repositories/authRepository";
+import { AuthRepository } from "@/repositories/AuthRepository";
 import { Nurse } from "@/entities/Nurse";
 import { AccessToken } from "@/entities/AccessToken";
 
