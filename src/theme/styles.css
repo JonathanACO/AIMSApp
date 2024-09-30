@@ -2,3 +2,9 @@
   font-size: 2rem;
   font-weight: 400;
 }
+
+.dfont {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 300;
+}
