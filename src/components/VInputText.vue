@@ -1,38 +1,49 @@
 <script setup lang="ts">
 defineProps<{
-  modelValue: string | number | Date;
+  modelValue: string | number | Date | null;
+  type: "text" | "number" | "date";
   label?: string;
   labelPosition?: "top" | "side";
-  type: "text" | "number" | "date";
   unit?: string;
   afterText?: string;
   placeHolder?: string;
+  disabled?: boolean;
 }>();
 defineEmits<{
-  (e: "update:modelValue", value: string): void;
+  (e: "update:modelValue", value: string | number | Date): void;
 }>();
 </script>
 <template>
   <div
     class="flex"
-    :class="labelPosition == 'top' ? 'flex-col' : 'items-center'"
+    :class="{
+      'flex-col': labelPosition == 'top',
+      'items-center': labelPosition !== 'top',
+      'text-stone-300': disabled,
+      'text-stone-500': !disabled,
+    }"
   >
-    <label v-if="label" :for="modelValue.toString" class="mr-3">{{
-      label
-    }}</label>
+    <label
+      v-if="label"
+      class="min-w-max"
+      :class="labelPosition === 'top' ? 'mb-1.5' : 'mr-3'"
+      >{{ label }}</label
+    >
     <div class="relative inline-flex items-center w-full">
       <div class="relative flex-grow">
         <input
+          :disabled="disabled"
           :value="modelValue"
-          :id="modelValue.toString"
           :type="type"
           :placeholder="placeHolder"
           :class="{
-            'text-center': type == 'date',
+            'text-center [&::-webkit-calendar-picker-indicator]:w-0 cursor-pointer':
+              type == 'date',
+            'pr-9': type !== 'date',
             '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none':
               type == 'number',
           }"
-          class="w-full p-1 pr-9 outline-none border bg-white border-black rounded-md"
+          class="w-full p-1 h-9 outline-none border bg-white border-stone-500 rounded-md disabled:border-stone-300"
           @input="
             $emit(
               'update:modelValue',
@@ -42,7 +53,7 @@ defineEmits<{
         />
         <span
           v-if="unit"
-          class="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none"
+          class="absolute top-1/2 transform -translate-y-1/2 pointer-events-none right-2"
         >
           {{ unit }}
         </span>
