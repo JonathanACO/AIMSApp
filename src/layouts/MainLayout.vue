@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
-import { errorHandler } from "@/helpers/authErrorsHandler";
-import { nameFormatter } from "@/helpers/nameFormatter";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
+import { nameFormatter } from "@/helpers/nameFormatter";
+import { errorHandler } from "@/helpers/authErrorsHandler";
 import {
   IonButtons,
   IonHeader,
@@ -20,8 +22,6 @@ import {
   personCircleOutline,
   personCircleSharp,
 } from "ionicons/icons";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 const nurse = ref<Nurse>({
   id: 1,
