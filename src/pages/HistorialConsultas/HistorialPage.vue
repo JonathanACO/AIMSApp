@@ -5,7 +5,7 @@ import { useRouter } from "vue-router";
 import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
 import { nameFormatter } from "@/helpers/nameFormatter";
 import { errorHandler } from "@/helpers/authErrorsHandler";
-import { AppointmentsRepository } from "@/repositories/appointmentRepository";
+import { AppointmentsRepository } from "@/repositories/AppointmentRepository";
 import { Appointment } from "@/entities/Appointment";
 import {
   IonButtons,
