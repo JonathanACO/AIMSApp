@@ -10,6 +10,13 @@ const routes = [
     name: "main-layout",
     meta: { requireAuth: true },
     component: () => import("../layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/guias-de-practica",
+        name: "guias-de-practica",
+        component: () => import("../pages/PracticeGuides/PracticeGuides.vue"),
+      },
+    ],
   },
 ];
 export { routes };
