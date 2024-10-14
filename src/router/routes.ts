@@ -14,7 +14,6 @@ const routes = [
       {
         path: "historial",
         name: "historial",
-        meta: { requireAuth: true },
         component: () =>
           import("../pages/AppoinmentsHistory/AppointmentsHistoryPage.vue"),
       },
