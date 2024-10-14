@@ -111,7 +111,7 @@ async function logout() {
     <ion-page id="main-content">
       <IonHeader mode="md">
         <IonToolbar class="h-16 flex items-center pr-5" color="primary">
-          <IonTitle class="font-semibold text-2xl">AIMS</IonTitle>
+          <IonTitle class="font-semibold text-2xl">Software PCIE-CV</IonTitle>
           <IonButtons slot="end">
             <h3 class="mr-2 -mb-0.5 font-medium">{{ formattedName }}</h3>
             <IonMenuToggle class="flex items-center">
