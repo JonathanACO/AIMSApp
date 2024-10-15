@@ -2,7 +2,8 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    component: () => import("@/pages/Login/LoginPage.vue"),
+    meta: { requireAuth: false },
+    component: () => import("../pages/Login/LoginPage.vue"),
   },
   {
     path: "/",
@@ -19,6 +20,11 @@ const routes = [
         name: "patient-details",
         component: () =>
           import("@/pages/DetallesPaciente/DetallesPacientePage.vue"),
+      },
+      {
+        path: "/guias-de-practica",
+        name: "guias-de-practica",
+        component: () => import("../pages/PracticeGuides/PracticeGuides.vue"),
       },
     ],
   },

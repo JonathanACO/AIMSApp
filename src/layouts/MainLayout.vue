@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { generateNurseId } from "@/helpers/formatNurseId";
+import { errorHandler } from "@/helpers/authErrorsHandler";
 import { nameFormatter } from "@/helpers/nameFormatter";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -21,6 +22,7 @@ import {
   personCircleOutline,
   personCircleSharp,
 } from "ionicons/icons";
+import router from "@/router";
 
 const authStore = useAuthStore();
 
@@ -28,6 +30,16 @@ const nurse = authStore.nurse;
 
 function handleRefresh() {
   location.reload();
+}
+
+async function logout() {
+  try {
+    await authStore.logout();
+  } catch (error) {
+    errorHandler(error);
+  } finally {
+    router.push({ name: "login" });
+  }
 }
 </script>
 
@@ -72,18 +84,21 @@ function handleRefresh() {
         <IonButtons
           class="flex justify-center absolute bottom-0 inset-x-0 mb-10"
         >
-          <button
-            class="text-white rounded-2xl bg-black py-3 px-16 font-semibold"
-          >
-            Cerrar sesión
-          </button>
+          <form @submit.prevent="logout">
+            <button
+              type="submit"
+              class="text-white rounded-2xl bg-black py-3 px-16 font-semibold"
+            >
+              Cerrar sesión
+            </button>
+          </form>
         </IonButtons>
       </IonContent>
     </IonMenu>
     <ion-page id="main-content">
       <IonHeader mode="md">
         <IonToolbar class="h-16 flex items-center pr-5" color="primary">
-          <IonTitle class="font-semibold text-2xl">AIMS</IonTitle>
+          <IonTitle class="font-semibold text-2xl">Software PCIE-CV</IonTitle>
           <IonButtons slot="end">
             <h3 v-if="nurse" class="mr-2 -mb-0.5 font-medium">
               {{ nameFormatter(nurse.name) }}
