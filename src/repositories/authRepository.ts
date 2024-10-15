@@ -7,14 +7,14 @@ export class AuthRepository {
     name: string;
     password: string;
   }): Promise<AccessToken> {
-    return await api("POST", "/login", credentials);
+    return await api("POST", "/auth/login", credentials);
   }
 
   public static async logout() {
-    await api("DELETE", "/logout");
+    await api("DELETE", "/auth/logout");
   }
 
   public static async me(): Promise<Nurse> {
-    return await api("GET", "/me");
+    return await api("GET", "/auth/me");
   }
 }

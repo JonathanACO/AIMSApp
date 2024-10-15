@@ -9,6 +9,6 @@ export class PatientRepository {
       isCompleted: boolean;
     }[]
   > {
-    return await api("GET", `/nurse-patients/${nurseId}`);
+    return await api("GET", `/patients/nurse-patients/${nurseId}`);
   }
 }
