@@ -33,6 +33,7 @@ async function login() {
   try {
     isLoading.value = true;
     await auth.login(form.value);
+    auth.me();
     //TODO
     router.push({ name: "main-layout" });
   } catch (error) {
