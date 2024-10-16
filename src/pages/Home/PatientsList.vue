@@ -53,12 +53,14 @@ onMounted(async () => {
       </div>
       <div v-else>
         <div v-if="!items.length">
-          <h1 class="title mb-10">Listado de pacientes</h1>
+          <h1 class="title mb-6">Listado de pacientes</h1>
           <p class="text-center">No cuentas con pacientes actualmente</p>
         </div>
         <div v-else>
-          <h1 v-if="items.length == 1" class="title mb-10">Paciente actual</h1>
-          <h1 v-else class="title mb-10">Listado de pacientes</h1>
+          <h1 v-if="items.length == 1" class="title mb-6 ml-1">
+            Paciente actual
+          </h1>
+          <h1 v-else class="title mb-6 ml-1">Listado de pacientes</h1>
           <PatientTable :items="items" />
         </div>
       </div>

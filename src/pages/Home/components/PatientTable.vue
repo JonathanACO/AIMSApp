@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonRow, IonCol, IonLabel, IonGrid, IonSpinner } from "@ionic/vue";
+import { IonRow, IonCol, IonLabel, IonGrid } from "@ionic/vue";
 import { useRouter } from "vue-router";
 import { generatePatientId } from "@/helpers/formatPatientId";
 
@@ -30,7 +30,7 @@ const dateFormat = Intl.DateTimeFormat("es-MX", {
         <ion-label class="text-stone-500">HABITACIÓN</ion-label>
       </ion-col>
       <ion-col size="5">
-        <ion-label class="text-stone-500">ULTIMA FECHA DE CONSULTA </ion-label>
+        <ion-label class="text-stone-500">ULTIMA FECHA DE CONSULTA</ion-label>
       </ion-col>
     </ion-row>
     <div
