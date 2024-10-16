@@ -33,9 +33,10 @@ async function login() {
   try {
     isLoading.value = true;
     await auth.login(form.value);
-    auth.me();
-    //TODO
-    router.push({ name: "main-layout" });
+    const nurse = await auth.me();
+    localStorage.setItem("nurse", JSON.stringify(nurse));
+
+    router.push({ name: "patients-list" });
   } catch (error) {
     errorHandler(error);
   } finally {
