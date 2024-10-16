@@ -98,7 +98,11 @@ async function logout() {
     <ion-page id="main-content">
       <IonHeader mode="md">
         <IonToolbar class="h-16 flex items-center pr-5" color="primary">
-          <IonTitle class="font-semibold text-2xl">Software PCIE-CV</IonTitle>
+          <IonTitle
+            class="font-semibold text-2xl"
+            @click="router.push({ name: 'patients-list' })"
+            >Software PCIE-CV</IonTitle
+          >
           <IonButtons slot="end">
             <h3 v-if="nurse" class="mr-2 -mb-0.5 font-medium">
               {{ nameFormatter(nurse.name) }}
