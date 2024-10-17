@@ -12,6 +12,12 @@ const routes = [
     component: () => import("../layouts/MainLayout.vue"),
     children: [
       {
+        path: "historial",
+        name: "historial",
+        component: () =>
+          import("../pages/AppoinmentsHistory/AppointmentsHistoryPage.vue"),
+      },
+      {
         path: "/guias-de-practica",
         name: "guias-de-practica",
         component: () => import("../pages/PracticeGuides/PracticeGuides.vue"),
