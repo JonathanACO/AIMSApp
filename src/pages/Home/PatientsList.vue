@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { IonContent, IonPage } from "@ionic/vue";
 import PatientTable from "./components/PatientTable.vue";
-import { PatientRepository } from "@/repositories/PatientRepository";
+import { PatientsRepository } from "@/repositories/PatientsRepository";
 import { onMounted, ref } from "vue";
 import { showErrorToast } from "@/helpers/swalFunctions";
 import HeaderLoader from "@/components/HeaderLoader.vue";
@@ -26,7 +26,7 @@ async function getPatients() {
   try {
     const nurseId = authStore.nurse?.id;
     if (!nurseId) throw new Error("Cierre sesión y vuelva a intentarlo");
-    items.value = await PatientRepository.getNursePatients(nurseId);
+    items.value = await PatientsRepository.fetchByNurseId(nurseId);
   } catch (error) {
     if (
       error instanceof Error &&
