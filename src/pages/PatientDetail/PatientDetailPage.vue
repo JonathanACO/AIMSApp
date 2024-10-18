@@ -7,8 +7,6 @@ import {
   chatboxEllipsesOutline,
   readerOutline,
 } from "ionicons/icons";
-import { PatientRespository } from "../../repositories/PatientRepository";
-import { AppointmetsRespository } from "../../repositories/AppointmentsRepository";
 import { RoomsRespository } from "@/repositories/RoomsRepository";
 import { formatPatientId } from "../../helpers/formatPatientId";
 import { formatDateToLong } from "../../utils/formatDates";
@@ -17,9 +15,9 @@ import { type Appointment } from "../../entities/Appointment";
 import { type Room } from "@/entities/Room";
 import { getDaysDifference } from "@/utils/getDaysDifference";
 import { showErrorToast } from "@/helpers/swalFunctions";
+import { PatientsRepository } from "../../repositories/PatientsRepository";
+import { AppointmentsRepository } from "../../repositories/AppointmentsRepository";
 
-const patientRepository = new PatientRespository();
-const appointmentsRepository = new AppointmetsRespository();
 const roomsRepository = new RoomsRespository();
 const route = useRoute();
 const patientId = Number(route.params.id);
@@ -36,7 +34,7 @@ const daysInHospital = computed(() => {
 async function getPatient() {
   if (!patientId) return null;
   try {
-    patient.value = await patientRepository.getDetails(patientId);
+    patient.value = await PatientsRepository.fetchById(patientId);
   } catch (e) {
     showErrorToast("Error al obtener paciente.");
   }
@@ -44,7 +42,7 @@ async function getPatient() {
 
 async function getAppointmentsHistory() {
   try {
-    appointments.value = await appointmentsRepository.getAppointmentsHistory(
+    appointments.value = await AppointmentsRepository.fetchByPatientId(
       patientId
     );
 
