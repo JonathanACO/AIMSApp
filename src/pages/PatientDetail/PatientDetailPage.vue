@@ -7,7 +7,7 @@ import {
   chatboxEllipsesOutline,
   readerOutline,
 } from "ionicons/icons";
-import { RoomsRespository } from "@/repositories/RoomsRepository";
+import { RoomsRepository } from "@/repositories/RoomsRepository";
 import { formatPatientId } from "../../helpers/formatPatientId";
 import { formatDateToLong } from "../../utils/formatDates";
 import { type Patient } from "../../entities/Patient";
@@ -18,7 +18,6 @@ import { showErrorToast } from "@/helpers/swalFunctions";
 import { PatientsRepository } from "../../repositories/PatientsRepository";
 import { AppointmentsRepository } from "../../repositories/AppointmentsRepository";
 
-const roomsRepository = new RoomsRespository();
 const route = useRoute();
 const patientId = Number(route.params.id);
 const patient = ref<Patient | null>(null);
@@ -57,7 +56,7 @@ async function getRoom() {
     if (!patient.value) return;
     const roomId = patient.value.roomId;
     if (roomId) {
-      room.value = await roomsRepository.find(roomId);
+      room.value = await RoomsRepository.fetchById(roomId);
     }
   } catch (e) {
     showErrorToast("Error al obtener habitación.");
