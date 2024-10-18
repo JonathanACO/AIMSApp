@@ -14,6 +14,12 @@ const routes = [
         name: "home",
         component: () => import("../pages/Home/HomePage.vue"),
       },
+      {
+        path: "valoracion",
+        name: "medical-assesment",
+        component: () =>
+          import("../pages/ValorationForm/ValorationFormPage.vue"),
+      },
     ],
   },
 ];
