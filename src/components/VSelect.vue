@@ -1,18 +1,26 @@
 <script setup lang="ts">
 defineProps<{
-  modelValue: string | null;
-  options: readonly any[];
+  modelValue: string | number | null;
+  options: { value: string | number; label?: string }[] | any[];
   label?: string;
+  disabled?: boolean;
   labelPosition?: "top" | "side";
   afterText?: "string";
   placeHolder?: string;
-  hidePlaceHolder?: boolean;
 }>();
+
+const isObjectOption = (
+  option: any
+): option is { value: string | number; label?: string } => {
+  return typeof option === "object" && "value" in option;
+};
 </script>
 <template>
   <div
-    class="flex text-stone-500"
-    :class="labelPosition == 'top' ? 'flex-col' : 'items-center'"
+    class="flex"
+    :class="`${disabled ? 'text-stone-300' : 'text-stone-500'} ${
+      labelPosition == 'top' ? 'flex-col' : 'items-center'
+    }`"
   >
     <label v-if="label" :class="labelPosition === 'top' ? 'mb-1.5' : 'mr-3'">{{
       label
@@ -20,7 +28,8 @@ defineProps<{
     <div class="relative inline-flex items-center w-full">
       <div class="relative flex-grow">
         <select
-          class="w-full p-1 pr-9 h-9 outline-none border bg-white border-stone-500 rounded-md"
+          class="w-full p-1 pr-9 h-9 outline-none border bg-white border-stone-500 disabled:border-stone-300 rounded-md"
+          :disabled="disabled"
           :value="modelValue"
           @input="
             $emit(
@@ -35,9 +44,9 @@ defineProps<{
           <option
             v-for="(option, index) in options"
             :key="index"
-            :value="option"
+            :value="isObjectOption(option) ? option.value : option"
           >
-            {{ option }}
+            {{ isObjectOption(option) ? option.label || option.value : option }}
           </option>
           <option value="">No responder</option>
         </select>
