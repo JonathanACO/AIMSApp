@@ -39,7 +39,7 @@ const dateFormat = Intl.DateTimeFormat("es-MX", {
       @click="
         router.push({
           name: 'patient-details',
-          params: { property: item.patient },
+          params: { id: item.patient },
         })
       "
     >

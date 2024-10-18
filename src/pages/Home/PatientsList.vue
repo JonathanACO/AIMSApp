@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { IonContent, IonPage } from "@ionic/vue";
+import { IonContent, IonPage, IonSpinner } from "@ionic/vue";
 import PatientTable from "./components/PatientTable.vue";
 import { PatientsRepository } from "@/repositories/PatientsRepository";
 import { onMounted, ref } from "vue";
 import { showErrorToast } from "@/helpers/swalFunctions";
-import HeaderLoader from "@/components/HeaderLoader.vue";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 const authStore = useAuthStore();
@@ -22,8 +21,8 @@ const items = ref<
 >([]);
 
 async function getPatients() {
-  isLoading.value = true;
   try {
+    isLoading.value = true;
     const nurseId = authStore.nurse?.id;
     if (!nurseId) throw new Error("Cierre sesión y vuelva a intentarlo");
     items.value = await PatientsRepository.fetchByNurseId(nurseId);
@@ -46,7 +45,9 @@ onMounted(async () => {
 </script>
 <template>
   <IonPage>
-    <HeaderLoader v-if="isLoading" />
+    <div v-if="isLoading" class="flex justify-center items-center h-full p-28">
+      <IonSpinner class="p-10" color="primary" />
+    </div>
     <IonContent v-else class="ion-padding" :fullscreen="true">
       <div v-if="isError" class="text-center mt-5">
         <p class="font-medium text-lg">Deslice para recargar</p>

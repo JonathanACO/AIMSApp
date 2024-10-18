@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { IonButton, IonContent, IonIcon } from "@ionic/vue";
+import { IonButton, IonContent, IonIcon, IonSpinner } from "@ionic/vue";
 import {
   starOutline,
   chatboxEllipsesOutline,
@@ -19,10 +19,12 @@ import { PatientsRepository } from "../../repositories/PatientsRepository";
 import { AppointmentsRepository } from "../../repositories/AppointmentsRepository";
 
 const route = useRoute();
+
 const patientId = Number(route.params.id);
 const patient = ref<Patient | null>(null);
-const appointments = ref<Appointment[] | null>(null);
 const patientIdentifier = formatPatientId(patientId.toString());
+
+const appointments = ref<Appointment[] | null>(null);
 const room = ref<Room | null>(null);
 const daysInHospital = computed(() => {
   if (!patient.value) return;
@@ -30,49 +32,63 @@ const daysInHospital = computed(() => {
   return `${days} días`;
 });
 
+const isLoading = ref(false);
+
 async function getPatient() {
-  if (!patientId) return null;
   try {
+    if (!patientId) return;
+    isLoading.value = true;
     patient.value = await PatientsRepository.fetchById(patientId);
   } catch (e) {
     showErrorToast("Error al obtener paciente.");
+  } finally {
+    isLoading.value = false;
   }
 }
 
-async function getAppointmentsHistory() {
-  try {
-    appointments.value = await AppointmentsRepository.fetchByPatientId(
-      patientId
-    );
-
-    if (!appointments.value) return;
-  } catch (e) {
-    showErrorToast("Error al obtener consultas previas.");
-  }
-}
-
-async function getRoom() {
+async function getPatientAppointments() {
   try {
     if (!patient.value) return;
+    isLoading.value = true;
+    appointments.value = await AppointmentsRepository.fetchByPatientId(
+      patient.value.id
+    );
+  } catch (e) {
+    showErrorToast("Error al obtener consultas previas.");
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+async function getPatientRoom() {
+  try {
+    if (!patient.value) return;
+    isLoading.value = true;
     const roomId = patient.value.roomId;
-    if (roomId) {
-      room.value = await RoomsRepository.fetchById(roomId);
-    }
+    room.value = await RoomsRepository.fetchById(roomId);
   } catch (e) {
     showErrorToast("Error al obtener habitación.");
+  } finally {
+    isLoading.value = false;
   }
 }
 
 onMounted(async () => {
   await getPatient();
-  await getAppointmentsHistory();
-  await getRoom();
+  await getPatientAppointments();
+  await getPatientRoom();
 });
 </script>
 
 <template>
   <IonPage>
     <IonContent class="ion-padding" :fullscreen="true">
+      <div
+        v-show="isLoading"
+        class="flex justify-center items-center h-full p-28"
+      >
+        <IonSpinner class="p-10" color="primary" />
+      </div>
       <h1 class="title">Detalles de paciente</h1>
       <div class="grid grid-cols-2 gap-4 my-8">
         <section
