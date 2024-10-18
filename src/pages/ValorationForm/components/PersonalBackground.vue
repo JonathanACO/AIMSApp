@@ -253,6 +253,7 @@ watch(
             !antecedentesPersonales.antecedentesQuirurgicosTransfusionales
           "
           type="date"
+          :center-text="true"
           class="w-max"
         />
       </div>
@@ -390,18 +391,3 @@ watch(
     ></Transition>
   </div>
 </template>
-<style scoped>
-.expand-enter-active,
-.expand-leave-active {
-  transition: all 1s ease-in-out;
-  max-height: 200px;
-  overflow: hidden;
-}
-.expand-enter-from,
-.expand-leave-to {
-  max-height: 0px;
-}
-.alergias-content {
-  overflow: hidden;
-}
-</style>
