@@ -1,5 +1,5 @@
-import { Nurse } from "@/entities/Nurse";
 import { api } from "@/services/api";
+import { Nurse } from "@/entities/Nurse";
 import { AccessToken } from "@/entities/AccessToken";
 
 export class AuthRepository {

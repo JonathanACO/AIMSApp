@@ -16,14 +16,13 @@ const routes = [
         component: () => import("@/pages/Home/PatientsList.vue"),
       },
       {
-        path: "detalles-paciente/:property",
+        path: "detalles-paciente/:id",
         name: "patient-details",
-        component: () =>
-          import("@/pages/DetallesPaciente/DetallesPacientePage.vue"),
+        component: () => import("../pages/PatientDetail/PatientDetailPage.vue"),
       },
       {
-        path: "historial",
-        name: "historial",
+        path: "paciente/:id/historial",
+        name: "appointments-history",
         component: () =>
           import("../pages/AppoinmentsHistory/AppointmentsHistoryPage.vue"),
       },

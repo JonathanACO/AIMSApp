@@ -1,4 +1,4 @@
-export function nameFormatter(fullName: string): string {
+export function formatNurseName(fullName: string): string {
   const dividedName = fullName.split(" ");
 
   if (dividedName.length <= 2) {
