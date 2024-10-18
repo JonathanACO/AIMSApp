@@ -47,14 +47,14 @@ async function logout() {
   <IonPage>
     <IonMenu side="end" content-id="main-content">
       <IonHeader mode="md">
-        <ion-toolbar color="light" class="h-16 flex items-center">
-          <IonMenuToggle class="ml-2.5 flex w-max items-center">
+        <IonToolbar color="light" class="h-16 flex items-center">
+          <IonMenuToggle class="ml-2.5 flex items-center">
             <IonIcon
               class="h-8 w-8 text-black cursor-pointer"
               :icon="chevronBackOutline"
             ></IonIcon
           ></IonMenuToggle>
-        </ion-toolbar>
+        </IonToolbar>
       </IonHeader>
       <IonContent color="light" class="relative font-sans">
         <div class="w-full flex flex-col text-center mt-10">
@@ -95,7 +95,7 @@ async function logout() {
         </IonButtons>
       </IonContent>
     </IonMenu>
-    <ion-page id="main-content">
+    <IonPage id="main-content">
       <IonHeader mode="md">
         <IonToolbar class="h-16 flex items-center pr-5" color="primary">
           <IonTitle
@@ -122,6 +122,6 @@ async function logout() {
         </IonRefresher>
         <IonRouterOutlet />
       </IonContent>
-    </ion-page>
+    </IonPage>
   </IonPage>
 </template>
