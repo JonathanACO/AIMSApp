@@ -8,9 +8,19 @@ const routes = [
   {
     path: "/",
     name: "main-layout",
-    meta: { requireAuth: true },
-    component: () => import("../layouts/MainLayout.vue"),
+    component: () => import("@/layouts/MainLayout.vue"),
     children: [
+      {
+        path: "",
+        name: "patients-list",
+        component: () => import("@/pages/Home/PatientsList.vue"),
+      },
+      {
+        path: "detalles-paciente/:property",
+        name: "patient-details",
+        component: () =>
+          import("@/pages/DetallesPaciente/DetallesPacientePage.vue"),
+      },
       {
         path: "historial",
         name: "historial",

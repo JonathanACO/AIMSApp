@@ -1,10 +1,8 @@
 <script lang="ts" setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
-import { nameFormatter } from "@/helpers/nameFormatter";
+import { generateNurseId } from "@/helpers/formatNurseId";
 import { errorHandler } from "@/helpers/authErrorsHandler";
+import { nameFormatter } from "@/helpers/nameFormatter";
+import { useAuthStore } from "@/stores/useAuthStore";
 import {
   IonButtons,
   IonHeader,
@@ -16,32 +14,27 @@ import {
   IonRouterOutlet,
   IonTitle,
   IonToolbar,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/vue";
 import {
   chevronBackOutline,
   personCircleOutline,
   personCircleSharp,
 } from "ionicons/icons";
+import router from "@/router";
 
-const nurse = ref<Nurse>({
-  id: 1,
-  name: "Jonathan Andrés Cano Ornelas",
-  password: "password",
-  sex: SexEnum.Masculino,
-  ageInYears: 19,
-  workshift: ShiftEnum.Morning,
-  workExperienceInMonths: 10,
-  createdAt: new Date(),
-  modifiedAt: new Date(),
-});
-const formattedName = nameFormatter(nurse.value.name);
-//TODO: Cambiar estos datos...
-const auth = useAuthStore();
-const router = useRouter();
+const authStore = useAuthStore();
+
+const nurse = authStore.nurse;
+
+function handleRefresh() {
+  location.reload();
+}
 
 async function logout() {
   try {
-    await auth.logout();
+    await authStore.logout();
   } catch (error) {
     errorHandler(error);
   } finally {
@@ -49,6 +42,7 @@ async function logout() {
   }
 }
 </script>
+
 <template>
   <IonPage>
     <IonMenu side="end" content-id="main-content">
@@ -67,29 +61,22 @@ async function logout() {
           <div>
             <IonIcon class="h-20 w-20" :icon="personCircleOutline"></IonIcon>
           </div>
-          <div></div>
-          <h1 class="-mt-2 text-xl mb-10 font-semibold">{{ formattedName }}</h1>
+          <h1 v-if="nurse" class="-mt-2 text-xl mb-10 font-semibold">
+            {{ nameFormatter(nurse.name) }}
+          </h1>
           <hr />
           <h2 class="text-xl font-bold mt-8 mb-4">Información</h2>
           <div class="flex w-full justify-center">
-            <div class="text-left w-max">
+            <div v-if="nurse" class="text-left w-max">
               <div class="w-max my-1.5">
                 <div class="w-36 inline-block font-bold">ID:</div>
-                <p class="inline-block font-medium">{{ `PF00${nurse.id}` }}</p>
+                <p class="inline-block font-medium">
+                  {{ generateNurseId(nurse.id.toString()) }}
+                </p>
               </div>
               <div class="w-max my-1.5">
                 <div class="w-36 inline-block font-bold">Turno:</div>
                 <p class="inline-block font-medium">{{ nurse.workshift }}</p>
-              </div>
-              <div class="w-max my-1.5">
-                <div class="w-36 inline-block font-bold">Habitación:</div>
-                <p class="inline-block font-medium">8</p>
-              </div>
-              <div class="w-max my-1.5">
-                <div class="w-36 inline-block font-bold">Paciente:</div>
-                <p class="inline-block font-medium">
-                  {{ `P00 89` }}
-                </p>
               </div>
             </div>
           </div>
@@ -111,9 +98,15 @@ async function logout() {
     <IonPage id="main-content">
       <IonHeader mode="md">
         <IonToolbar class="h-16 flex items-center pr-5" color="primary">
-          <IonTitle class="font-semibold text-2xl">Software PCIE-CV</IonTitle>
+          <IonTitle
+            class="font-semibold text-2xl"
+            @click="router.push({ name: 'patients-list' })"
+            >Software PCIE-CV</IonTitle
+          >
           <IonButtons slot="end">
-            <h3 class="mr-2 -mb-0.5 font-medium">{{ formattedName }}</h3>
+            <h3 v-if="nurse" class="mr-2 -mb-0.5 font-medium">
+              {{ nameFormatter(nurse.name) }}
+            </h3>
             <IonMenuToggle class="flex items-center">
               <IonIcon
                 class="h-12 w-12 text-white cursor-pointer"
@@ -124,6 +117,9 @@ async function logout() {
         </IonToolbar>
       </IonHeader>
       <IonContent class="font-sans">
+        <IonRefresher slot="fixed" @ionRefresh="handleRefresh()">
+          <IonRefresherContent />
+        </IonRefresher>
         <IonRouterOutlet />
       </IonContent>
     </IonPage>

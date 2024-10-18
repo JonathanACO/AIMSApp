@@ -3,13 +3,13 @@ export default {
   content: ["./src/**/*.{vue,html,css,ts,js,tsx,jsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+      },
       colors: {
-        primary: "#1265a8",
+        primary: "#1264a8",
         secondary: "#f3f7fe",
         tertiary: "#666667",
-      },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "Arial", "sans-serif"],
       },
     },
   },

@@ -33,8 +33,10 @@ async function login() {
   try {
     isLoading.value = true;
     await auth.login(form.value);
-    //TODO
-    router.push({ name: "main-layout" });
+    const nurse = await auth.me();
+    localStorage.setItem("nurse", JSON.stringify(nurse));
+
+    router.push({ name: "patients-list" });
   } catch (error) {
     errorHandler(error);
   } finally {
@@ -57,8 +59,8 @@ async function login() {
         >
           <div class="w-full card-body center">
             <IonTitle
-              class="font-semibold text-5xl pt-10 px-20 text-center text-blue-800"
-              >AIMS</IonTitle
+              class="font-bold text-3xl pt-10 px-20 text-center text-blue-800"
+              >Software PCIE-CV</IonTitle
             >
             <form @submit.prevent="login()" class="m-8">
               <div class="mb-4">

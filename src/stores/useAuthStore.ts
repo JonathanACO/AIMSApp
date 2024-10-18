@@ -5,7 +5,7 @@ import { Nurse } from "@/entities/Nurse";
 import { AccessToken } from "@/entities/AccessToken";
 
 export const useAuthStore = defineStore("auth", () => {
-  const nurse = ref<Nurse | null>(null);
+  const nurse = ref<Nurse | null>(getNurseFromLocalStorage());
   const token = ref(localStorage.getItem("token"));
 
   function authenticate(tokenValue: string | null) {
@@ -22,9 +22,9 @@ export const useAuthStore = defineStore("auth", () => {
     name: string;
     password: string;
   }): Promise<AccessToken> {
-    const token = await AuthRepository.login(credentials);
-    authenticate(token.token);
-    return token;
+    const accessToken = await AuthRepository.login(credentials);
+    authenticate(accessToken.token);
+    return accessToken;
   }
 
   async function logout() {
@@ -32,12 +32,17 @@ export const useAuthStore = defineStore("auth", () => {
     token.value = null;
     nurse.value = null;
     localStorage.removeItem("token");
+    localStorage.removeItem("nurse");
   }
 
   async function me() {
-    const result = await AuthRepository.me();
-    nurse.value = result;
+    nurse.value = await AuthRepository.me();
     return nurse.value;
+  }
+
+  function getNurseFromLocalStorage(): Nurse | null {
+    const localUser = localStorage.getItem("nurse");
+    return localUser ? JSON.parse(localUser) : null;
   }
 
   return { nurse, token, login, logout, me };
