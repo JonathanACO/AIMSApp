@@ -1,5 +1,5 @@
-import { Patient } from "@/entities/Patient";
 import { api } from "@/services/api";
+import { Patient } from "@/entities/Patient";
 
 export class PatientsRepository {
   public static async fetchById(id: number): Promise<Patient> {
