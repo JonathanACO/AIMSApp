@@ -21,8 +21,8 @@ const routes = [
         component: () => import("../pages/PatientDetail/PatientDetailPage.vue"),
       },
       {
-        path: "historial",
-        name: "historial",
+        path: "paciente/:id/historial",
+        name: "appointments-history",
         component: () =>
           import("../pages/AppoinmentsHistory/AppointmentsHistoryPage.vue"),
       },
