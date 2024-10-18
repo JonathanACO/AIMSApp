@@ -10,7 +10,7 @@ import {
 import { PatientRespository } from "../../repositories/PatientRepository";
 import { AppointmetsRespository } from "../../repositories/AppointmentsRepository";
 import { RoomsRespository } from "@/repositories/RoomsRepository";
-import { generateId } from "../../helpers/formatPatientId";
+import { formatPatientId } from "../../helpers/formatPatientId";
 import { formatDateToLong } from "../../utils/formatDates";
 import { type Patient } from "../../entities/Patient";
 import { type Appointment } from "../../entities/Appointment";
@@ -25,7 +25,7 @@ const route = useRoute();
 const patientId = Number(route.params.id);
 const patient = ref<Patient | null>(null);
 const appointments = ref<Appointment[] | null>(null);
-const patientIdentifier = generateId(patientId.toString());
+const patientIdentifier = formatPatientId(patientId.toString());
 const room = ref<Room | null>(null);
 const daysInHospital = computed(() => {
   if (!patient.value) return;
@@ -151,7 +151,6 @@ onMounted(async () => {
           class="grid gap-4 mt-8 border overflow-y-auto"
         >
           <div
-            v-if="appointments"
             v-for="appointments in appointments"
             :key="appointments.id"
             class="border border-tertiary p-1 flex justify-between items-center"

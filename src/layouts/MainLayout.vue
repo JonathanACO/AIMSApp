@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { generateNurseId } from "@/helpers/formatNurseId";
+import { formatNurseId } from "@/helpers/formatNurseId";
 import { errorHandler } from "@/helpers/authErrorsHandler";
-import { nameFormatter } from "@/helpers/nameFormatter";
+import { formatNurseName } from "@/helpers/formatNurseName";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
   IonButtons,
@@ -62,7 +62,7 @@ async function logout() {
             <IonIcon class="h-20 w-20" :icon="personCircleOutline"></IonIcon>
           </div>
           <h1 v-if="nurse" class="-mt-2 text-xl mb-10 font-semibold">
-            {{ nameFormatter(nurse.name) }}
+            {{ formatNurseName(nurse.name) }}
           </h1>
           <hr />
           <h2 class="text-xl font-bold mt-8 mb-4">Información</h2>
@@ -71,7 +71,7 @@ async function logout() {
               <div class="w-max my-1.5">
                 <div class="w-36 inline-block font-bold">ID:</div>
                 <p class="inline-block font-medium">
-                  {{ generateNurseId(nurse.id.toString()) }}
+                  {{ formatNurseId(nurse.id.toString()) }}
                 </p>
               </div>
               <div class="w-max my-1.5">
@@ -105,7 +105,7 @@ async function logout() {
           >
           <IonButtons slot="end">
             <h3 v-if="nurse" class="mr-2 -mb-0.5 font-medium">
-              {{ nameFormatter(nurse.name) }}
+              {{ formatNurseName(nurse.name) }}
             </h3>
             <IonMenuToggle class="flex items-center">
               <IonIcon

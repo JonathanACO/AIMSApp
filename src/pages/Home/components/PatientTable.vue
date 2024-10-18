@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { IonRow, IonCol, IonLabel, IonGrid } from "@ionic/vue";
 import { useRouter } from "vue-router";
-import { generatePatientId } from "@/helpers/formatPatientId";
+import { formatPatientId } from "@/helpers/formatPatientId";
 
 defineProps<{
   items: {
@@ -48,9 +48,7 @@ const dateFormat = Intl.DateTimeFormat("es-MX", {
         :class="{ 'rounded-b-md': index === items.length - 1 }"
       >
         <ion-col size="4">
-          <ion-label>{{
-            generatePatientId(item.patient.toString())
-          }}</ion-label>
+          <ion-label>{{ formatPatientId(item.patient.toString()) }}</ion-label>
         </ion-col>
         <ion-col size="3">
           <ion-label>{{ item.room }}</ion-label>

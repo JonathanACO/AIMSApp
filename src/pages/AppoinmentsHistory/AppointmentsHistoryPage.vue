@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { ShiftEnum, SexEnum, Nurse } from "@/entities/Nurse";
-import { nameFormatter } from "@/helpers/nameFormatter";
+import { formatNurseName } from "@/helpers/formatNurseName";
 import { errorHandler } from "@/helpers/authErrorsHandler";
 import { AppointmentsRepository } from "@/repositories/AppointmentRepository";
 import { Appointment } from "@/entities/Appointment";
@@ -28,7 +28,7 @@ const nurse = ref<Nurse>({
   createdAt: new Date(),
   modifiedAt: new Date(),
 });
-const formattedName = nameFormatter(nurse.value.name);
+const formattedName = formatNurseName(nurse.value.name);
 const appointments = ref<Appointment[]>([]);
 const isLoading = ref(false);
 const currentIndex = ref(0);
