@@ -1,8 +1,8 @@
 import { Appointment } from "@/entities/Appointment";
 import { api } from "@/services/api";
 
-export class AppointmetsRespository {
-  public async getAppointmentsHistory(id: number): Promise<Appointment[]> {
-    return await api("GET", `/appointments-history/${id}`);
+export class AppointmentsRepository {
+  public static async fetchByPatientId(id: number): Promise<Appointment[]> {
+    return await api("GET", `/patients/${id}/appointments`);
   }
 }
