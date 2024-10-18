@@ -22,3 +22,12 @@ export function formatDateToLong(date: any) {
     return "Fecha no disponible";
   }
 }
+
+export function formatDateToNumeric(date: string | Date) {
+  if (!date) return "Fecha no disponible";
+  return new Date(date).toLocaleString("es-MX", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  });
+}
