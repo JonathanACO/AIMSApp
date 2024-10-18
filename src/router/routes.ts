@@ -2,23 +2,35 @@ const routes = [
   {
     path: "/login",
     name: "login",
+    meta: { requireAuth: false },
     component: () => import("../pages/Login/LoginPage.vue"),
   },
   {
     path: "/",
     name: "main-layout",
-    component: () => import("../layouts/MainLayout.vue"),
+    component: () => import("@/layouts/MainLayout.vue"),
     children: [
       {
         path: "",
-        name: "home",
-        component: () => import("../pages/Home/HomePage.vue"),
+        name: "patients-list",
+        component: () => import("@/pages/Home/PatientsList.vue"),
       },
       {
-        path: "detalles-paciente/:id",
-        name: "details-patient",
+        path: "detalles-paciente/:property",
+        name: "patient-details",
         component: () =>
-          import("@/pages/PatientDetailsPage/PatientDetailsPage.vue"),
+          import("../pages/PatientDetailsPage/PatientDetailsPage.vue"),
+      },
+      {
+        path: "historial",
+        name: "historial",
+        component: () =>
+          import("../pages/AppoinmentsHistory/AppointmentsHistoryPage.vue"),
+      },
+      {
+        path: "/guias-de-practica",
+        name: "guias-de-practica",
+        component: () => import("../pages/PracticeGuides/PracticeGuides.vue"),
       },
     ],
   },
