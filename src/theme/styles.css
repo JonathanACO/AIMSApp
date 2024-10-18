@@ -2,3 +2,16 @@
   font-size: 2rem;
   font-weight: 400;
 }
+.expand-enter-active,
+.expand-leave-active {
+  transition: all 1s ease-in-out;
+  max-height: 240px;
+  overflow: hidden;
+}
+.expand-enter-from,
+.expand-leave-to {
+  max-height: 0px;
+}
+.alergias-content {
+  overflow: hidden;
+}
