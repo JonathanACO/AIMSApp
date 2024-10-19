@@ -51,8 +51,18 @@ const antecedentesPersonales = ref<{
   tipoDeAlergia: null,
 });
 
+const fechaDeRealizacion = ref<Date | null>(null);
+const alergiaSeleccionada = ref<string | null>(null);
+const alergiaEspecifica = ref<string | null>(null);
+const otrasEnfermedadesInternal = ref<string | null>(null);
+
+const antecedentesQuirúrgicosOTransfusionalesOptions = [
+  "Quirurgico",
+  "Transfusionales",
+];
+
 const tipoDeAlergiaSeleccionado = computed(() => {
-  if (alergiaSeleccionada.value) {
+  if (alergiaSeleccionada.value && antecedentesPersonales.value.alergias) {
     if (alergiaSeleccionada.value !== "Otro" || !alergiaEspecifica.value)
       return alergiaSeleccionada.value;
     else return alergiaEspecifica.value;
@@ -70,7 +80,7 @@ const fechaQuirurgicoTransfusionales = computed({
     fechaDeRealizacion.value = !value ? null : value;
   },
 });
-const fechaDeRealizacion = ref<Date | null>(null);
+
 const otrasEnfermedades = computed({
   get() {
     return antecedentesPersonales.value.cronicoDegenerativas ===
@@ -83,7 +93,6 @@ const otrasEnfermedades = computed({
   },
 });
 
-const alergiaSeleccionada = ref<string | null>(null);
 const otraAlergia = computed({
   get() {
     if (alergiaSeleccionada.value == "Otro") return alergiaEspecifica.value;
@@ -93,29 +102,21 @@ const otraAlergia = computed({
     alergiaEspecifica.value = !value ? null : value;
   },
 });
-const alergiaEspecifica = ref<string | null>(null);
 
-const otrasEnfermedadesInternal = ref<string | null>(null);
-const antecedentesQuirúrgicosOTransfusionalesOptions = [
-  "Quirurgico",
-  "Transfusionales",
-];
-watch(antecedentesPersonales.value, (value) => {
-  console.log(value);
-});
 watch(
   [
     fechaQuirurgicoTransfusionales,
     otrasEnfermedades,
     tipoDeAlergiaSeleccionado,
   ],
-  ([newFecha, newEnfermedades, newAlergia]) => {
-    antecedentesPersonales.value.tiempoQuirurgicosTransfusionales = newFecha;
-    antecedentesPersonales.value.otrasEnfermedades = newEnfermedades;
-    antecedentesPersonales.value.tipoDeAlergia = newAlergia;
+  ([fechaValue, enfermedadesValue, alergiaValue]) => {
+    antecedentesPersonales.value.tiempoQuirurgicosTransfusionales = fechaValue;
+    antecedentesPersonales.value.otrasEnfermedades = enfermedadesValue;
+    antecedentesPersonales.value.tipoDeAlergia = alergiaValue;
   }
 );
 </script>
+
 <template>
   <div class="flex justify-between items-center bg-sky-100 px-4 py-1 my-4">
     <h1 class="font-medium text-2xl inline-block">Antecedentes Personales</h1>

@@ -25,35 +25,8 @@ const estadoDeConciencia = ref<{
   datosSubjetivoEstadoDeConciencia: null,
 });
 
-const datosSubjetivos = computed({
-  get() {
-    return hasSubjectiveData.value === false ? null : subjectiveData.value;
-  },
-  set(value) {
-    subjectiveData.value = !value ? null : value;
-  },
-});
-
 const hasSubjectiveData = ref<boolean | null>(null);
 const subjectiveData = ref<string | null>(null);
-
-const glasgowScaleTotal = computed(() => {
-  if (
-    estadoDeConciencia.value.aberturaOcular == null ||
-    estadoDeConciencia.value.respuestaVerbal == null ||
-    estadoDeConciencia.value.respuestaMotoral == null
-  )
-    return null;
-  let suma =
-    estadoDeConciencia.value.aberturaOcular +
-    estadoDeConciencia.value.respuestaVerbal +
-    estadoDeConciencia.value.respuestaMotoral;
-  return suma > 12
-    ? `${suma} - Trauma leve`
-    : suma > 8
-    ? `${suma} - Trauma moderado`
-    : `${suma} - Trauma grave`;
-});
 
 const RASSScaleOptions = [
   { value: 4, label: "+4 - Combativo" },
@@ -78,13 +51,38 @@ const pupillaryReflexOptions = [
   { value: "Anisocoria", label: "Anisocoria - Pupilas de tamaños desiguales" },
 ];
 
+const datosSubjetivos = computed({
+  get() {
+    return hasSubjectiveData.value === false ? null : subjectiveData.value;
+  },
+  set(value) {
+    subjectiveData.value = !value ? null : value;
+  },
+});
+
+const glasgowScaleTotal = computed(() => {
+  if (
+    estadoDeConciencia.value.aberturaOcular == null ||
+    estadoDeConciencia.value.respuestaVerbal == null ||
+    estadoDeConciencia.value.respuestaMotoral == null
+  )
+    return null;
+  let suma =
+    estadoDeConciencia.value.aberturaOcular +
+    estadoDeConciencia.value.respuestaVerbal +
+    estadoDeConciencia.value.respuestaMotoral;
+  return suma > 12
+    ? `${suma} - Trauma leve`
+    : suma > 8
+    ? `${suma} - Trauma moderado`
+    : `${suma} - Trauma grave`;
+});
+
 watch(datosSubjetivos, (value) => {
   estadoDeConciencia.value.datosSubjetivoEstadoDeConciencia = value;
 });
-watch(estadoDeConciencia.value, (value) => {
-  console.log(value);
-});
 </script>
+
 <template>
   <div class="flex justify-between items-center bg-sky-100 px-4 py-1 my-4">
     <h1 class="font-medium text-2xl inline-block">Estado de Conciencia</h1>
