@@ -16,7 +16,6 @@ const props = defineProps<{
 
 const inputWidthClass = computed(() => {
   if (!props.inputWidth) return "w-full";
-  // Asegúrate de incluir todas las clases de ancho que podrías usar
   const validWidths = [
     "w-12",
     "w-16",
