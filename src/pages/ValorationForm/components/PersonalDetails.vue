@@ -3,7 +3,7 @@ import VInputRadio from "@/components/VInputRadio.vue";
 import VInputText from "@/components/VInputText.vue";
 import VSelect from "@/components/VSelect.vue";
 import { computed, ref, watch } from "vue";
-//TODO: convertir los elementos vacios en nulos
+
 const datosPersonales = ref<{
   edad: number | null;
   sexo: "Masculino" | "Femenino" | null;
@@ -35,17 +35,6 @@ const datosPersonales = ref<{
   estadoCivil: null,
 });
 
-const datosSocialesEspecificos = computed({
-  get() {
-    return datosPersonales.value.datoSocial === "Con familia"
-      ? datosSocialesEspecificosInternal.value
-      : null;
-  },
-  set(value) {
-    datosSocialesEspecificosInternal.value = !value ? null : value;
-  },
-});
-
 const datosSocialesEspecificosInternal = ref<string | null>(null);
 
 const civilStatementOptions = [
@@ -65,10 +54,22 @@ const escolaridadOpciones = [
   "Postgrado",
 ];
 
+const datosSocialesEspecificos = computed({
+  get() {
+    return datosPersonales.value.datoSocial === "Con familia"
+      ? datosSocialesEspecificosInternal.value
+      : null;
+  },
+  set(value) {
+    datosSocialesEspecificosInternal.value = !value ? null : value;
+  },
+});
+
 watch(datosSocialesEspecificos, (value) => {
   datosPersonales.value.datoSocialEspecificado = value;
 });
 </script>
+
 <template>
   <div class="mx-4 my-6">
     <div class="grid gap-x-6 gap-y-3 h-fit grid-cols-4 grid-rows-2 mb-3">
