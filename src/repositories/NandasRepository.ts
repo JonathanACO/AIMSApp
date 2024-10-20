@@ -1,5 +1,5 @@
-import { Nanda } from "@/entities/Nanda";
 import { api } from "@/services/api";
+import { Nanda } from "@/entities/Nanda";
 
 export class NandasRepository {
   static async fetchAll(): Promise<Nanda[]> {
