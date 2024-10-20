@@ -13,9 +13,15 @@ import { Nanda } from "@/entities/Nanda";
 import { onMounted, ref } from "vue";
 import { showErrorToast } from "@/helpers/swalFunctions";
 import { SuggestionsOptions } from "./components/SuggestionsOptions";
+import { Nic } from "@/entities/Nic";
+import { Noc } from "@/entities/Noc";
+import { NicsRepository } from "@/repositories/NicsRepository";
+import { NocsRepository } from "@/repositories/NocsRepository";
 
 const isLoading = ref(false);
 const nandas = ref<Nanda[]>([]);
+const nics = ref<Nic[]>([]);
+const nocs = ref<Noc[]>([]);
 
 async function getAllNandas() {
   try {
@@ -27,9 +33,31 @@ async function getAllNandas() {
     isLoading.value = false;
   }
 }
+async function getAllNics() {
+  try {
+    isLoading.value = true;
+    nics.value = await NicsRepository.fetchAll();
+  } catch (error) {
+    showErrorToast("Error al obtener nics.");
+  } finally {
+    isLoading.value = false;
+  }
+}
+async function getAllNocs() {
+  try {
+    isLoading.value = true;
+    nocs.value = await NocsRepository.fetchAll();
+  } catch (error) {
+    showErrorToast("Error al obtener nocs.");
+  } finally {
+    isLoading.value = false;
+  }
+}
 
-onMounted(() => {
-  getAllNandas();
+onMounted(async () => {
+  await getAllNandas();
+  await getAllNics();
+  await getAllNocs();
 });
 </script>
 
