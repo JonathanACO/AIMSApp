@@ -31,6 +31,13 @@ const routes = [
         name: "guias-de-practica",
         component: () => import("../pages/PracticeGuides/PracticeGuides.vue"),
       },
+      // TODO: Add all these routes to the consultation path
+      {
+        path: "/sugerencias-de-diagnostico",
+        name: "suggestions",
+        component: () =>
+          import("../pages/Consultation/Suggestions/SuggestionsPage.vue"),
+      },
     ],
   },
 ];
