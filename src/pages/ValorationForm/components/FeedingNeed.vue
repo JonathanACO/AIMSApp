@@ -57,6 +57,23 @@ const NecesidadOxigenacion = ref<{
   calibreSonda: "12" | "14" | "16" | "18" | "20" | "22" | null;
   alteracionesDePeso: boolean | null;
   siAlteracionesDePeso: "Sobrepeso" | "Obesidad" | "Obesidad morbida" | null;
+  solucionBase: number | null;
+  sf: "1000" | "500" | null;
+  sg: "5" | "10" | "Otro" | null;
+  otroSg: string | null;
+  infusiones: string | null;
+  accesosVenosos:
+    | "CVPC"
+    | "CVC"
+    | "C. Swan Ganz"
+    | "C. Tenckhoff"
+    | "C. HD"
+    | null;
+  calibreAccesoVenoso: number | null;
+  fechaDeColocacion: Date | null;
+  fechaDeCuracion: Date | null;
+  balanceParcial: "Neutro" | string | null;
+  datosSubjetivosBalanceParcial: string | null;
 }>({
   tipoDeDieta: null,
   otraDieta: null,
@@ -89,6 +106,17 @@ const NecesidadOxigenacion = ref<{
   calibreSonda: null,
   alteracionesDePeso: null,
   siAlteracionesDePeso: null,
+  solucionBase: null,
+  sf: null,
+  sg: null,
+  otroSg: null,
+  infusiones: null,
+  accesosVenosos: null,
+  calibreAccesoVenoso: null,
+  fechaDeColocacion: null,
+  fechaDeCuracion: null,
+  balanceParcial: null,
+  datosSubjetivosBalanceParcial: null,
 });
 const handleInputChange = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
@@ -96,6 +124,14 @@ const handleInputChange = (event: Event) => {
     NecesidadOxigenacion.value.datosSubjetivosDeProblemasDeMasticacion = value;
   } else {
     NecesidadOxigenacion.value.datosSubjetivosDeProblemasDeMasticacion = null;
+  }
+};
+const handleInputChangeOne = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  if (value) {
+    NecesidadOxigenacion.value.datosSubjetivosBalanceParcial = value;
+  } else {
+    NecesidadOxigenacion.value.datosSubjetivosBalanceParcial = null;
   }
 };
 </script>
@@ -657,6 +693,192 @@ const handleInputChange = (event: Event) => {
                   class="w-max"
                 />
               </div>
+            </div>
+          </div>
+          <div class="flex space-x-12 mb-3">
+            <p class="h-max mb-1.5 mt-1">Solución base/Plan de líquidos</p>
+            <VInputText
+              class="w-60"
+              v-model="NecesidadOxigenacion.solucionBase"
+              type="number"
+              label="Frecuencia"
+              label-position="side"
+              unit="horas"
+            />
+          </div>
+          <div class="mb-3">
+            <p class="h-max mb-1.5 mt-1">SF:</p>
+            <div class="grid grid-cols-4">
+              <VInputRadio
+                v-model="NecesidadOxigenacion.sf"
+                value="1000"
+                label="1000 ml: 0.9%"
+                identifier="sf"
+                class="w-max"
+              />
+              <VInputRadio
+                v-model="NecesidadOxigenacion.sf"
+                value="500"
+                label="500 ml: 0.9%"
+                identifier="sf"
+                class="w-max"
+              />
+            </div>
+          </div>
+          <div class="mb-3">
+            <p class="h-max mb-1.5 mt-1">SG:</p>
+            <div class="grid grid-cols-4">
+              <VInputRadio
+                v-model="NecesidadOxigenacion.sg"
+                value="5"
+                label="5% 1000 ml"
+                identifier="sg"
+                class="w-max"
+              />
+              <VInputRadio
+                v-model="NecesidadOxigenacion.sg"
+                value="10"
+                label="10% 1000 ml"
+                identifier="sg"
+                class="w-max"
+              />
+            </div>
+            <div class="flex space-x-10">
+              <VInputRadio
+                v-model="NecesidadOxigenacion.sg"
+                value="Otro"
+                label="Otro"
+                identifier="sg"
+                class="w-max"
+              />
+              <VInputText
+                class="w-full mb-3 mt-4"
+                v-model="NecesidadOxigenacion.otroSg"
+                type="text"
+                label="Especificar"
+                label-position="side"
+              />
+            </div>
+          </div>
+          <div class="mb-3">
+            <p class="h-max mt-1">Infusion o infusiones</p>
+            <VInputText
+              class="w-full mb-3 mt-1"
+              v-model="NecesidadOxigenacion.infusiones"
+              type="text"
+              label="Especificar"
+              label-position="side"
+            />
+          </div>
+          <div class="mb-3">
+            <p class="h-max mb-1.5 mt-1">Accesos Venosos</p>
+            <div class="flex space-x-5">
+              <VInputRadio
+                v-model="NecesidadOxigenacion.accesosVenosos"
+                value="CVPC"
+                label="CVPC"
+                identifier="Accesos Venosos"
+                class="w-max"
+              />
+              <VInputRadio
+                v-model="NecesidadOxigenacion.accesosVenosos"
+                value="CVC"
+                label="CVC"
+                identifier="Accesos Venosos"
+                class="w-max"
+              />
+              <VInputRadio
+                v-model="NecesidadOxigenacion.accesosVenosos"
+                value="C. Swan Ganz"
+                label="C. Swan Ganz"
+                identifier="Accesos Venosos"
+                class="w-max"
+              />
+              <VInputRadio
+                v-model="NecesidadOxigenacion.accesosVenosos"
+                value="C. Tenckhoff"
+                label="C. Tenckhoff"
+                identifier="Accesos Venosos"
+                class="w-max"
+              />
+              <VInputRadio
+                v-model="NecesidadOxigenacion.accesosVenosos"
+                value="C. HD"
+                label="C. HD"
+                identifier="Accesos Venosos"
+                class="w-max"
+              />
+            </div>
+            <div
+              v-show="NecesidadOxigenacion.accesosVenosos != null"
+              class="grid grid-cols-3 mb-3"
+            >
+              <VInputText
+                class="w-full mb-3 mt-1"
+                v-model="NecesidadOxigenacion.calibreAccesoVenoso"
+                type="number"
+                label="Calibre"
+                label-position="side"
+              />
+            </div>
+          </div>
+          <div class="mb-3">
+            <VInputText
+              class="w-2/6 mb-3 mt-1"
+              v-model="NecesidadOxigenacion.fechaDeColocacion"
+              type="date"
+              label="Fr Fecha de colocación"
+              label-position="side"
+            />
+          </div>
+          <div class="mb-3">
+            <VInputText
+              class="w-2/6 mb-3 mt-1"
+              v-model="NecesidadOxigenacion.fechaDeCuracion"
+              type="date"
+              label="Fr Fecha de curación &nbsp;&nbsp;&nbsp;"
+              label-position="side"
+            />
+          </div>
+          <div class="mb-3">
+            <p class="h-max mb-1.5 mt-1">Balance parcial por turno</p>
+            <VInputText
+              class="w-2/6 mb-3 mt-1"
+              v-model="NecesidadOxigenacion.balanceParcial"
+              type="text"
+              label="+"
+              label-position="side"
+            />
+            <VInputText
+              class="w-2/6 mb-3 mt-1"
+              v-model="NecesidadOxigenacion.balanceParcial"
+              type="text"
+              label="-"
+              label-position="side"
+            />
+            <VInputRadio
+              v-model="NecesidadOxigenacion.balanceParcial"
+              value="Neutro"
+              label="Neutro"
+              identifier="Balance parcial por turno"
+              class="w-max"
+            />
+            <div class="flex space-x-8">
+              <VInputText
+                class="w-3/4 mb-3"
+                v-model="NecesidadOxigenacion.datosSubjetivosBalanceParcial"
+                type="text"
+                label="Datos subjetivos"
+                label-position="top"
+              />
+              <VInputRadio
+                v-model="NecesidadOxigenacion.datosSubjetivosBalanceParcial"
+                value=""
+                label="N/A"
+                identifier="Datos subjetivos"
+                class="pt-2"
+                @input="handleInputChangeOne"
+              />
             </div>
           </div>
         </div>
