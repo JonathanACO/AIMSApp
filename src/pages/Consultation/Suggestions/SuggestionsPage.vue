@@ -10,7 +10,7 @@ import {
 } from "@ionic/vue";
 import { NandasRepository } from "@/repositories/NandasRepository";
 import { Nanda } from "@/entities/Nanda";
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { showErrorToast } from "@/helpers/swalFunctions";
 import { SuggestionsOptions } from "./components/SuggestionsOptions";
 import { Nic } from "@/entities/Nic";
@@ -22,6 +22,15 @@ const isLoading = ref(false);
 const nandas = ref<Nanda[]>([]);
 const nics = ref<Nic[]>([]);
 const nocs = ref<Noc[]>([]);
+const selectedOptions = reactive<{
+  nanda: string[];
+  nic: string[];
+  noc: string[];
+}>({
+  nanda: [],
+  nic: [],
+  noc: [],
+});
 
 async function getAllNandas() {
   try {
@@ -51,6 +60,22 @@ async function getAllNocs() {
     showErrorToast("Error al obtener nocs.");
   } finally {
     isLoading.value = false;
+  }
+}
+
+function handleSelectNandasOption(option: string) {
+  if (!selectedOptions.nanda.includes(option)) {
+    selectedOptions.nanda.push(option);
+  }
+}
+function handleSelectNicsOption(option: string) {
+  if (!selectedOptions.nic.includes(option)) {
+    selectedOptions.nic.push(option);
+  }
+}
+function handleSelectNocsOption(option: string) {
+  if (!selectedOptions.noc.includes(option)) {
+    selectedOptions.noc.push(option);
   }
 }
 
@@ -86,7 +111,10 @@ onMounted(async () => {
           <section slot="content">
             <div class="ion-padding">
               <p class="text-lg font-bold mb-2">NANDAS</p>
-              <SuggestionsOptions :options="nanda.diagnosticDetails" />
+              <SuggestionsOptions
+                :options="nanda.diagnosticDetails"
+                @selectOption="handleSelectNandasOption"
+              />
 
               <p class="text-lg font-bold mb-2">NICS</p>
               <SuggestionsOptions
@@ -95,6 +123,7 @@ onMounted(async () => {
                 :options="{
                   [`${nic.code}  ${nic.name}`]: nic.interventionDetails,
                 }"
+                @selectOption="handleSelectNicsOption"
               />
 
               <p class="text-lg font-bold mb-2">NOCS</p>
@@ -104,6 +133,7 @@ onMounted(async () => {
                 :options="{
                   [`${noc.code}  ${noc.name}`]: noc.indicatorDetails,
                 }"
+                @selectOption="handleSelectNocsOption"
               />
             </div>
           </section>
