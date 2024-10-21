@@ -85,8 +85,26 @@ onMounted(async () => {
 
           <section slot="content">
             <div class="ion-padding">
-              <p class="text-lg font-bold mb-2">NANDA</p>
+              <p class="text-lg font-bold mb-2">NANDAS</p>
               <SuggestionsOptions :options="nanda.diagnosticDetails" />
+
+              <p class="text-lg font-bold mb-2">NICS</p>
+              <SuggestionsOptions
+                v-for="nic in nics"
+                :key="nic.id"
+                :options="{
+                  [`${nic.code}  ${nic.name}`]: nic.interventionDetails,
+                }"
+              />
+
+              <p class="text-lg font-bold mb-2">NOCS</p>
+              <SuggestionsOptions
+                v-for="noc in nocs"
+                :key="noc.id"
+                :options="{
+                  [`${noc.code}  ${noc.name}`]: noc.indicatorDetails,
+                }"
+              />
             </div>
           </section>
         </IonAccordion>
