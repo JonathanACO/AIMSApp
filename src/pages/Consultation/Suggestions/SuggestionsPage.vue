@@ -7,6 +7,7 @@ import {
   IonLabel,
   IonContent,
   IonSpinner,
+  IonButton,
 } from "@ionic/vue";
 import { NandasRepository } from "@/repositories/NandasRepository";
 import { Nanda } from "@/entities/Nanda";
@@ -17,6 +18,10 @@ import { Nic } from "@/entities/Nic";
 import { Noc } from "@/entities/Noc";
 import { NicsRepository } from "@/repositories/NicsRepository";
 import { NocsRepository } from "@/repositories/NocsRepository";
+import { useAppointmentStore } from "@/stores/useAppointmentStore";
+import router from "@/router";
+
+const appointmentStore = useAppointmentStore();
 
 const isLoading = ref(false);
 const nandas = ref<Nanda[]>([]);
@@ -80,6 +85,24 @@ function handleSelectNocsOption(option: string) {
   }
 }
 
+function handleContinue() {
+  if (!selectedOptions.nanda.length) {
+    showErrorToast("Debe seleccionar al menos una NANDA.");
+    return;
+  }
+  if (!selectedOptions.nic.length) {
+    showErrorToast("Debe seleccionar al menos una NIC.");
+    return;
+  }
+  if (!selectedOptions.noc.length) {
+    showErrorToast("Debe seleccionar al menos una NOC.");
+    return;
+  }
+
+  appointmentStore.individualizedCarePlanDetails = selectedOptions;
+  router.push({ name: "" });
+}
+
 onMounted(async () => {
   await getAllNandas();
   await getAllNics();
@@ -140,6 +163,12 @@ onMounted(async () => {
           </section>
         </IonAccordion>
       </IonAccordionGroup>
+
+      <div class="w-full flex justify-end">
+        <IonButton color="primary" :disabled="isLoading" @click="handleContinue"
+          >Continuar</IonButton
+        >
+      </div>
     </IonContent>
   </IonPage>
 </template>
