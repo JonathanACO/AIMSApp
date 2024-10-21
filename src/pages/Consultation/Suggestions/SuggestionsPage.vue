@@ -22,6 +22,7 @@ const isLoading = ref(false);
 const nandas = ref<Nanda[]>([]);
 const nics = ref<Nic[]>([]);
 const nocs = ref<Noc[]>([]);
+// TODO: Check if it's possible to save the name of the nanda and its options
 const selectedOptions = reactive<{
   nanda: string[];
   nic: string[];
