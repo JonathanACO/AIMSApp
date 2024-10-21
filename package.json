@@ -23,6 +23,7 @@
     "axios": "^1.7.7",
     "ionicons": "^7.0.0",
     "pinia": "^2.2.1",
+    "pinia-plugin-persistedstate": "^4.1.1",
     "sweetalert2": "^11.12.4",
     "swiper": "^11.1.14",
     "vue": "^3.3.0",
