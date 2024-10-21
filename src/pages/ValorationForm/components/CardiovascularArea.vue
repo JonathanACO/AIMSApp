@@ -612,13 +612,12 @@ watch(
     <VInputRadio
       v-model="areaCardiovascular.ritmoTrazoElectrocardiografico"
       value="Normal"
-      class="mb-3 w-44"
+      class="w-44"
     />
 
     <VInputRadio
       v-model="areaCardiovascular.ritmoTrazoElectrocardiografico"
       value="Anormal"
-      class="mb-3"
     />
   </div>
   <Transition name="expand">
@@ -626,11 +625,11 @@ watch(
       v-if="isNormalRythm"
       v-model="specificRythm"
       value="Ritmo sinusal"
-      class="mb-3"
+      class="mt-3"
     />
   </Transition>
   <Transition name="expand">
-    <div v-if="isAnormalRythm" class="ml-44 grid grid-cols-2">
+    <div v-if="isAnormalRythm" class="ml-44 grid grid-cols-2 mt-3">
       <VInputRadio
         v-model="specificRythm"
         value="Bradicardia sinusal"
@@ -690,7 +689,7 @@ watch(
       <VInputRadio
         v-model="specificRythm"
         value="Flutter ventricular"
-        class="mb-3"
+        class=""
       />
     </div>
   </Transition>
