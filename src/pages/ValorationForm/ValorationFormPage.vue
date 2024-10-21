@@ -4,6 +4,7 @@ import PersonalDetails from "./components/PersonalDetails.vue";
 import PersonalBackground from "./components/PersonalBackground.vue";
 import ConsciousnessState from "./components/ConsciousnessState.vue";
 import OxygenationNeed from "./components/OxygenationNeed.vue";
+import FeedingNeed from "./components/FeedingNeed.vue";
 //TODO: juntar todos los objetos en uno( y hacer su entidad )
 </script>
 <template>
@@ -16,6 +17,7 @@ import OxygenationNeed from "./components/OxygenationNeed.vue";
       <PersonalBackground />
       <ConsciousnessState />
       <OxygenationNeed />
+      <FeedingNeed />
     </IonContent>
   </IonPage>
 </template>
