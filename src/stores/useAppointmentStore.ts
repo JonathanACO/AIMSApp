@@ -7,6 +7,15 @@ import { deserializeStateTree } from "./deserializers/deserializeStateTree";
 export const useAppointmentStore = defineStore(
   "appointment",
   () => {
+    const individualizedCarePlanDetails = ref<{
+      nanda: string[];
+      nic: string[];
+      noc: string[];
+    }>({
+      nanda: [],
+      nic: [],
+      noc: [],
+    });
     const individualizedCarePlan = ref<CreateIndividualizedCarePlanDTO | null>(
       null
     );
@@ -16,7 +25,7 @@ export const useAppointmentStore = defineStore(
       IndividualizedCarePlansRepository.create(individualizedCarePlan.value);
     }
 
-    return { individualizedCarePlan, save };
+    return { individualizedCarePlanDetails, individualizedCarePlan, save };
   },
   {
     persist: {
