@@ -8,13 +8,13 @@ export const useAppointmentStore = defineStore(
   "appointment",
   () => {
     const individualizedCarePlanDetails = ref<{
-      nanda: string[];
-      nic: string[];
-      noc: string[];
+      nanda: Record<string, any>;
+      nic: Record<string, any>;
+      noc: Record<string, any>;
     }>({
-      nanda: [],
-      nic: [],
-      noc: [],
+      nanda: {},
+      nic: {},
+      noc: {},
     });
     const individualizedCarePlan = ref<CreateIndividualizedCarePlanDTO | null>(
       null

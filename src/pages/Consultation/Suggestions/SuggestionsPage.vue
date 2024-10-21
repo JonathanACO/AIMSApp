@@ -29,13 +29,13 @@ const nics = ref<Nic[]>([]);
 const nocs = ref<Noc[]>([]);
 // TODO: Check if it's possible to save the name of the nanda and its options
 const selectedOptions = reactive<{
-  nanda: string[];
-  nic: string[];
-  noc: string[];
+  nanda: Record<string, any>;
+  nic: Record<string, any>;
+  noc: Record<string, any>;
 }>({
-  nanda: [],
-  nic: [],
-  noc: [],
+  nanda: {},
+  nic: {},
+  noc: {},
 });
 
 async function getAllNandas() {
