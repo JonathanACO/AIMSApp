@@ -133,6 +133,7 @@ const variable = ref<any>(null);
         />
       </div>
     </div>
+
     <p class="text-stone-500 h-max min-w-max mb-1.5">Apoyo parcial</p>
     <div class="flex flex-wrap gap-x-10 gap-y-3">
       <VInputRadio
@@ -150,6 +151,172 @@ const variable = ref<any>(null);
         v-model="variable"
         value="Cambio de panal"
         label="Cambio de pañal"
+      />
+    </div>
+
+    <p class="text-stone-500 h-max min-w-max mb-1.5">Apoyo total</p>
+    <div class="flex flex-wrap gap-x-10 gap-y-3">
+      <VInputRadio v-model="variable" :value="true" label="Sí" />
+      <VInputRadio v-model="variable" :value="false" label="No" />
+    </div>
+
+    <p class="text-stone-500 h-max min-w-max mb-1.5">
+      Tratamiento Sustitutivo Renal
+    </p>
+    <div class="flex">
+      <div class="w-2/3">
+        <div class="grid grid-cols-2 mb-1.5">
+          <VInputRadio
+            v-model="variable"
+            :value="true"
+            label="Sí"
+            class="mb-1.5"
+          />
+          <VInputRadio v-model="variable" :value="false" label="No" />
+          <div>
+            <VInputRadio
+              v-model="variable"
+              value="Diálisis peritoneal"
+              label="Diálisis peritoneal"
+              class="mb-1.5"
+            />
+            <VInputRadio
+              v-model="variable"
+              value="Hemodiálisis"
+              label="Hemodiálisis"
+              class="mb-1.5"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-end mb-3">
+      <VInputText
+        class="w-full mr-8"
+        v-model="variable"
+        type="text"
+        label="Datos subjetivos"
+        label-position="top"
+      />
+      <VInputRadio
+        v-model="variable"
+        value=""
+        label="N/A"
+        identifier="Datos subjetivos"
+        class="pt-2"
+      />
+    </div>
+
+    <p class="text-stone-500 h-max min-w-max mb-1.5">Patrón intestinal</p>
+    <VInputText
+      v-model="variable"
+      type="text"
+      label="Frecuencias"
+      label-position="side"
+      after-text="veces al día"
+      class="w-64 mb-3"
+      :center-text="true"
+    />
+
+    <p class="text-stone-500 h-max min-w-max mb-1.5">Características</p>
+    <div class="grid grid-cols-3 mb-1.5">
+      <VInputRadio v-model="variable" value="Normal" label="Normal" />
+      <VInputRadio v-model="variable" value="Anormal" label="Anormal" />
+    </div>
+    <div class="grid grid-cols-3">
+      <div class="col-start-2">
+        <VInputRadio v-model="variable" value="Estreñimiento" class="mb-1.5" />
+        <VInputRadio v-model="variable" value="Diarrea" class="mb-1.5" />
+        <VInputRadio v-model="variable" value="Incontinencia" />
+      </div>
+    </div>
+
+    <p class="text-stone-500 h-max mb-1.5">Características</p>
+    <div class="flex gap-y-3 gap-x-10 flex-wrap mb-3">
+      <VInputRadio
+        v-model="variable"
+        value="Acolia"
+        label="Acolia"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="variable"
+        value="Melena"
+        label="Melena"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="variable"
+        value="Mucoide"
+        label="Mucoide"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="variable"
+        value="Pastosa"
+        label="Pastosa"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="variable"
+        value="Fétida"
+        label="Fétida"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="variable"
+        value="Líquida con sangre fresca"
+        label="Líquida con sangre fresca"
+        class="w-max"
+      />
+    </div>
+
+    <p class="text-stone-500 h-max mb-1.5">Suplencia intestinal</p>
+    <div class="flex gap-y-3 gap-x-10 flex-wrap mb-3">
+      <VInputRadio
+        v-model="variable"
+        value="Sin suplencia"
+        label="Sin suplencia"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="variable"
+        value="Suplencia parcial"
+        label="Suplencia parcial"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="variable"
+        value="Suplencia total"
+        label="Suplencia total"
+        class="w-max"
+      />
+    </div>
+
+    <p class="text-stone-500 h-max mb-1.5">Ostomías</p>
+    <VInputText
+      class="w-full mr-8 mb-3"
+      v-model="variable"
+      type="text"
+      label="Especificar"
+      label-position="side"
+    />
+
+    <div class="flex items-end mb-3">
+      <VInputText
+        class="w-full mr-8"
+        v-model="variable"
+        type="text"
+        label="Datos subjetivos"
+        label-position="top"
+      />
+      <VInputRadio
+        v-model="variable"
+        value=""
+        label="N/A"
+        identifier="Datos subjetivos"
+        class="pt-2"
       />
     </div>
   </div>
