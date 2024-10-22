@@ -67,7 +67,7 @@ const glasgowScaleTotal = computed(() => {
     estadoDeConciencia.value.respuestaMotoral == null
   )
     return null;
-  let suma =
+  const suma =
     estadoDeConciencia.value.aberturaOcular +
     estadoDeConciencia.value.respuestaVerbal +
     estadoDeConciencia.value.respuestaMotoral;

@@ -19,7 +19,7 @@ const traumaType = computed(() => {
     props.respuestaMotoral == null
   )
     return 0;
-  let suma =
+  const suma =
     props.aberturaOcular + props.respuestaMotoral + props.respuestaVerbal;
   return suma;
 });
@@ -130,7 +130,7 @@ const respuestaMotoralOpciones = [
     </table>
   </div>
 </template>
-<style scoped>
+<style scoped lang="postcss">
 tr,
 th,
 td {
