@@ -112,7 +112,7 @@ const isAnormalRythm = ref<boolean>(false);
 const waitingAnimation = ref<any>(null);
 
 const edematype = computed(() => {
-  return !selectedEdemaPlace ? null : edemaClasification.value;
+  return !selectedEdemaPlace.value ? null : edemaClasification.value;
 });
 
 const apoyoAminas = computed({
