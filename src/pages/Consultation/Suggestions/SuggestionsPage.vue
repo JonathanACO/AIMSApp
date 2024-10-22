@@ -106,7 +106,7 @@ function handleContinue() {
   }
 
   appointmentStore.individualizedCarePlanDetails = selectedOptions;
-  router.push({ name: "" });
+  router.push({ name: "practice-guides-info" });
 }
 
 onMounted(async () => {
