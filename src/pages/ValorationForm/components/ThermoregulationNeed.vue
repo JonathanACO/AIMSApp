@@ -13,7 +13,7 @@ const variable = ref<any>(null);
   </div>
 
   <div class="mx-4 my-6">
-    <p class="text-stone-500 h-max mb-1.5">Características</p>
+    <p class="text-stone-500 h-max mb-1.5">Temperatura</p>
     <div class="flex gap-y-3 gap-x-10 flex-wrap mb-3">
       <VInputRadio
         v-model="variable"
