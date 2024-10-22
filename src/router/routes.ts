@@ -26,11 +26,23 @@ const routes = [
         component: () =>
           import("../pages/AppoinmentsHistory/AppointmentsHistoryPage.vue"),
       },
+      // {
+      //   path: "/atender-paciente/:id",
+      //   name: "attend-patient",
+      //   children: [
       {
-        path: "/guias-de-practica",
-        name: "guias-de-practica",
+        path: "/sugerencias-de-diagnostico",
+        name: "suggestions",
+        component: () =>
+          import("../pages/Consultation/Suggestions/SuggestionsPage.vue"),
+      },
+      {
+        path: "/informacion-sobre-guias-de-practica",
+        name: "practice-guides-info",
         component: () => import("../pages/PracticeGuides/PracticeGuides.vue"),
       },
+      // ],
+      // },
     ],
   },
 ];
