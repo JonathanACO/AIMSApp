@@ -27,7 +27,6 @@ const isLoading = ref(false);
 const nandas = ref<Nanda[]>([]);
 const nics = ref<Nic[]>([]);
 const nocs = ref<Noc[]>([]);
-// TODO: Check if it's possible to save the name of the nanda and its options
 const selectedOptions = reactive<{
   nanda: Record<string, any>;
   nic: Record<string, any>;
@@ -69,32 +68,39 @@ async function getAllNocs() {
   }
 }
 
-function handleSelectNandasOption(option: string) {
-  if (!selectedOptions.nanda.includes(option)) {
-    selectedOptions.nanda.push(option);
+function handleSelectOption(type: "nanda" | "nic" | "noc", path: string) {
+  const keys = path.split("__").filter(Boolean);
+  let current = selectedOptions[type];
+
+  for (let i = 0; i < keys.length - 2; i++) {
+    if (!current[keys[i]]) {
+      current[keys[i]] = {};
+    }
+    current = current[keys[i]];
   }
-}
-function handleSelectNicsOption(option: string) {
-  if (!selectedOptions.nic.includes(option)) {
-    selectedOptions.nic.push(option);
+
+  const parentKey = keys[keys.length - 2];
+  const finalValue = keys[keys.length - 1];
+
+  if (!Array.isArray(current[parentKey])) {
+    current[parentKey] = [];
   }
-}
-function handleSelectNocsOption(option: string) {
-  if (!selectedOptions.noc.includes(option)) {
-    selectedOptions.noc.push(option);
+
+  if (!current[parentKey].includes(finalValue)) {
+    current[parentKey].push(finalValue);
   }
 }
 
 function handleContinue() {
-  if (!selectedOptions.nanda.length) {
+  if (Object.keys(selectedOptions.nanda).length === 0) {
     showErrorToast("Debe seleccionar al menos una NANDA.");
     return;
   }
-  if (!selectedOptions.nic.length) {
+  if (Object.keys(selectedOptions.nic).length === 0) {
     showErrorToast("Debe seleccionar al menos una NIC.");
     return;
   }
-  if (!selectedOptions.noc.length) {
+  if (Object.keys(selectedOptions.noc).length === 0) {
     showErrorToast("Debe seleccionar al menos una NOC.");
     return;
   }
@@ -116,7 +122,7 @@ onMounted(async () => {
       <IonSpinner class="p-10" color="primary" />
     </div>
     <IonContent v-else class="ion-padding" :fullscreen="true" :scroll-y="true">
-      <h1 class="title mb-6">Sugerencias</h1>
+      <h1 class="title mb-6">Diagnósticos, intervenciones y resultados</h1>
 
       <IonAccordionGroup>
         <IonAccordion
@@ -137,7 +143,10 @@ onMounted(async () => {
               <p class="text-lg font-bold mb-2">NANDAS</p>
               <SuggestionsOptions
                 :options="nanda.diagnosticDetails"
-                @selectOption="handleSelectNandasOption"
+                @selectOption="
+                  (option) =>
+                    handleSelectOption('nanda', `${nanda.name}__${option}`)
+                "
               />
 
               <p class="text-lg font-bold mb-2">NICS</p>
@@ -147,7 +156,10 @@ onMounted(async () => {
                 :options="{
                   [`${nic.code}  ${nic.name}`]: nic.interventionDetails,
                 }"
-                @selectOption="handleSelectNicsOption"
+                @selectOption="
+                  (option) =>
+                    handleSelectOption('nic', `${nanda.name}__${option}`)
+                "
               />
 
               <p class="text-lg font-bold mb-2">NOCS</p>
@@ -157,7 +169,10 @@ onMounted(async () => {
                 :options="{
                   [`${noc.code}  ${noc.name}`]: noc.indicatorDetails,
                 }"
-                @selectOption="handleSelectNocsOption"
+                @selectOption="
+                  (option) =>
+                    handleSelectOption('noc', `${nanda.name}__${option}`)
+                "
               />
             </div>
           </section>
