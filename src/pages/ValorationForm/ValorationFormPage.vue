@@ -6,6 +6,7 @@ import ConsciousnessState from "./components/ConsciousnessState.vue";
 import OxygenationNeed from "./components/OxygenationNeed.vue";
 import FeedingNeed from "./components/FeedingNeed.vue";
 import EliminationNeed from "./components/EliminationNeed.vue";
+import ThermoregulationNeed from "./components/ThermoregulationNeed.vue";
 //TODO: juntar todos los objetos en uno( y hacer su entidad )
 </script>
 <template>
@@ -20,6 +21,7 @@ import EliminationNeed from "./components/EliminationNeed.vue";
       <OxygenationNeed />
       <FeedingNeed />
       <EliminationNeed />
+      <ThermoregulationNeed />
     </IonContent>
   </IonPage>
 </template>
