@@ -3,6 +3,13 @@ import VInputRadio from "@/components/VInputRadio.vue";
 import VInputText from "@/components/VInputText.vue";
 import { computed, ref, watch } from "vue";
 
+const emits = defineEmits<{
+  (
+    e: "update:thermoregulation-need",
+    value: typeof necesidadDeTermorregulacion.value
+  ): void;
+}>();
+
 const necesidadDeTermorregulacion = ref<{
   clasificacionTemperatura:
     | "Nomotermia"
@@ -37,6 +44,10 @@ const datosSubjetivosTermorregulacion = computed({
 watch(datosSubjetivosTermorregulacion, (value) => {
   necesidadDeTermorregulacion.value.datosSubjetivosTermorregulacion = value;
 });
+
+function updateThermoregulationNeed() {
+  emits("update:thermoregulation-need", necesidadDeTermorregulacion.value);
+}
 </script>
 <template>
   <div class="flex justify-between items-center bg-sky-100 px-4 py-1 my-4">
@@ -54,24 +65,28 @@ watch(datosSubjetivosTermorregulacion, (value) => {
         value="Normotermia"
         label="Normotermia"
         class="w-max"
+        @input="updateThermoregulationNeed"
       />
       <VInputRadio
         v-model="necesidadDeTermorregulacion.clasificacionTemperatura"
         value="Hipotermia"
         label="Hipotermia"
         class="w-max"
+        @input="updateThermoregulationNeed"
       />
       <VInputRadio
         v-model="necesidadDeTermorregulacion.clasificacionTemperatura"
         value="Hipertermia"
         label="Hipertermia"
         class="w-max"
+        @input="updateThermoregulationNeed"
       />
       <VInputRadio
         v-model="necesidadDeTermorregulacion.clasificacionTemperatura"
         value="Fiebre"
         label="Fiebre"
         class="w-max"
+        @input="updateThermoregulationNeed"
       />
     </div>
 
@@ -83,6 +98,7 @@ watch(datosSubjetivosTermorregulacion, (value) => {
       after-text="°"
       class="w-52 mb-3"
       :center-text="true"
+      @input="updateThermoregulationNeed"
     />
 
     <p class="text-stone-500 h-max min-w-max">Diaforesis</p>
@@ -91,11 +107,13 @@ watch(datosSubjetivosTermorregulacion, (value) => {
         v-model="necesidadDeTermorregulacion.diaforesis"
         :value="true"
         label="Sí"
+        @input="updateThermoregulationNeed"
       />
       <VInputRadio
         v-model="necesidadDeTermorregulacion.diaforesis"
         :value="false"
         label="No"
+        @input="updateThermoregulationNeed"
       />
     </div>
 
@@ -106,6 +124,7 @@ watch(datosSubjetivosTermorregulacion, (value) => {
         type="text"
         label="Datos subjetivos"
         label-position="top"
+        @input="updateThermoregulationNeed"
       />
       <VInputRadio
         v-model="tieneDatosSubjetivos"
@@ -113,6 +132,7 @@ watch(datosSubjetivosTermorregulacion, (value) => {
         label="N/A"
         identifier="Datos subjetivos"
         class="pt-2"
+        @input="updateThermoregulationNeed"
       />
     </div>
   </div>

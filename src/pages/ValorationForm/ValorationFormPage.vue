@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonContent, IonPage } from "@ionic/vue";
+import { IonButton, IonContent, IonPage } from "@ionic/vue";
 import PersonalDetails from "./components/PersonalDetails.vue";
 import PersonalBackground from "./components/PersonalBackground.vue";
 import ConsciousnessState from "./components/ConsciousnessState.vue";
@@ -13,8 +13,20 @@ import {
   initialMedicalAssesment,
   MedicalAssesment,
 } from "@/entities/MedicalAssesment";
+import { useAppointmentStore } from "@/stores/useAppointmentStore";
+import router from "@/router";
 
+const appointmentStore = useAppointmentStore();
 const medicalAssesment = ref<MedicalAssesment>({ ...initialMedicalAssesment });
+
+function saveMedicalAssesment() {
+  appointmentStore.medicalAssesment = medicalAssesment.value;
+}
+
+function handleContinue() {
+  saveMedicalAssesment();
+  router.push({ name: "suggestions" });
+}
 </script>
 <template>
   <IonPage>
@@ -33,11 +45,40 @@ const medicalAssesment = ref<MedicalAssesment>({ ...initialMedicalAssesment });
           medicalAssesment.estadoDeConciencia = $event
         "
       />
-      <OxygenationNeed />
-      <FeedingNeed />
-      <EliminationNeed />
-      <ThermoregulationNeed />
-      <HygienicNeed />
+      <OxygenationNeed
+        @update:oxygenation-need="
+          medicalAssesment.necesidadDeOxigenacion = $event
+        "
+      />
+      <FeedingNeed
+        @update:feeding-need="medicalAssesment.necesidadDeAlimentacion = $event"
+      />
+      <EliminationNeed
+        @update:elimination-need="
+          medicalAssesment.necesidadDeEliminacion = $event
+        "
+      />
+      <ThermoregulationNeed
+        @update:thermoregulation-need="
+          medicalAssesment.necesidadDeTermorregulacion = $event
+        "
+      />
+      <HygienicNeed
+        @update:necesidad-de-higiene="
+          medicalAssesment.necesidadDeHigiene = $event
+        "
+      />
+
+      <div class="w-full flex justify-end mb-3">
+        <IonButton
+          @click="handleContinue"
+          color="primary"
+          fill="solid"
+          shape="round"
+        >
+          Siguiente
+        </IonButton>
+      </div>
     </IonContent>
   </IonPage>
 </template>

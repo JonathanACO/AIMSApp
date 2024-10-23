@@ -3,10 +3,12 @@ import { IndividualizedCarePlansRepository } from "@/repositories/Individualized
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { deserializeStateTree } from "./deserializers/deserializeStateTree";
+import { MedicalAssesment } from "@/entities/MedicalAssesment";
 
 export const useAppointmentStore = defineStore(
   "appointment",
   () => {
+    const medicalAssesment = ref<MedicalAssesment | null>(null);
     const individualizedCarePlanDetails = ref<{
       nanda: Record<string, any>;
       nic: Record<string, any>;
@@ -25,7 +27,12 @@ export const useAppointmentStore = defineStore(
       IndividualizedCarePlansRepository.create(individualizedCarePlan.value);
     }
 
-    return { individualizedCarePlanDetails, individualizedCarePlan, save };
+    return {
+      medicalAssesment,
+      individualizedCarePlanDetails,
+      individualizedCarePlan,
+      save,
+    };
   },
   {
     persist: {

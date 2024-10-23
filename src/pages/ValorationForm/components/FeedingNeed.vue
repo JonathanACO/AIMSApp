@@ -3,7 +3,11 @@ import { computed, ref, watch } from "vue";
 import VInputText from "@/components/VInputText.vue";
 import VInputRadio from "@/components/VInputRadio.vue";
 
-const NecesidadAlimentacion = ref<{
+const emits = defineEmits<{
+  (e: "update:feeding-need", value: typeof necesidadAlimentacion.value): void;
+}>();
+
+const necesidadAlimentacion = ref<{
   tipoDeDieta:
     | "Normal"
     | "Liquida"
@@ -158,7 +162,7 @@ const otraDieta = computed({
 const otraDietaHabitual = computed({
   get() {
     if (
-      !NecesidadAlimentacion.value.dietaHabitualOtros ||
+      !necesidadAlimentacion.value.dietaHabitualOtros ||
       !dietaHabitualEspecifica.value
     )
       return null;
@@ -172,32 +176,32 @@ const otraDietaHabitual = computed({
 });
 
 const suplementoAlimenticio = computed(() => {
-  return NecesidadAlimentacion.value.suplementoAlimenticio
+  return necesidadAlimentacion.value.suplementoAlimenticio
     ? suplementoAlimenticioEspecifico.value
     : null;
 });
 
 const tipoDeProtesisDental = computed(() => {
-  return NecesidadAlimentacion.value.protesisDental
+  return necesidadAlimentacion.value.protesisDental
     ? protesisDentalSeleccionada.value
     : null;
 });
 
 const valorSondaDeAlimentacion = computed(() => {
-  return NecesidadAlimentacion.value.sondaDeAlimentacion
+  return necesidadAlimentacion.value.sondaDeAlimentacion
     ? calibreSeleccionado.value
     : null;
 });
 
 const tipoDeAlteracionDePeso = computed(() => {
-  return NecesidadAlimentacion.value.alteracionesDePeso
+  return necesidadAlimentacion.value.alteracionesDePeso
     ? alteracionDePesoSeleccionado.value
     : null;
 });
 
 const sgEspecifico = computed({
   get() {
-    return NecesidadAlimentacion.value.sg !== "Otro" ? null : otroSg.value;
+    return necesidadAlimentacion.value.sg !== "Otro" ? null : otroSg.value;
   },
   set(value) {
     otroSg.value = !value ? null : value;
@@ -220,18 +224,18 @@ const datosSubjetivosProblemasDeMasticacion = computed({
 const handleInputChange = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   if (value) {
-    NecesidadAlimentacion.value.datosSubjetivosDeProblemasDeMasticacion = value;
+    necesidadAlimentacion.value.datosSubjetivosDeProblemasDeMasticacion = value;
   } else {
-    NecesidadAlimentacion.value.datosSubjetivosDeProblemasDeMasticacion = null;
+    necesidadAlimentacion.value.datosSubjetivosDeProblemasDeMasticacion = null;
   }
 };
 
 const handleInputChangeOne = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   if (value) {
-    NecesidadAlimentacion.value.datosSubjetivosBalanceParcial = value;
+    necesidadAlimentacion.value.datosSubjetivosBalanceParcial = value;
   } else {
-    NecesidadAlimentacion.value.datosSubjetivosBalanceParcial = null;
+    necesidadAlimentacion.value.datosSubjetivosBalanceParcial = null;
   }
 };
 
@@ -256,18 +260,22 @@ watch(
     suplementoAlimenticioVal,
     datosSubjetivosProblemasDeMasticacion,
   ]) => {
-    NecesidadAlimentacion.value.otroSg = sgEspecificoVal;
-    NecesidadAlimentacion.value.siAlteracionesDePeso = tipoDeAlteracionDePeso;
-    NecesidadAlimentacion.value.calibreSonda = valorSondaDeAlimentacionVal;
-    NecesidadAlimentacion.value.siprotesisDental = tipoDeProtesisDentalVal;
-    NecesidadAlimentacion.value.tipoDeDieta = tipoDeDietaVal;
-    NecesidadAlimentacion.value.otraDietaHabitual = otraDietaHabitualVal;
-    NecesidadAlimentacion.value.especificarSuplemento =
+    necesidadAlimentacion.value.otroSg = sgEspecificoVal;
+    necesidadAlimentacion.value.siAlteracionesDePeso = tipoDeAlteracionDePeso;
+    necesidadAlimentacion.value.calibreSonda = valorSondaDeAlimentacionVal;
+    necesidadAlimentacion.value.siprotesisDental = tipoDeProtesisDentalVal;
+    necesidadAlimentacion.value.tipoDeDieta = tipoDeDietaVal;
+    necesidadAlimentacion.value.otraDietaHabitual = otraDietaHabitualVal;
+    necesidadAlimentacion.value.especificarSuplemento =
       suplementoAlimenticioVal;
-    NecesidadAlimentacion.value.datosSubjetivosDeProblemasDeMasticacion =
+    necesidadAlimentacion.value.datosSubjetivosDeProblemasDeMasticacion =
       datosSubjetivosProblemasDeMasticacion;
   }
 );
+
+function updateFeedingNeed() {
+  emits("update:feeding-need", necesidadAlimentacion.value);
+}
 </script>
 <template>
   <div class="flex justify-between items-center bg-sky-100 px-4 py-1 my-4">
@@ -288,12 +296,14 @@ watch(
         value="Normal"
         identifier="Tipo de Dieta"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="tipoDeDietaSeleccionada"
         value="Blanda"
         identifier="Tipo de Dieta"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="tipoDeDietaSeleccionada"
@@ -301,42 +311,49 @@ watch(
         label="Líquida"
         identifier="Tipo de Dieta"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="tipoDeDietaSeleccionada"
         value="Vegana"
         identifier="Tipo de Dieta"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="tipoDeDietaSeleccionada"
         value="Baja en Sodio"
         identifier="Tipo de Dieta"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="tipoDeDietaSeleccionada"
         value="Libre de gluten"
         identifier="Tipo de Dieta"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="tipoDeDietaSeleccionada"
         value="Ayuno"
         identifier="Tipo de Dieta"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="tipoDeDietaSeleccionada"
         value="NPT"
         identifier="Tipo de Dieta"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="tipoDeDietaSeleccionada"
         value="Otra"
         identifier="Tipo de Dieta"
         class="w-max"
+        @input="updateFeedingNeed"
       />
     </div>
     <VInputText
@@ -346,96 +363,109 @@ watch(
       type="text"
       label="Especificar"
       label-position="side"
+      @input="updateFeedingNeed"
     />
 
     <p class="h-max mb-1.5">Dieta habitual</p>
     <div class="grid grid-cols-4 gap-y-3 gap-x-4 mb-3">
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualCarnes"
+        v-model="necesidadAlimentacion.dietaHabitualCarnes"
         label="Carnes"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualVerduras"
+        v-model="necesidadAlimentacion.dietaHabitualVerduras"
         label="Verduras"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualFrutas"
+        v-model="necesidadAlimentacion.dietaHabitualFrutas"
         label="Frutas"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualHarinas"
+        v-model="necesidadAlimentacion.dietaHabitualHarinas"
         label="Harinas"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualLeguminosas"
+        v-model="necesidadAlimentacion.dietaHabitualLeguminosas"
         label="Leguminosas"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualLacteos"
+        v-model="necesidadAlimentacion.dietaHabitualLacteos"
         label="Lácteos"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualRefresco"
+        v-model="necesidadAlimentacion.dietaHabitualRefresco"
         label="Refresco"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualCafe"
+        v-model="necesidadAlimentacion.dietaHabitualCafe"
         label="Café"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualAgua"
+        v-model="necesidadAlimentacion.dietaHabitualAgua"
         label="Agua"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
+        @input="updateFeedingNeed"
       />
     </div>
     <VInputRadio
-      v-model="NecesidadAlimentacion.dietaNoApegadaAEnfermedad"
+      v-model="necesidadAlimentacion.dietaNoApegadaAEnfermedad"
       :value="true"
       label="Dieta no apegada a su enfermedad"
       identifier="Dieta Habitual"
       class="w-max mb-3"
+      @input="updateFeedingNeed"
     />
     <div class="flex gap-x-12">
       <VInputRadio
-        v-model="NecesidadAlimentacion.dietaHabitualOtros"
+        v-model="necesidadAlimentacion.dietaHabitualOtros"
         :value="true"
         label="Otros"
         identifier="Dieta Habitual"
         class="w-max mb-3"
+        @input="updateFeedingNeed"
       />
       <VInputText
         class="w-full mb-3"
         v-model="otraDietaHabitual"
-        :disabled="!NecesidadAlimentacion.dietaHabitualOtros"
+        :disabled="!necesidadAlimentacion.dietaHabitualOtros"
         type="text"
         label="Especificar"
         label-position="side"
+        @input="updateFeedingNeed"
       />
     </div>
 
@@ -443,25 +473,28 @@ watch(
       <p class="col-span-4 h-max mb-1.5">Ingesta de líquidos por 24 hrs.</p>
       <div class="grid grid-cols-4 mb-3">
         <VInputRadio
-          v-model="NecesidadAlimentacion.ingestaDeLiquidos"
+          v-model="necesidadAlimentacion.ingestaDeLiquidos"
           value="Menos de 1 lt."
           label="Menos de 1 lt."
           identifier="Ingesta de liquidos"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.ingestaDeLiquidos"
+          v-model="necesidadAlimentacion.ingestaDeLiquidos"
           value="De 1 a 2 lts."
           label="De 1 a 2 lts."
           identifier="Ingesta de liquidos"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.ingestaDeLiquidos"
+          v-model="necesidadAlimentacion.ingestaDeLiquidos"
           value="Mayor de 2 lits."
           label="Mayor de 2 lits."
           identifier="Ingesta de liquidos"
           class="w-max"
+          @input="updateFeedingNeed"
         />
       </div>
     </div>
@@ -469,25 +502,28 @@ watch(
       <p class="col-span-4 h-max mb-1.5">Apetito</p>
       <div class="grid grid-cols-4 mb-3">
         <VInputRadio
-          v-model="NecesidadAlimentacion.apetito"
+          v-model="necesidadAlimentacion.apetito"
           value="Conservado"
           label="Conservado"
           identifier="Apetito"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.apetito"
+          v-model="necesidadAlimentacion.apetito"
           value="Aumentado"
           label="Aumentado"
           identifier="Apetito"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.apetito"
+          v-model="necesidadAlimentacion.apetito"
           value="Disminuido"
           label="Disminuido"
           identifier="Apetito"
           class="w-max"
+          @input="updateFeedingNeed"
         />
       </div>
     </div>
@@ -497,44 +533,50 @@ watch(
       </div>
       <div class="flex flex-wrap gap-x-12">
         <VInputRadio
-          v-model="NecesidadAlimentacion.suplementoAlimenticio"
+          v-model="necesidadAlimentacion.suplementoAlimenticio"
           :value="true"
           label="Si"
           identifier="Suplemento Alimenticio"
           class="w-max mb-3"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.suplementoAlimenticio"
+          v-model="necesidadAlimentacion.suplementoAlimenticio"
           :value="false"
           label="No"
           identifier="Suplemento Alimenticio"
           class="w-max mb-3"
+          @input="updateFeedingNeed"
         />
         <Transition name="expand">
           <VInputText
-            v-if="NecesidadAlimentacion.suplementoAlimenticio"
+            v-if="necesidadAlimentacion.suplementoAlimenticio"
             class="w-full mb-3"
             v-model="suplementoAlimenticioEspecifico"
             type="text"
             label="Especificar"
             label-position="side"
-        /></Transition>
+            @input="updateFeedingNeed"
+          />
+        </Transition>
       </div>
     </div>
 
     <p class="h-max mb-1.5">Estado de cavidad oral</p>
     <div class="flex gap-x-10 mb-3">
       <VInputRadio
-        v-model="NecesidadAlimentacion.estadoCavidadOral"
+        v-model="necesidadAlimentacion.estadoCavidadOral"
         value="Sin caries"
         identifier="Cavidad Oral"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.estadoCavidadOral"
+        v-model="necesidadAlimentacion.estadoCavidadOral"
         value="Con caries"
         identifier="Cavidad Oral"
         class="w-max"
+        @input="updateFeedingNeed"
       />
     </div>
 
@@ -544,22 +586,24 @@ watch(
       </div>
       <div class="flex flex-wrap gap-x-10 gap-y-3">
         <VInputRadio
-          v-model="NecesidadAlimentacion.protesisDental"
+          v-model="necesidadAlimentacion.protesisDental"
           :value="true"
           label="Si"
           identifier="Protesis Dental"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.protesisDental"
+          v-model="necesidadAlimentacion.protesisDental"
           :value="false"
           label="No"
           identifier="Protesis Dental"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <Transition name="expand">
           <div
-            v-if="NecesidadAlimentacion.protesisDental == true"
+            v-if="necesidadAlimentacion.protesisDental == true"
             class="w-full"
           >
             <div>
@@ -569,6 +613,7 @@ watch(
                 label="Fija"
                 identifier="Protesis Dental"
                 class="w-max mb-3"
+                @input="updateFeedingNeed"
               />
               <VInputRadio
                 v-model="protesisDentalSeleccionada"
@@ -576,6 +621,7 @@ watch(
                 label="Móvil"
                 identifier="Protesis Dental"
                 class="w-max"
+                @input="updateFeedingNeed"
               />
             </div></div
         ></Transition>
@@ -585,47 +631,52 @@ watch(
     <p class="h-max mb-1.5">Mucosas orales</p>
     <div class="flex gap-x-10 mb-3">
       <VInputRadio
-        v-model="NecesidadAlimentacion.mucosasOrales"
+        v-model="necesidadAlimentacion.mucosasOrales"
         value="Hidratadas"
         label="Hidratadas"
         identifier="Mucosas Orales"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.mucosasOrales"
+        v-model="necesidadAlimentacion.mucosasOrales"
         value="Deshidratadas"
         label="Deshidratadas"
         identifier="Mucosas Orales"
         class="w-max"
+        @input="updateFeedingNeed"
       />
     </div>
 
     <p class="h-max mb-1.5">Adoncia</p>
     <div class="flex gap-x-10 mb-3">
       <VInputRadio
-        v-model="NecesidadAlimentacion.adoncia"
+        v-model="necesidadAlimentacion.adoncia"
         value="Total"
         label="Total"
         identifier="Adoncia"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.adoncia"
+        v-model="necesidadAlimentacion.adoncia"
         value="Parcial"
         label="Parcial"
         identifier="Adoncia"
         class="w-max"
+        @input="updateFeedingNeed"
       />
     </div>
 
     <p class="h-max mb-1.5">Problemas de masticación y deglución</p>
     <div class="flex gap-y-3 gap-x-10 flex-wrap mb-3">
       <VInputRadio
-        v-model="NecesidadAlimentacion.problemasDeMasticacion"
+        v-model="necesidadAlimentacion.problemasDeMasticacion"
         value="Masticacion"
         label="Masticación"
         identifier="Progblemas de masticacion"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="datosSubjetivosProblemasDeMasticacion"
@@ -633,45 +684,51 @@ watch(
         label="Deglución"
         identifier="Problemas de masticacion"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.problemasDeMasticacion"
+        v-model="necesidadAlimentacion.problemasDeMasticacion"
         value="Intolerancia"
         label="Intolerancia"
         identifier="Problemas de masticacion"
         class="w-max"
         :disabled="!tieneDatosSubjetivosProblemasDeMasticacion"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.problemasDeMasticacion"
+        v-model="necesidadAlimentacion.problemasDeMasticacion"
         value="Nauseas"
         label="Náuseas"
         identifier="Problemas de masticacion"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.problemasDeMasticacion"
+        v-model="necesidadAlimentacion.problemasDeMasticacion"
         value="Vomito"
         label="Vómito"
         identifier="Problemas de masticacion"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.problemasDeMasticacion"
+        v-model="necesidadAlimentacion.problemasDeMasticacion"
         value="No aplica"
         label="N/A"
         identifier="Problemas de masticacion"
         class="w-max"
+        @input="updateFeedingNeed"
       />
     </div>
     <div class="flex items-end mb-3">
       <VInputText
         class="w-full mr-8"
-        v-model="NecesidadAlimentacion.datosSubjetivosDeProblemasDeMasticacion"
+        v-model="necesidadAlimentacion.datosSubjetivosDeProblemasDeMasticacion"
         type="text"
         label="Datos subjetivos"
         label-position="top"
         :disabled="tieneDatosSubjetivosProblemasDeMasticacion === false"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
         v-model="tieneDatosSubjetivosProblemasDeMasticacion"
@@ -679,29 +736,34 @@ watch(
         label="N/A"
         identifier="Datos subjetivos"
         class="pt-2"
-        @input="handleInputChange"
+        @input="
+          handleInputChange;
+          updateFeedingNeed;
+        "
       />
     </div>
 
     <div class="flex gap-x-10 items-center">
       <p class="h-max">Sonda de alimentación</p>
       <VInputRadio
-        v-model="NecesidadAlimentacion.sondaDeAlimentacion"
+        v-model="necesidadAlimentacion.sondaDeAlimentacion"
         :value="true"
         label="Si"
         identifier="Sonda de Alimentacion"
         class="w-max"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.sondaDeAlimentacion"
+        v-model="necesidadAlimentacion.sondaDeAlimentacion"
         :value="false"
         label="No"
         identifier="Sonda de Alimentacion"
         class="w-max"
+        @input="updateFeedingNeed"
       />
     </div>
     <Transition name="expand">
-      <div v-if="NecesidadAlimentacion.sondaDeAlimentacion == true">
+      <div v-if="necesidadAlimentacion.sondaDeAlimentacion == true">
         <p class="h-max mb-1.5">Calibre</p>
         <div class="w-1/3 flex flex-wrap gap-x-10 gap-y-1.5">
           <VInputRadio
@@ -710,6 +772,7 @@ watch(
             label="12 fr"
             identifier="Calibre de la sonda de alimentacion"
             class="w-max"
+            @input="updateFeedingNeed"
           />
           <VInputRadio
             v-model="calibreSeleccionado"
@@ -717,6 +780,7 @@ watch(
             label="18 fr"
             identifier="Calibre de la sonda de alimentacion"
             class="w-max"
+            @input="updateFeedingNeed"
           />
           <VInputRadio
             v-model="calibreSeleccionado"
@@ -724,6 +788,7 @@ watch(
             label="14 fr"
             identifier="Calibre de la sonda de alimentacion"
             class="w-max"
+            @input="updateFeedingNeed"
           />
           <VInputRadio
             v-model="calibreSeleccionado"
@@ -731,6 +796,7 @@ watch(
             label="20 fr"
             identifier="Calibre de la sonda de alimentacion"
             class="w-max"
+            @input="updateFeedingNeed"
           />
           <VInputRadio
             v-model="calibreSeleccionado"
@@ -738,6 +804,7 @@ watch(
             label="16 fr"
             identifier="Calibre de la sonda de alimentacion"
             class="w-max"
+            @input="updateFeedingNeed"
           />
           <VInputRadio
             v-model="calibreSeleccionado"
@@ -745,6 +812,7 @@ watch(
             label="22 fr"
             identifier="Calibre de la sonda de alimentacion"
             class="w-max"
+            @input="updateFeedingNeed"
           />
         </div></div
     ></Transition>
@@ -754,23 +822,25 @@ watch(
       <div>
         <div class="w-full flex gap-x-10">
           <VInputRadio
-            v-model="NecesidadAlimentacion.alteracionesDePeso"
+            v-model="necesidadAlimentacion.alteracionesDePeso"
             :value="true"
             label="Si"
             identifier="Alteraciones de Peso"
             class="w-max"
+            @input="updateFeedingNeed"
           />
           <VInputRadio
-            v-model="NecesidadAlimentacion.alteracionesDePeso"
+            v-model="necesidadAlimentacion.alteracionesDePeso"
             :value="false"
             label="No"
             identifier="Alteraciones de Peso"
             class="w-max"
+            @input="updateFeedingNeed"
           />
         </div>
         <Transition name="expand">
           <div
-            v-if="NecesidadAlimentacion.alteracionesDePeso == true"
+            v-if="necesidadAlimentacion.alteracionesDePeso == true"
             class="flex flex-col gap-y-1.5 mt-1.5"
           >
             <VInputRadio
@@ -779,6 +849,7 @@ watch(
               label="Sobrepeso"
               identifier="Alteraciones de Peso"
               class="w-max"
+              @input="updateFeedingNeed"
             />
             <VInputRadio
               v-model="alteracionDePesoSeleccionado"
@@ -786,6 +857,7 @@ watch(
               label="Obesidad"
               identifier="Alteraciones de Peso"
               class="w-max"
+              @input="updateFeedingNeed"
             />
             <VInputRadio
               v-model="alteracionDePesoSeleccionado"
@@ -793,6 +865,7 @@ watch(
               label="Obesidad mórbida"
               identifier="Alteraciones de Peso"
               class="w-max"
+              @input="updateFeedingNeed"
             /></div
         ></Transition>
       </div>
@@ -802,29 +875,32 @@ watch(
       <p class="h-max">Solución base/Plan de líquidos</p>
       <VInputText
         class="w-60"
-        v-model="NecesidadAlimentacion.solucionBase"
+        v-model="necesidadAlimentacion.solucionBase"
         type="number"
         label="Frecuencia"
         label-position="side"
         unit="horas"
+        @input="updateFeedingNeed"
       />
     </div>
     <div class="mb-3">
       <p class="h-max mb-1.5">SF:</p>
       <div class="grid grid-cols-4">
         <VInputRadio
-          v-model="NecesidadAlimentacion.sf"
+          v-model="necesidadAlimentacion.sf"
           value="1000"
           label="1000 ml: 0.9%"
           identifier="sf"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.sf"
+          v-model="necesidadAlimentacion.sf"
           value="500"
           label="500 ml: 0.9%"
           identifier="sf"
           class="w-max"
+          @input="updateFeedingNeed"
         />
       </div>
     </div>
@@ -832,95 +908,106 @@ watch(
       <p class="h-max mb-1.5">SG:</p>
       <div class="grid grid-cols-4 mb-1.5">
         <VInputRadio
-          v-model="NecesidadAlimentacion.sg"
+          v-model="necesidadAlimentacion.sg"
           value="5"
           label="5% 1000 ml"
           identifier="sg"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.sg"
+          v-model="necesidadAlimentacion.sg"
           value="10"
           label="10% 1000 ml"
           identifier="sg"
           class="w-max"
+          @input="updateFeedingNeed"
         />
       </div>
       <div class="flex space-x-10">
         <VInputRadio
-          v-model="NecesidadAlimentacion.sg"
+          v-model="necesidadAlimentacion.sg"
           value="Otro"
           label="Otro"
           identifier="sg"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputText
           class="w-full"
           v-model="sgEspecifico"
-          :disabled="NecesidadAlimentacion.sg != 'Otro'"
+          :disabled="necesidadAlimentacion.sg != 'Otro'"
           type="text"
           label="Especificar"
           label-position="side"
+          @input="updateFeedingNeed"
         />
       </div>
     </div>
     <p class="h-max mb-1.5">Infusion o infusiones</p>
     <VInputText
       class="w-full mb-3 mt-1"
-      v-model="NecesidadAlimentacion.infusiones"
+      v-model="necesidadAlimentacion.infusiones"
       type="text"
       label="Especificar"
       label-position="side"
+      @input="updateFeedingNeed"
     />
     <div class="mb-3">
       <p class="h-max mb-1.5 mt-1">Accesos Venosos</p>
       <div class="flex gap-x-10">
         <VInputRadio
-          v-model="NecesidadAlimentacion.accesosVenosos"
+          v-model="necesidadAlimentacion.accesosVenosos"
           value="CVPC"
           label="CVPC"
           identifier="Accesos Venosos"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.accesosVenosos"
+          v-model="necesidadAlimentacion.accesosVenosos"
           value="CVC"
           label="CVC"
           identifier="Accesos Venosos"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.accesosVenosos"
+          v-model="necesidadAlimentacion.accesosVenosos"
           value="C. Swan Ganz"
           label="C. Swan Ganz"
           identifier="Accesos Venosos"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.accesosVenosos"
+          v-model="necesidadAlimentacion.accesosVenosos"
           value="C. Tenckhoff"
           label="C. Tenckhoff"
           identifier="Accesos Venosos"
           class="w-max"
+          @input="updateFeedingNeed"
         />
         <VInputRadio
-          v-model="NecesidadAlimentacion.accesosVenosos"
+          v-model="necesidadAlimentacion.accesosVenosos"
           value="C. HD"
           label="C. HD"
           identifier="Accesos Venosos"
           class="w-max"
+          @input="updateFeedingNeed"
         />
       </div>
       <div
-        v-show="NecesidadAlimentacion.accesosVenosos != null"
+        v-show="necesidadAlimentacion.accesosVenosos != null"
         class="grid grid-cols-3 mt-1.5 mb-3"
       >
         <VInputText
           class="w-full"
-          v-model="NecesidadAlimentacion.calibreAccesoVenoso"
+          v-model="necesidadAlimentacion.calibreAccesoVenoso"
           type="number"
           label="Calibre"
           label-position="side"
+          @input="updateFeedingNeed"
         />
       </div>
     </div>
@@ -928,54 +1015,63 @@ watch(
       <label class="min-w-max">Fr Fecha de colocación</label>
       <VInputText
         class="w-max"
-        v-model="NecesidadAlimentacion.fechaDeColocacion"
+        v-model="necesidadAlimentacion.fechaDeColocacion"
         type="date"
         :center-text="true"
+        @input="updateFeedingNeed"
       /><label class="min-w-max row-start-2">Fr Fecha de curación</label>
       <VInputText
         class="w-max col-start-2 row-start-2"
-        v-model="NecesidadAlimentacion.fechaDeCuracion"
+        v-model="necesidadAlimentacion.fechaDeCuracion"
         type="date"
         :center-text="true"
+        @input="updateFeedingNeed"
       />
     </div>
 
     <p class="h-max mb-1.5">Balance parcial por turno</p>
     <VInputText
       class="w-2/6 mb-3"
-      v-model="NecesidadAlimentacion.balanceParcial"
+      v-model="necesidadAlimentacion.balanceParcial"
       type="text"
       label="+"
       label-position="side"
+      @input="updateFeedingNeed"
     />
     <VInputText
       class="w-2/6 mb-3"
-      v-model="NecesidadAlimentacion.balanceParcial"
+      v-model="necesidadAlimentacion.balanceParcial"
       type="text"
       label="-"
       label-position="side"
+      @input="updateFeedingNeed"
     />
     <VInputRadio
-      v-model="NecesidadAlimentacion.balanceParcial"
+      v-model="necesidadAlimentacion.balanceParcial"
       value="Neutro"
       identifier="Balance parcial por turno"
       class="w-max mb-3"
+      @input="updateFeedingNeed"
     />
     <div class="flex items-end">
       <VInputText
         class="w-full mr-8"
-        v-model="NecesidadAlimentacion.datosSubjetivosBalanceParcial"
+        v-model="necesidadAlimentacion.datosSubjetivosBalanceParcial"
         type="text"
         label="Datos subjetivos"
         label-position="top"
+        @input="updateFeedingNeed"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.datosSubjetivosBalanceParcial"
+        v-model="necesidadAlimentacion.datosSubjetivosBalanceParcial"
         value=""
         label="N/A"
         identifier="Datos subjetivos"
         class="pt-2"
-        @input="handleInputChangeOne"
+        @input="
+          handleInputChangeOne;
+          updateFeedingNeed;
+        "
       />
     </div>
   </div>

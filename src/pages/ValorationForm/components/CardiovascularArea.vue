@@ -4,6 +4,13 @@ import VInputText from "@/components/VInputText.vue";
 import VInputRadio from "@/components/VInputRadio.vue";
 import ArterialTensionInput from "./ArterialTensionInput.vue";
 
+const emits = defineEmits<{
+  (
+    e: "update:cardiovascular-area",
+    value: typeof areaCardiovascular.value
+  ): void;
+}>();
+
 const areaCardiovascular = ref<{
   frecuenciaCardiaca: number | null;
   tensionArterialSistolica: number | null;
@@ -279,6 +286,10 @@ watch(
 watch(selectedEdemaPlace, (value) => {
   areaCardiovascular.value.sitioDelEdema = value;
 });
+
+function updateCardiovascularArea() {
+  emits("update:cardiovascular-area", areaCardiovascular.value);
+}
 </script>
 
 <template>
@@ -295,6 +306,7 @@ watch(selectedEdemaPlace, (value) => {
           after-text="latidos por minuto"
           input-width="16"
           :center-text="true"
+          @input="updateCardiovascularArea"
         />
       </td>
     </tr>
@@ -309,6 +321,8 @@ watch(selectedEdemaPlace, (value) => {
             areaCardiovascular.tensionArterialDiastolica
           "
           after-text="mmHg"
+          @update:tension-arterial-diastolica="updateCardiovascularArea"
+          @update:tension-arterial-sistolica="updateCardiovascularArea"
         />
       </td>
     </tr>
@@ -325,6 +339,7 @@ watch(selectedEdemaPlace, (value) => {
                 :value="tensionArterialMedia"
                 type="number"
                 class="w-16 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-center p-1 h-9 outline-none border bg-white border-stone-500 rounded-md"
+                @input="updateCardiovascularArea"
               />
             </div>
             <p class="ml-3 min-w-max">mmHg</p>
@@ -339,11 +354,13 @@ watch(selectedEdemaPlace, (value) => {
       v-model="areaCardiovascular.apoyoDeAminas"
       :value="true"
       label="Sí"
+      @input="updateCardiovascularArea"
     />
     <VInputRadio
       v-model="areaCardiovascular.apoyoDeAminas"
       :value="false"
       label="No"
+      @input="updateCardiovascularArea"
     />
   </div>
   <div class="flex items-center gap-x-12 mb-3">
@@ -355,6 +372,7 @@ watch(selectedEdemaPlace, (value) => {
       label-position="side"
       after-text="gamas/mcg/hr"
       :disabled="!areaCardiovascular.apoyoDeAminas"
+      @input="updateCardiovascularArea"
     />
   </div>
   <div class="flex items-center gap-x-12 mb-1.5">
@@ -365,11 +383,13 @@ watch(selectedEdemaPlace, (value) => {
       v-model="areaCardiovascular.apoyoDeInotropicos"
       :value="true"
       label="Sí"
+      @input="updateCardiovascularArea"
     />
     <VInputRadio
       v-model="areaCardiovascular.apoyoDeInotropicos"
       :value="false"
       label="No"
+      @input="updateCardiovascularArea"
     />
   </div>
   <div class="flex items-center gap-x-12 mb-3">
@@ -381,6 +401,7 @@ watch(selectedEdemaPlace, (value) => {
       label-position="side"
       after-text="gamas/mcg/hr"
       :disabled="!areaCardiovascular.apoyoDeInotropicos"
+      @input="updateCardiovascularArea"
     />
   </div>
 
@@ -392,6 +413,7 @@ watch(selectedEdemaPlace, (value) => {
           v-model="areaCardiovascular.tiposDePulso"
           value="Braquial"
           class="mr-8"
+          @input="updateCardiovascularArea"
         />
       </td>
       <td>
@@ -399,12 +421,14 @@ watch(selectedEdemaPlace, (value) => {
           v-model="areaCardiovascular.tiposDePulso"
           value="Radial"
           class="mr-8"
+          @input="updateCardiovascularArea"
         />
       </td>
       <td>
         <VInputRadio
           v-model="areaCardiovascular.tiposDePulso"
           value="Carotideo"
+          @input="updateCardiovascularArea"
         />
       </td>
     </tr>
@@ -415,6 +439,7 @@ watch(selectedEdemaPlace, (value) => {
           value="Popliteo"
           label="Poplíteo"
           class="mr-8"
+          @input="updateCardiovascularArea"
         />
       </td>
       <td>
@@ -422,12 +447,14 @@ watch(selectedEdemaPlace, (value) => {
           v-model="areaCardiovascular.tiposDePulso"
           value="Pedio"
           class="mr-8"
+          @input="updateCardiovascularArea"
         />
       </td>
       <td>
         <VInputRadio
           v-model="areaCardiovascular.tiposDePulso"
           value="Femoral"
+          @input="updateCardiovascularArea"
         />
       </td>
     </tr>
@@ -450,9 +477,17 @@ watch(selectedEdemaPlace, (value) => {
       :center-text="true"
       :disabled="hasPainScale === false"
       class="w-fit"
-      @input="validateValue()"
+      @input="
+        validateValue();
+        updateCardiovascularArea();
+      "
     />
-    <VInputRadio v-model="hasPainScale" :value="false" label="N/A" />
+    <VInputRadio
+      v-model="hasPainScale"
+      :value="false"
+      label="N/A"
+      @input="updateCardiovascularArea"
+    />
   </div>
   <img src="../../../assets/images/dolorPrecordial.png" />
   <p class="text-stone-500 h-max mb-1.5">Llenado capilar</p>
@@ -465,6 +500,7 @@ watch(selectedEdemaPlace, (value) => {
       after-text="seg"
       input-width="16"
       :center-text="true"
+      @input="updateCardiovascularArea"
     />
     <VInputText
       v-model="areaCardiovascular.miembroInferior"
@@ -474,6 +510,7 @@ watch(selectedEdemaPlace, (value) => {
       after-text="seg"
       input-width="16"
       :center-text="true"
+      @input="updateCardiovascularArea"
     />
   </div>
   <div class="flex gap-x-12 items-center mb-3">
@@ -482,22 +519,26 @@ watch(selectedEdemaPlace, (value) => {
       v-model="areaCardiovascular.ingurgitacionYugular"
       :value="true"
       label="Sí"
+      @input="updateCardiovascularArea"
     />
     <VInputRadio
       v-model="areaCardiovascular.ingurgitacionYugular"
       :value="false"
       label="No"
+      @input="updateCardiovascularArea"
     />
     <p class="text-stone-500 h-max inline-block">Hepatomegalia</p>
     <VInputRadio
       v-model="areaCardiovascular.hepatomegalia"
       :value="true"
       label="Sí"
+      @input="updateCardiovascularArea"
     />
     <VInputRadio
       v-model="areaCardiovascular.hepatomegalia"
       :value="false"
       label="No"
+      @input="updateCardiovascularArea"
     />
   </div>
   <div class="flex items-center mb-3">
@@ -508,11 +549,13 @@ watch(selectedEdemaPlace, (value) => {
         v-model="areaCardiovascular.edema"
         :value="true"
         label="Sí"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="areaCardiovascular.edema"
         :value="false"
         label="No"
+        @input="updateCardiovascularArea"
       />
     </div>
   </div>
@@ -523,14 +566,20 @@ watch(selectedEdemaPlace, (value) => {
         v-model="edemaPlace"
         value="Miembros inferiores"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="edemaPlace"
         value="Miembros superiores"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <div class="flex gap-x-8">
-        <VInputRadio v-model="edemaPlace" value="Otro" />
+        <VInputRadio
+          v-model="edemaPlace"
+          value="Otro"
+          @input="updateCardiovascularArea"
+        />
         <VInputText
           v-model="anotherPlace"
           type="text"
@@ -538,15 +587,33 @@ watch(selectedEdemaPlace, (value) => {
           label-position="side"
           input-width="44"
           :disabled="edemaPlace !== 'Otro'"
+          @input="updateCardiovascularArea"
         />
-      </div></div
-  ></Transition>
+      </div>
+    </div>
+  </Transition>
   <Transition name="expand">
     <div class="flex gap-x-8 mb-3" v-if="selectedEdemaPlace">
-      <VInputRadio v-model="edemaClasification" value="+" />
-      <VInputRadio v-model="edemaClasification" value="++" />
-      <VInputRadio v-model="edemaClasification" value="+++" />
-      <VInputRadio v-model="edemaClasification" value="++++" /></div
+      <VInputRadio
+        v-model="edemaClasification"
+        value="+"
+        @input="updateCardiovascularArea"
+      />
+      <VInputRadio
+        v-model="edemaClasification"
+        value="++"
+        @input="updateCardiovascularArea"
+      />
+      <VInputRadio
+        v-model="edemaClasification"
+        value="+++"
+        @input="updateCardiovascularArea"
+      />
+      <VInputRadio
+        v-model="edemaClasification"
+        value="++++"
+        @input="updateCardiovascularArea"
+      /></div
   ></Transition>
   <div class="flex gap-x-8 mb-3 items-center">
     <p class="text-stone-500 h-max inline-block">Marcapaso</p>
@@ -554,21 +621,25 @@ watch(selectedEdemaPlace, (value) => {
       v-model="areaCardiovascular.marcapasos"
       :value="true"
       label="Sí"
+      @input="updateCardiovascularArea"
     />
     <VInputRadio
       v-model="areaCardiovascular.marcapasos"
       :value="false"
       label="No"
+      @input="updateCardiovascularArea"
     />
   </div>
   <div class="flex gap-x-8 mb-3">
     <VInputRadio
       v-model="areaCardiovascular.tipoDeMarcapasos"
       value="Temporal"
+      @input="updateCardiovascularArea"
     />
     <VInputRadio
       v-model="areaCardiovascular.tipoDeMarcapasos"
       value="Definitivo"
+      @input="updateCardiovascularArea"
     />
   </div>
   <table class="border-collapse">
@@ -580,6 +651,7 @@ watch(selectedEdemaPlace, (value) => {
           type="number"
           :center-text="true"
           class="mb-3"
+          @input="updateCardiovascularArea"
         />
       </td>
     </tr>
@@ -591,6 +663,7 @@ watch(selectedEdemaPlace, (value) => {
           type="number"
           :center-text="true"
           class="mb-3"
+          @input="updateCardiovascularArea"
         />
       </td>
     </tr>
@@ -603,8 +676,14 @@ watch(selectedEdemaPlace, (value) => {
       label-position="top"
       class="w-full mr-8"
       :disabled="hasSubjectiveData === false"
+      @input="updateCardiovascularArea"
     />
-    <VInputRadio v-model="hasSubjectiveData" :value="false" label="N/A" />
+    <VInputRadio
+      v-model="hasSubjectiveData"
+      :value="false"
+      label="N/A"
+      @input="updateCardiovascularArea"
+    />
   </div>
   <p class="text-stone-500 h-max my-1.5">Trazo Electrocardiográfico</p>
   <p class="text-stone-500 h-max my-1.5">Ritmo</p>
@@ -613,11 +692,13 @@ watch(selectedEdemaPlace, (value) => {
       v-model="areaCardiovascular.ritmoTrazoElectrocardiografico"
       value="Normal"
       class="w-44"
+      @input="updateCardiovascularArea"
     />
 
     <VInputRadio
       v-model="areaCardiovascular.ritmoTrazoElectrocardiografico"
       value="Anormal"
+      @input="updateCardiovascularArea"
     />
   </div>
   <Transition name="expand">
@@ -626,6 +707,7 @@ watch(selectedEdemaPlace, (value) => {
       v-model="specificRythm"
       value="Ritmo sinusal"
       class="mt-3"
+      @input="updateCardiovascularArea"
     />
   </Transition>
   <Transition name="expand">
@@ -634,62 +716,79 @@ watch(selectedEdemaPlace, (value) => {
         v-model="specificRythm"
         value="Bradicardia sinusal"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
-      <VInputRadio v-model="specificRythm" value="Asistolia" class="mb-3" />
+      <VInputRadio
+        v-model="specificRythm"
+        value="Asistolia"
+        class="mb-3"
+        @input="updateCardiovascularArea"
+      />
       <VInputRadio
         v-model="specificRythm"
         value="Taquicardia sinusal"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Dorsal de pointes"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Taquicardia ventricular"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Bloqueo de primer grado"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Fibrilación auricular"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Bloqueo de segundo grado"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Fibrilación ventricular"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Bloqueo de tercer grado"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Flutter auricular"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Actividad eléctrica sin pulso"
         class="mb-3"
+        @input="updateCardiovascularArea"
       />
       <VInputRadio
         v-model="specificRythm"
         value="Flutter ventricular"
         class=""
+        @input="updateCardiovascularArea"
       />
     </div>
   </Transition>

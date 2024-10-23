@@ -3,6 +3,13 @@ import VInputRadio from "@/components/VInputRadio.vue";
 import VInputText from "@/components/VInputText.vue";
 import { computed, ref, watch } from "vue";
 
+const emits = defineEmits<{
+  (
+    e: "update:elimination-need",
+    value: typeof necesidadDeEliminacion.value
+  ): void;
+}>();
+
 const necesidadDeEliminacion = ref<{
   frecuenciaPatronUrinario: number | null;
   caracteristicasNormalesPatronUrinario: boolean | null;
@@ -277,6 +284,10 @@ watch(
     }
   }
 );
+
+function updateEliminationNeed() {
+  emits("update:elimination-need", necesidadDeEliminacion.value);
+}
 </script>
 <template>
   <div class="flex justify-between items-center bg-sky-100 px-4 py-1 my-4">
@@ -295,6 +306,7 @@ watch(
       after-text="veces al día"
       class="w-64 mb-3"
       :center-text="true"
+      @input="updateEliminationNeed"
     />
     <p class="text-stone-500 h-max min-w-max mb-1.5">
       Características normales
@@ -308,6 +320,7 @@ watch(
             "
             :value="true"
             label="Sí"
+            @input="updateEliminationNeed"
           />
           <VInputRadio
             v-model="
@@ -315,6 +328,7 @@ watch(
             "
             :value="false"
             label="No"
+            @input="updateEliminationNeed"
           />
         </div>
         <div class="grid grid-cols-3">
@@ -324,6 +338,7 @@ watch(
                 v-if="isNormalRythm"
                 v-model="selectedNormalCharacteristic"
                 value="Oliguria"
+                @input="updateEliminationNeed"
             /></Transition>
           </div>
           <Transition name="expand">
@@ -333,15 +348,18 @@ watch(
                   v-model="selectedAnormalCharacteristic"
                   value="Anuria"
                   class="mb-1.5"
+                  @input="updateEliminationNeed"
                 />
                 <VInputRadio
                   v-model="selectedAnormalCharacteristic"
                   value="Poliuria"
                   class="mb-1.5"
+                  @input="updateEliminationNeed"
                 />
                 <VInputRadio
                   v-model="selectedAnormalCharacteristic"
                   value="Disuria"
+                  @input="updateEliminationNeed"
                 />
               </div>
               <div>
@@ -349,15 +367,18 @@ watch(
                   v-model="selectedAnormalCharacteristic"
                   value="Nicturia"
                   class="mb-1.5"
+                  @input="updateEliminationNeed"
                 />
                 <VInputRadio
                   v-model="selectedAnormalCharacteristic"
                   value="Tenesmo"
                   class="mb-1.5"
+                  @input="updateEliminationNeed"
                 />
                 <VInputRadio
                   v-model="selectedAnormalCharacteristic"
                   value="Incontinencia"
+                  @input="updateEliminationNeed"
                 />
               </div></div
           ></Transition>
@@ -375,6 +396,7 @@ watch(
           label="Características de la orina"
           label-position="top"
           class="w-1/3"
+          @input="updateEliminationNeed"
       /></Transition>
     </div>
     <p class="text-stone-500 h-max min-w-max mb-1.5">Coloración</p>
@@ -383,10 +405,12 @@ watch(
         <VInputRadio
           v-model="necesidadDeEliminacion.coloracionPatronUrinario"
           value="Normal"
+          @input="updateEliminationNeed"
         />
         <VInputRadio
           v-model="necesidadDeEliminacion.coloracionPatronUrinario"
           value="Anormal"
+          @input="updateEliminationNeed"
         />
       </div>
       <Transition name="expand">
@@ -399,13 +423,19 @@ watch(
               v-model="selectedAnormalColoration"
               value="Hematurica"
               label="Hematúrica"
+              @input="updateEliminationNeed"
             />
             <VInputRadio
               v-model="selectedAnormalColoration"
               value="Colurica"
               label="Colúrica"
+              @input="updateEliminationNeed"
             />
-            <VInputRadio v-model="selectedAnormalColoration" value="Otro" />
+            <VInputRadio
+              v-model="selectedAnormalColoration"
+              value="Otro"
+              @input="updateEliminationNeed"
+            />
           </div></div
       ></Transition>
       <Transition name="expand">
@@ -421,6 +451,7 @@ watch(
             type="text"
             label="Especificar"
             label-position="side"
+            @input="updateEliminationNeed"
           /></div
       ></Transition>
     </div>
@@ -433,11 +464,13 @@ watch(
           v-model="necesidadDeEliminacion.sondaVesical"
           :value="true"
           label="Sí"
+          @input="updateEliminationNeed"
         />
         <VInputRadio
           v-model="necesidadDeEliminacion.sondaVesical"
           :value="false"
           label="No"
+          @input="updateEliminationNeed"
         />
         <Transition name="expand">
           <div v-if="necesidadDeEliminacion.sondaVesical" class="w-full">
@@ -449,6 +482,7 @@ watch(
               after-text="Fr"
               class="w-36 my-3"
               :center-text="true"
+              @input="updateEliminationNeed"
             />
             <VInputText
               v-model="H2O"
@@ -458,6 +492,7 @@ watch(
               after-text="ml H2O"
               class="w-56"
               :center-text="true"
+              @input="updateEliminationNeed"
             /></div
         ></Transition>
       </div>
@@ -469,6 +504,7 @@ watch(
       label="Fecha de colocación"
       label-position="side"
       class="w-max mb-3"
+      @input="updateEliminationNeed"
     />
     <div class="flex gap-x-10 mb-3">
       <div class="flex items-center h-9">
@@ -479,11 +515,13 @@ watch(
           v-model="necesidadDeEliminacion.usoDeDiureticos"
           :value="true"
           label="Sí"
+          @input="updateEliminationNeed"
         />
         <VInputRadio
           v-model="necesidadDeEliminacion.usoDeDiureticos"
           :value="false"
           label="No"
+          @input="updateEliminationNeed"
         />
         <Transition name="expand">
           <VInputText
@@ -493,6 +531,7 @@ watch(
             label="Especificar"
             label-position="side"
             class="w-56 mt-3"
+            @input="updateEliminationNeed"
         /></Transition>
       </div>
     </div>
@@ -503,17 +542,20 @@ watch(
         v-model="necesidadDeEliminacion.apoyoParcial"
         value="Acompanamiento al sanitario"
         label="Acompañamiento al sanitario"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.apoyoParcial"
         value="Proporcionar comodo/orinal"
         label="Proporcionar cómodo/orinal"
         class="mr-12"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.apoyoParcial"
         value="Cambio de panal"
         label="Cambio de pañal"
+        @input="updateEliminationNeed"
       />
     </div>
 
@@ -523,11 +565,13 @@ watch(
         v-model="necesidadDeEliminacion.apoyoTotal"
         :value="true"
         label="Sí"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.apoyoTotal"
         :value="false"
         label="No"
+        @input="updateEliminationNeed"
       />
     </div>
 
@@ -542,11 +586,13 @@ watch(
             :value="true"
             label="Sí"
             class="mb-1.5"
+            @input="updateEliminationNeed"
           />
           <VInputRadio
             v-model="necesidadDeEliminacion.tratamientoSustitutivoRenal"
             :value="false"
             label="No"
+            @input="updateEliminationNeed"
           />
           <Transition name="expand">
             <div v-if="necesidadDeEliminacion.tratamientoSustitutivoRenal">
@@ -555,12 +601,14 @@ watch(
                 value="Dialisis peritoneal"
                 label="Diálisis peritoneal"
                 class="mb-1.5"
+                @input="updateEliminationNeed"
               />
               <VInputRadio
                 v-model="tratamientoSustitutivoRenalSeleccionado"
                 value="Hemodialisis"
                 label="Hemodiálisis"
                 class="mb-1.5"
+                @input="updateEliminationNeed"
               /></div
           ></Transition>
         </div>
@@ -575,6 +623,7 @@ watch(
         label="Datos subjetivos"
         label-position="top"
         :disabled="tieneDatosSubjetivosSustitutivoRenal == false"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="tieneDatosSubjetivosSustitutivoRenal"
@@ -582,6 +631,7 @@ watch(
         label="N/A"
         identifier="Datos subjetivos"
         class="pt-2"
+        @input="updateEliminationNeed"
       />
     </div>
 
@@ -594,6 +644,7 @@ watch(
       after-text="veces al día"
       class="w-64 mb-3"
       :center-text="true"
+      @input="updateEliminationNeed"
     />
 
     <p class="text-stone-500 h-max min-w-max mb-1.5">Características</p>
@@ -601,10 +652,12 @@ watch(
       <VInputRadio
         v-model="necesidadDeEliminacion.caracteristicasPatronIntestinal"
         value="Normal"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.caracteristicasPatronIntestinal"
         value="Anormal"
+        @input="updateEliminationNeed"
       />
     </div>
     <Transition name="expand">
@@ -620,15 +673,18 @@ watch(
             value="Estrenimiento"
             label="Estreñimiento"
             class="mb-1.5"
+            @input="updateEliminationNeed"
           />
           <VInputRadio
             v-model="caracteristicaAnormalEspecificaSeleccionada"
             value="Diarrea"
             class="mb-1.5"
+            @input="updateEliminationNeed"
           />
           <VInputRadio
             v-model="caracteristicaAnormalEspecificaSeleccionada"
             value="Incontinencia"
+            @input="updateEliminationNeed"
           />
         </div></div
     ></Transition>
@@ -639,33 +695,39 @@ watch(
         v-model="necesidadDeEliminacion.caracteristicaIndividual"
         value="Acolia"
         class="w-max"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.caracteristicaIndividual"
         value="Melena"
         class="w-max"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.caracteristicaIndividual"
         value="Mucoide"
         class="w-max"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.caracteristicaIndividual"
         value="Pastosa"
         class="w-max"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.caracteristicaIndividual"
         value="Fetida"
         label="Fétida"
         class="w-max"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.caracteristicaIndividual"
         value="Liquida con sangre fresca"
         label="Líquida con sangre fresca"
         class="w-max"
+        @input="updateEliminationNeed"
       />
     </div>
 
@@ -675,16 +737,19 @@ watch(
         v-model="necesidadDeEliminacion.suplenciaIntestinal"
         value="Sin suplencia"
         class="w-max"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.suplenciaIntestinal"
         value="Suplencia parcial"
         class="w-max"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="necesidadDeEliminacion.suplenciaIntestinal"
         value="Suplencia total"
         class="w-max"
+        @input="updateEliminationNeed"
       />
     </div>
 
@@ -695,6 +760,7 @@ watch(
       type="text"
       label="Especificar"
       label-position="side"
+      @input="updateEliminationNeed"
     />
 
     <div class="flex items-end mb-3">
@@ -705,6 +771,7 @@ watch(
         label="Datos subjetivos"
         label-position="top"
         :disabled="tieneDatosSubjetivosPatronIntestinal == false"
+        @input="updateEliminationNeed"
       />
       <VInputRadio
         v-model="tieneDatosSubjetivosPatronIntestinal"
@@ -712,6 +779,7 @@ watch(
         label="N/A"
         identifier="Datos subjetivos"
         class="pt-2"
+        @input="updateEliminationNeed"
       />
     </div>
   </div>

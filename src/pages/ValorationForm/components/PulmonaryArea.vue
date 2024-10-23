@@ -4,6 +4,10 @@ import VInputText from "@/components/VInputText.vue";
 import VInputRadio from "@/components/VInputRadio.vue";
 import VSelect from "@/components/VSelect.vue";
 
+const emits = defineEmits<{
+  (e: "update:pulmonary-area", value: typeof areaPulmonar.value): void;
+}>();
+
 const areaPulmonar = ref<{
   frecuenciaRespiratoria: number | null;
   dificultadRespiratoria:
@@ -367,6 +371,10 @@ watch(
     areaPulmonar.value.electrolitoCalcioPerfilDeGases = CaElectrolyteValue;
   }
 );
+
+function updatePulmonaryArea() {
+  emits("update:pulmonary-area", areaPulmonar.value);
+}
 </script>
 <template>
   <h1 class="font-medium text-2xl mb-6">Área pulmonar</h1>
@@ -378,6 +386,7 @@ watch(
     after-text="x min"
     :center-text="true"
     class="w-36 mb-3"
+    @input="updatePulmonaryArea"
   />
   <p class="text-stone-500 h-max mb-1.5">Dificultad para respirar</p>
   <div class="flex gap-x-12 mb-3">
@@ -385,16 +394,19 @@ watch(
       v-model="areaPulmonar.dificultadRespiratoria"
       value="Apnea"
       label="Apnea"
+      @input="updatePulmonaryArea"
     />
     <VInputRadio
       v-model="areaPulmonar.dificultadRespiratoria"
       value="Disnea en reposo"
       label="Disnea en reposo"
+      @input="updatePulmonaryArea"
     />
     <VInputRadio
       v-model="areaPulmonar.dificultadRespiratoria"
       value="Disnea en esfuerzo"
       label="Disnea en esfuerzo"
+      @input="updatePulmonaryArea"
     />
   </div>
   <VInputText
@@ -405,7 +417,10 @@ watch(
     unit="%"
     :center-text="true"
     class="mb-3 w-32"
-    @input="validateSPO2()"
+    @input="
+      validateSPO2();
+      updatePulmonaryArea();
+    "
   />
   <p class="text-stone-500 h-max mb-1.5">Secreciones bronquiales</p>
   <div class="flex gap-x-12 mb-3">
@@ -413,11 +428,13 @@ watch(
       v-model="areaPulmonar.secrecionesBronquiales"
       :value="true"
       label="Sí"
+      @input="updatePulmonaryArea"
     />
     <VInputRadio
       v-model="areaPulmonar.secrecionesBronquiales"
       :value="false"
       label="No"
+      @input="updatePulmonaryArea"
     />
     <VSelect
       v-model="secrecionesBronquialesCaracteristicas"
@@ -426,6 +443,7 @@ watch(
       label-position="side"
       class="w-full"
       :disabled="!areaPulmonar.secrecionesBronquiales"
+      @input="updatePulmonaryArea"
     />
   </div>
   <p class="text-stone-500 h-max mb-1.5">Dificultad para la expectoración</p>
@@ -434,11 +452,13 @@ watch(
       v-model="areaPulmonar.dificultadExpectoración"
       :value="true"
       label="Sí"
+      @input="updatePulmonaryArea"
     />
     <VInputRadio
       v-model="areaPulmonar.dificultadExpectoración"
       :value="false"
       label="No"
+      @input="updatePulmonaryArea"
     />
   </div>
   <div class="flex items-end mb-3">
@@ -449,11 +469,13 @@ watch(
       label-position="top"
       class="w-full mr-8"
       :disabled="hasDifficultyExpectoratingSubjectiveData === false"
+      @input="updatePulmonaryArea"
     />
     <VInputRadio
       v-model="hasDifficultyExpectoratingSubjectiveData"
       :value="false"
       label="N/A"
+      @input="updatePulmonaryArea"
     />
   </div>
   <p class="text-stone-500 h-max mb-1.5">Ruidos respiratorios</p>
@@ -462,11 +484,13 @@ watch(
       v-model="areaPulmonar.ruidosRespiratorios"
       value="Normales"
       label="Normales"
+      @input="updatePulmonaryArea"
     />
     <VInputRadio
       v-model="areaPulmonar.ruidosRespiratorios"
       value="Anormales"
       label="Anormales"
+      @input="updatePulmonaryArea"
     />
   </div>
   <Transition name="expand">
@@ -479,26 +503,31 @@ watch(
           v-model="respiratorySoundType"
           value="Vesicular"
           class="mb-3"
+          @input="updatePulmonaryArea"
         />
         <VInputRadio
           v-model="respiratorySoundType"
           value="Broncovesicular"
           class="mb-3"
+          @input="updatePulmonaryArea"
         />
         <VInputRadio
           v-model="respiratorySoundType"
           value="Estertores"
           class="mb-3"
+          @input="updatePulmonaryArea"
         />
         <VInputRadio
           v-model="respiratorySoundType"
           value="Sibilancias"
           class="mb-3"
+          @input="updatePulmonaryArea"
         />
         <VInputRadio
           v-model="respiratorySoundType"
           value="Roce pleural"
           class="mb-3"
+          @input="updatePulmonaryArea"
         />
       </div></div
   ></Transition>
@@ -510,11 +539,13 @@ watch(
       label-position="top"
       class="w-full mr-8"
       :disabled="hasRespiratorySoundSubjectiveData === false"
+      @input="updatePulmonaryArea"
     />
     <VInputRadio
       v-model="hasRespiratorySoundSubjectiveData"
       :value="false"
       label="N/A"
+      @input="updatePulmonaryArea"
     />
   </div>
   <div class="flex gap-x-12 items-center mb-3">
@@ -523,11 +554,13 @@ watch(
       v-model="areaPulmonar.suplementoDeO2"
       :value="true"
       label="Sí"
+      @input="updatePulmonaryArea"
     />
     <VInputRadio
       v-model="areaPulmonar.suplementoDeO2"
       :value="false"
       label="No"
+      @input="updatePulmonaryArea"
     />
   </div>
   <div class="grid grid-rows-1 grid-cols-2 mb-3">
@@ -536,6 +569,7 @@ watch(
         v-model="hasNebulizer"
         :value="true"
         label="Nebulizador"
+        @input="updatePulmonaryArea"
       /><VInputText
         v-model="nebulizer"
         type="number"
@@ -543,6 +577,7 @@ watch(
         :center-text="true"
         :disabled="!hasNebulizer"
         class="w-32"
+        @input="updatePulmonaryArea"
       />
     </div>
     <div class="flex gap-x-3">
@@ -550,6 +585,7 @@ watch(
         v-model="hasNasalCannula"
         :value="true"
         label="Puntas nasales"
+        @input="updatePulmonaryArea"
       /><VInputText
         v-model="nasalCannula"
         type="number"
@@ -557,6 +593,7 @@ watch(
         :center-text="true"
         :disabled="!hasNasalCannula"
         class="w-32"
+        @input="updatePulmonaryArea"
       />
     </div>
   </div>
@@ -565,6 +602,7 @@ watch(
       v-model="hasSimpleFaceMask"
       :value="true"
       label="Mascarilla simple"
+      @input="updatePulmonaryArea"
     /><VInputText
       v-model="simpleFaceMask"
       type="number"
@@ -572,6 +610,7 @@ watch(
       :center-text="true"
       :disabled="!hasSimpleFaceMask"
       class="w-32"
+      @input="updatePulmonaryArea"
     />
   </div>
   <div class="flex gap-x-3 mb-3">
@@ -579,26 +618,35 @@ watch(
       v-model="hasNonRebreatherMask"
       :value="true"
       label="Mascarilla con reservorio"
-    /><VInputText
+      @input="updatePulmonaryArea"
+    />
+    <VInputText
       v-model="nonRebreatherMask"
       type="number"
       after-text="lts. x min."
       :center-text="true"
       :disabled="!hasNonRebreatherMask"
       class="w-32"
+      @input="updatePulmonaryArea"
     />
   </div>
   <p class="text-stone-500 h-max mb-1.5">Ventilación mecánica</p>
   <div class="flex gap-x-12 mb-3">
-    <VInputRadio v-model="areaPulmonar.ventilacionMecanica" value="Invasiva" />
+    <VInputRadio
+      v-model="areaPulmonar.ventilacionMecanica"
+      value="Invasiva"
+      @input="updatePulmonaryArea"
+    />
     <VInputRadio
       v-model="areaPulmonar.ventilacionMecanica"
       value="No invasiva"
+      @input="updatePulmonaryArea"
     />
     <VInputRadio
       v-model="areaPulmonar.ventilacionMecanica"
       value="Valores dinamicos"
       label="Valores dinámicos"
+      @input="updatePulmonaryArea"
     />
   </div>
   <div class="flex gap-x-12 mb-3 items-center">
@@ -611,6 +659,7 @@ watch(
       label="Modalidad"
       label-position="side"
       class="w-full"
+      @input="updatePulmonaryArea"
     />
   </div>
   <div class="flex flex-wrap gap-x-12">
@@ -623,6 +672,7 @@ watch(
       after-text="ml"
       class="mb-3"
       input-width="28"
+      @input="updatePulmonaryArea"
     />
     <VInputText
       v-model="areaPulmonar.fio2VM"
@@ -633,7 +683,10 @@ watch(
       after-text="%"
       class="mb-3"
       input-width="28"
-      @input="validateFio2()"
+      @input="
+        validateFio2();
+        updatePulmonaryArea();
+      "
     />
     <VInputText
       v-model="areaPulmonar.flujoVM"
@@ -644,6 +697,7 @@ watch(
       after-text="lts. / min."
       class="mb-3"
       input-width="28"
+      @input="updatePulmonaryArea"
     />
     <VInputText
       v-model="areaPulmonar.presionSoporteVM"
@@ -654,6 +708,7 @@ watch(
       after-text="cm H2O"
       class="mb-3"
       input-width="28"
+      @input="updatePulmonaryArea"
     />
     <VInputText
       v-model="areaPulmonar.PEEPVM"
@@ -664,6 +719,7 @@ watch(
       after-text="cm H2O"
       class="mb-3"
       input-width="28"
+      @input="updatePulmonaryArea"
     />
     <VInputText
       v-model="areaPulmonar.sensibilidadVM"
@@ -674,7 +730,10 @@ watch(
       after-text="%"
       class="mb-3"
       input-width="28"
-      @input="validateSensibilitie()"
+      @input="
+        validateSensibilitie();
+        updatePulmonaryArea();
+      "
     />
   </div>
   <p class="text-stone-500 h-max mb-3">Perfil de gases</p>
@@ -684,6 +743,7 @@ watch(
       v-model="areaPulmonar.horaPerfilDeGases"
       type="time"
       class="text-stone-500 w-28 p-1 h-9 outline-none border bg-white border-stone-500 rounded-md text-center appearance-none bg-transparent hover:cursor-pointer [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-time-picker-indicator]:hidden [&::-moz-calendar-picker-indicator]:hidden"
+      @input="updatePulmonaryArea"
     />
   </div>
   <div class="flex flex-wrap gap-x-12">
@@ -695,6 +755,7 @@ watch(
       input-width="16"
       class="mb-3"
       :center-text="true"
+      @input="updatePulmonaryArea"
     />
     <VInputText
       v-model="areaPulmonar.PO2PerfilDeGases"
@@ -705,6 +766,7 @@ watch(
       input-width="16"
       class="mb-3"
       :center-text="true"
+      @input="updatePulmonaryArea"
     />
     <VInputText
       v-model="areaPulmonar.HCO3PerfilDeGases"
@@ -715,6 +777,7 @@ watch(
       input-width="16"
       class="mb-3"
       :center-text="true"
+      @input="updatePulmonaryArea"
     />
     <VInputText
       v-model="areaPulmonar.PCO2PerfilDeGases"
@@ -725,6 +788,7 @@ watch(
       input-width="16"
       class="mb-3"
       :center-text="true"
+      @input="updatePulmonaryArea"
     />
     <VInputText
       v-model="areaPulmonar.lactatoPerfilDeGases"
@@ -734,6 +798,7 @@ watch(
       input-width="16"
       class="mb-3"
       :center-text="true"
+      @input="updatePulmonaryArea"
     />
     <div class="flex gap-x-12">
       <VInputText
@@ -746,8 +811,14 @@ watch(
         :disabled="hasGlucose == 'N/A'"
         class="mb-3"
         :center-text="true"
+        @input="updatePulmonaryArea"
       />
-      <VInputRadio v-model="hasGlucose" value="N/A" class="mb-3" />
+      <VInputRadio
+        v-model="hasGlucose"
+        value="N/A"
+        class="mb-3"
+        @input="updatePulmonaryArea"
+      />
       <VInputText
         v-model="NaElectrolyte"
         type="number"
@@ -758,8 +829,14 @@ watch(
         :disabled="hasNaElectrolyte == 'N/A'"
         class="mb-3"
         :center-text="true"
+        @input="updatePulmonaryArea"
       />
-      <VInputRadio v-model="hasNaElectrolyte" value="N/A" class="mb-3" />
+      <VInputRadio
+        v-model="hasNaElectrolyte"
+        value="N/A"
+        class="mb-3"
+        @input="updatePulmonaryArea"
+      />
     </div>
     <div class="flex gap-x-12">
       <VInputText
@@ -772,8 +849,14 @@ watch(
         :disabled="hasKElectrolyte == 'N/A'"
         class="mb-3"
         :center-text="true"
+        @input="updatePulmonaryArea"
       />
-      <VInputRadio v-model="hasKElectrolyte" value="N/A" class="mb-3" />
+      <VInputRadio
+        v-model="hasKElectrolyte"
+        value="N/A"
+        class="mb-3"
+        @input="updatePulmonaryArea"
+      />
       <VInputText
         v-model="CaElectrolyte"
         type="number"
@@ -783,8 +866,14 @@ watch(
         :disabled="hasCaElectrolyte == 'N/A'"
         class="mb-3"
         :center-text="true"
+        @input="updatePulmonaryArea"
       />
-      <VInputRadio v-model="hasCaElectrolyte" value="N/A" class="mb-3" />
+      <VInputRadio
+        v-model="hasCaElectrolyte"
+        value="N/A"
+        class="mb-3"
+        @input="updatePulmonaryArea"
+      />
     </div>
   </div>
   <VInputText
@@ -793,6 +882,7 @@ watch(
     label="Encimas cardiacas"
     label-position="top"
     class="mb-3"
+    @input="updatePulmonaryArea"
   />
   <VInputText
     v-model="areaPulmonar.otrosLaboratorios"
@@ -800,6 +890,7 @@ watch(
     label="Otros laboratorios"
     label-position="top"
     class="mb-3"
+    @input="updatePulmonaryArea"
   />
   <p class="text-stone-500 h-max mb-1.5">Control radiológico</p>
   <table>
@@ -809,6 +900,7 @@ watch(
           v-model="selectedRadiologicControl"
           value="Congestion pulmonar"
           class="mr-12 mb-3"
+          @input="updatePulmonaryArea"
         />
       </td>
       <td>
@@ -816,6 +908,7 @@ watch(
           v-model="selectedRadiologicControl"
           value="Infiltrados"
           class="mr-12 mb-3"
+          @input="updatePulmonaryArea"
         />
       </td>
       <td>
@@ -823,6 +916,7 @@ watch(
           v-model="selectedRadiologicControl"
           value="N/A"
           class="mr-12 mb-3"
+          @input="updatePulmonaryArea"
         />
       </td>
     </tr>
@@ -832,6 +926,7 @@ watch(
           v-model="selectedRadiologicControl"
           value="Foco neumónico"
           class="mr-12 mb-3"
+          @input="updatePulmonaryArea"
         />
       </td>
       <td>
@@ -839,6 +934,7 @@ watch(
           v-model="selectedRadiologicControl"
           value="Derrame"
           class="mr-12 mb-3"
+          @input="updatePulmonaryArea"
         />
       </td>
     </tr>
@@ -849,5 +945,6 @@ watch(
     label="Datos subjetivos"
     label-position="top"
     class="mb-3"
+    @input="updatePulmonaryArea"
   />
 </template>

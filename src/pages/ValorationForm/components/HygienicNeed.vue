@@ -2,11 +2,18 @@
 import VInputRadio from "@/components/VInputRadio.vue";
 import VInputText from "@/components/VInputText.vue";
 import { ref, computed, watch } from "vue";
-import { IonButton, IonIcon } from "@ionic/vue";
+import { IonIcon } from "@ionic/vue";
 import { arrowForward } from "ionicons/icons";
 import PatientStateTable from "./PatientStateTable.vue";
 import FaillingRiskInfoTable from "./FaillingRiskInfoTable.vue";
 import BradenScale from "./BradenScale.vue";
+
+const emits = defineEmits<{
+  (
+    e: "update:necesidad-de-higiene",
+    value: typeof necesidadDeHigiene.value
+  ): void;
+}>();
 
 const necesidadDeHigiene = ref<{
   estadoDeLaPiel: string | null;
@@ -230,6 +237,10 @@ watch(
     necesidadDeHigiene.value.riesgoUPP = riesgoUPP;
   }
 );
+
+function updateHygienicNeed() {
+  emits("update:necesidad-de-higiene", necesidadDeHigiene.value);
+}
 </script>
 
 <template>
@@ -250,24 +261,28 @@ watch(
         value="Hidratada"
         label="Hidratada"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.estadoDeLaPiel"
         value="Deshidratada"
         label="Deshidratada"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.estadoDeLaPiel"
         value="Integra"
         label="Integra"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.estadoDeLaPiel"
         value="Con lesion"
         label="Con lesion"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputText
         v-model="necesidadDeHigiene.especificarLesionEnPiel"
@@ -277,6 +292,7 @@ watch(
         class="col-span-2"
         :center-text="true"
         :disabled="!fueLesionEnPielEspecificada"
+        @input="updateHygienicNeed"
       />
     </div>
 
@@ -287,42 +303,49 @@ watch(
         value="Pálida"
         label="Pálida"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Robicunda"
         label="Robicunda"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Marmórea"
         label="Marmórea"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Ictérica"
         label="Ictérica"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Equimosis"
         label="Equimosis"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Hematomas"
         label="Hematomas"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Cianótica"
         label="Cianótica"
         class="w-max"
+        @input="updateHygienicNeed"
       />
     </div>
 
@@ -339,30 +362,35 @@ watch(
         value="Cateteres"
         label="Cateteres"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.dispositivoCVPC"
         value="CVPC"
         label="CVPC"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.dispositivoCVC"
         value="CVC"
         label="CVC"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.dispositivoSondas"
         value="Sondas"
         label="Sondas"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.dispositivoSondaVesical"
         value="Sonda vesical"
         label="Sonda vesical"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <div></div>
       <VInputRadio
@@ -370,18 +398,21 @@ watch(
         value="Heridas"
         label="Heridas"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.dispositivoUPP"
         value="UPP"
         label="UPP"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.dispositivoFlictemas"
         value="Flictemas"
         label="Flictemas"
         class="w-max"
+        @input="updateHygienicNeed"
       />
     </div>
     <!-- <canvas ref="canvasRef" class="bg-transparent" @click="showCommentInput = true"></canvas> -->
@@ -400,7 +431,8 @@ watch(
     <PatientStateTable
       class="w-full mb-3"
       @update:puntuacion-riesgo-caidas="
-        handleUpdateFactoresDeRiesgoSeleccionados
+        handleUpdateFactoresDeRiesgoSeleccionados;
+        updateHygienicNeed;
       "
     />
     <FaillingRiskInfoTable class="w-full mb-1.5" />
@@ -413,7 +445,10 @@ watch(
     <p class="text-stone-500 h-max">Escala de riesgo de UPP</p>
     <BradenScale
       class="w-full mb-1.5"
-      @update:puntuacion-riesgo-u-p-p="handleUpdatePuntuacionRiesgoUPP"
+      @update:puntuacion-riesgo-u-p-p="
+        handleUpdatePuntuacionRiesgoUPP;
+        updateHygienicNeed;
+      "
     />
     <p class="h-max mb-3">
       Clasificación de riesgo: Alto riesgo: Puntuación total &lt; 12. <br />
@@ -446,6 +481,7 @@ watch(
                   !puntuacionTotalRiesgoCaidas,
               }"
               :value="puntuacionTotalRiesgoCaidas"
+              @input="updateHygienicNeed"
             />
           </div>
           <div class="flex items-center mb-1.5 text-stone-500">
@@ -463,6 +499,7 @@ watch(
                   riesgoCaidas === 'Bajo' || !riesgoCaidas,
               }"
               :value="riesgoCaidas"
+              @input="updateHygienicNeed"
             />
           </div>
         </div>
@@ -484,6 +521,7 @@ watch(
                   puntuacionTotalRiesgoUPP && puntuacionTotalRiesgoUPP >= 15,
               }"
               :value="puntuacionTotalRiesgoUPP"
+              @input="updateHygienicNeed"
             />
           </div>
           <div class="flex items-center mb-1.5 text-stone-500">
@@ -501,6 +539,7 @@ watch(
                   riesgoUPP === 'Bajo' || !riesgoUPP,
               }"
               :value="riesgoUPP"
+              @input="updateHygienicNeed"
             />
           </div>
         </div>
@@ -513,6 +552,7 @@ watch(
       value="Quirúrgica"
       label="1. Quirúrgica"
       class="w-max mb-1.5"
+      @input="updateHygienicNeed"
     />
     <Transition name="expand">
       <div
@@ -524,18 +564,21 @@ watch(
           value="En proceso de cicatrización sin infección"
           label="En proceso de cicatrización sin infección"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="Infectada"
           label="Infectada"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="Dehiscente"
           label="Dehiscente"
           class="w-max"
+          @input="updateHygienicNeed"
         />
       </div>
     </Transition>
@@ -545,6 +588,7 @@ watch(
       value="Ulcera por presión"
       label="2. Ulcera por presión"
       class="w-max mb-1.5"
+      @input="updateHygienicNeed"
     />
     <Transition name="expand">
       <div
@@ -556,24 +600,28 @@ watch(
           value="G I"
           label="G I"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="G II"
           label="G II"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="G III"
           label="G III"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="G IV"
           label="G IV"
           class="w-max"
+          @input="updateHygienicNeed"
         />
       </div>
     </Transition>
@@ -587,12 +635,14 @@ watch(
           value="En proceso de cicatrización"
           label="En proceso de cicatrización"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="Infectada"
           label="Infectada"
           class="w-max"
+          @input="updateHygienicNeed"
         />
       </div>
     </Transition>
@@ -602,6 +652,7 @@ watch(
       value="Ulcera venosa"
       label="3. Ulcera venosa"
       class="w-max mb-1.5"
+      @input="updateHygienicNeed"
     />
     <Transition name="expand">
       <div
@@ -613,24 +664,28 @@ watch(
           value="I"
           label="I"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="II"
           label="II"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="III"
           label="III"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="IV"
           label="IV"
           class="w-max"
+          @input="updateHygienicNeed"
         />
       </div>
     </Transition>
@@ -644,12 +699,14 @@ watch(
           value="En proceso de cicatrización"
           label="En proceso de cicatrización"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="Infectada"
           label="Infectada"
           class="w-max"
+          @input="updateHygienicNeed"
         />
       </div>
     </Transition>
@@ -659,6 +716,7 @@ watch(
       value="Ulcera diabética"
       label="4. Ulcera diabética"
       class="w-max mb-1.5"
+      @input="updateHygienicNeed"
     />
     <Transition name="expand">
       <div
@@ -670,24 +728,28 @@ watch(
           value="I"
           label="I"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="II"
           label="II"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="III"
           label="III"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="IV"
           label="IV"
           class="w-max"
+          @input="updateHygienicNeed"
         />
       </div>
     </Transition>
@@ -701,12 +763,14 @@ watch(
           value="En proceso de cicatrización"
           label="En proceso de cicatrización"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="Infectada"
           label="Infectada"
           class="w-max"
+          @input="updateHygienicNeed"
         />
       </div>
     </Transition>
@@ -716,6 +780,7 @@ watch(
       value="Otra"
       label="5. Otra"
       class="w-max mb-1.5"
+      @input="updateHygienicNeed"
     />
 
     <Transition>
@@ -728,12 +793,14 @@ watch(
           value="Proceso de cicatrización"
           label="Proceso de cicatrización"
           class="w-max"
+          @input="updateHygienicNeed"
         />
         <VInputRadio
           v-model="necesidadDeHigiene.gradoOTipoEspecifico"
           value="Infectada"
           label="Infectada"
           class="w-max"
+          @input="updateHygienicNeed"
         />
       </div>
     </Transition>
@@ -743,6 +810,7 @@ watch(
       value="N/A"
       label="6. N/A"
       class="w-max"
+      @input="updateHygienicNeed"
     />
 
     <img src="../../../assets/images/upp.png" alt="UPP" />
@@ -760,6 +828,7 @@ watch(
             type="text"
             input-width="32"
             :center-text="true"
+            @input="updateHygienicNeed"
           />
         </td>
       </tr>
@@ -775,6 +844,7 @@ watch(
             type="text"
             input-width="32"
             :center-text="true"
+            @input="updateHygienicNeed"
           />
         </td>
       </tr>
@@ -794,6 +864,7 @@ watch(
                   type="date"
                   input-width="32"
                   :center-text="true"
+                  @input="updateHygienicNeed"
                 />
               </div>
             </div>
@@ -809,18 +880,21 @@ watch(
         value="Independiente"
         label="Independiente"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.suplenciaParaElBano"
         value="Baño de regadera asistido"
         label="Baño de regadera asistido"
         class="w-max"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="necesidadDeHigiene.suplenciaParaElBano"
         value="Baño de esponja en cama"
         label="Baño de esponja en cama"
         class="w-max"
+        @input="updateHygienicNeed"
       />
     </div>
 
@@ -832,6 +906,7 @@ watch(
         label="Datos subjetivos"
         label-position="top"
         :disabled="tieneDatosSubjetivos === false"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="tieneDatosSubjetivos"
@@ -839,6 +914,7 @@ watch(
         label="N/A"
         identifier="Datos subjetivos"
         class="pt-2"
+        @input="updateHygienicNeed"
       />
     </div>
 
@@ -850,6 +926,7 @@ watch(
         label="Otros datos relevantes"
         label-position="top"
         :disabled="tieneOtrosDatosRelevantes === false"
+        @input="updateHygienicNeed"
       />
       <VInputRadio
         v-model="tieneOtrosDatosRelevantes"
@@ -857,6 +934,7 @@ watch(
         label="N/A"
         identifier="Otros datos relevantes"
         class="pt-2"
+        @input="updateHygienicNeed"
       />
     </div>
 
@@ -867,6 +945,7 @@ watch(
       type="text"
       label="(S) Situación del paciente:"
       label-position="top"
+      @input="updateHygienicNeed"
     />
     <VInputText
       class="w-full mr-8 mb-3"
@@ -874,6 +953,7 @@ watch(
       type="text"
       label="(B) Información clínica:"
       label-position="top"
+      @input="updateHygienicNeed"
     />
     <VInputText
       class="w-full mr-8 mb-3"
@@ -881,6 +961,7 @@ watch(
       type="text"
       label="(A) Evaluación:"
       label-position="top"
+      @input="updateHygienicNeed"
     />
     <VInputText
       class="w-full mr-8 mb-3"
@@ -888,6 +969,7 @@ watch(
       type="text"
       label="(R) Recomendaciones:"
       label-position="top"
+      @input="updateHygienicNeed"
     />
 
     <div class="grid grid-cols-2 gap-3 gap-x-10 justify-center content-center">
@@ -897,6 +979,7 @@ watch(
         type="text"
         label="Firma del enfermero(a)"
         label-position="top"
+        @input="updateHygienicNeed"
       />
       <div class="flex items-center">A. Cabello F. (ejemplo)</div>
     </div>
@@ -905,12 +988,6 @@ watch(
       apellido completo y la primer inicial del segundo apellido seguida de un
       punto.)
     </p>
-
-    <div class="w-full flex justify-end mb-3">
-      <IonButton color="primary" fill="solid" shape="round">
-        Siguiente
-      </IonButton>
-    </div>
   </div>
 </template>
 
