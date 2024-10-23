@@ -1,65 +1,87 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref} from "vue";
+
+const emits = defineEmits<{
+  (e: "update:puntuacionRiesgoUPP", value: { factor: string; opcion: { valor: string; puntuacion: number } }[]): void;
+}>();
 
 const bradenScaleFactors = ref([
   {
     factor: "Percepción sensorial",
-    options: [
-      { value: "Completamente limitada", points: 1 },
-      { value: "Muy limitada", points: 2 },
-      { value: "Ligeramente limitada", points: 3 },
-      { value: "Sin limitación", points: 4 },
+    opciones: [
+      {valor: "Completamente limitada", puntuacion: 1},
+      {valor: "Muy limitada", puntuacion: 2},
+      {valor: "Ligeramente limitada", puntuacion: 3},
+      {valor: "Sin limitación", puntuacion: 4},
     ],
   },
   {
     factor: "Exposición a la humedad",
-    options: [
-      { value: "Constante humedad", points: 1 },
-      { value: "A menudo humedad", points: 2 },
-      { value: "Ocasionalmente humedad", points: 3 },
-      { value: "Raramente humedad", points: 4 },
+    opciones: [
+      {valor: "Constante humedad", puntuacion: 1},
+      {valor: "A menudo humedad", puntuacion: 2},
+      {valor: "Ocasionalmente humedad", puntuacion: 3},
+      {valor: "Raramente humedad", puntuacion: 4},
     ],
   },
   {
     factor: "Actividad",
-    options: [
-      { value: "Encamado/a", points: 1 },
-      { value: "En silla", points: 2 },
-      { value: "Deambula ocasionalmente", points: 3 },
-      { value: "Deambula frecuentemente", points: 4 },
+    opciones: [
+      {valor: "Encamado/a", puntuacion: 1},
+      {valor: "En silla", puntuacion: 2},
+      {valor: "Deambula ocasionalmente", puntuacion: 3},
+      {valor: "Deambula frecuentemente", puntuacion: 4},
     ],
   },
   {
     factor: "Movilidad",
-    options: [
-      { value: "Completamente inmóvil", points: 1 },
-      { value: "Muy limitada", points: 2 },
-      { value: "Ligeramente limitada", points: 3 },
-      { value: "Sin limitaciones", points: 4 },
+    opciones: [
+      {valor: "Completamente inmóvil", puntuacion: 1},
+      {valor: "Muy limitada", puntuacion: 2},
+      {valor: "Ligeramente limitada", puntuacion: 3},
+      {valor: "Sin limitaciones", puntuacion: 4},
     ],
   },
   {
     factor: "Nutrición",
-    options: [
-      { value: "Muy pobre", points: 1 },
-      { value: "Probablemente inadecuada", points: 2 },
-      { value: "Adecuada", points: 3 },
-      { value: "Excelente", points: 4 },
+    opciones: [
+      {valor: "Muy pobre", puntuacion: 1},
+      {valor: "Probablemente inadecuada", puntuacion: 2},
+      {valor: "Adecuada", puntuacion: 3},
+      {valor: "Excelente", puntuacion: 4},
     ],
   },
   {
     factor: "Roce y peligro de lesiones",
-    options: [
-      { value: "Problema: Requiere moderada y máxima asistencia", points: 1 },
+    opciones: [
+      {valor: "Problema: Requiere moderada y máxima asistencia", puntuacion: 1},
       {
-        value:
-          "Potencial problema: Se mueve muy débilmente o requiere de mínima asistencia",
-        points: 2,
+        valor:
+            "Potencial problema: Se mueve muy débilmente o requiere de mínima asistencia",
+        puntuacion: 2,
       },
-      { value: "Sin problema: Deambula ocasionalmente", points: 3 },
+      {valor: "Sin problema: Deambula ocasionalmente", puntuacion: 3},
     ],
   },
 ]);
+
+const selectedBradenScaleOptions = ref<{
+  factor: string;
+  opcion: { valor: string; puntuacion: number };
+}[]>([]);
+
+function updateBradenScaleValue(factor: string, opcion: { valor: string; puntuacion: number }) {
+  const index = selectedBradenScaleOptions.value.findIndex(
+      (option) => option.factor === factor)
+
+  if (index !== -1) {
+    selectedBradenScaleOptions.value.splice(index, 1);
+  } else {
+    selectedBradenScaleOptions.value.push({factor, opcion});
+  }
+
+  emits("update:puntuacionRiesgoUPP", selectedBradenScaleOptions.value);
+}
 </script>
 
 <template>
@@ -73,12 +95,21 @@ const bradenScaleFactors = ref([
       <tr v-for="scaleSegment in bradenScaleFactors" :key="scaleSegment.factor">
         <th>{{ scaleSegment.factor }}</th>
         <td
-          v-for="(option, index) in scaleSegment.options"
-          :key="index"
-          :colspan="scaleSegment.options.length < 4 && index === 1 ? 2 : 1"
+            v-for="(option, index) in scaleSegment.opciones"
+            :key="index"
+            :colspan="scaleSegment.opciones.length < 4 && index === 1 ? 2 : 1"
+            :class="{
+              'bg-blue-100 transition-colors duration-300 ease-in-out': selectedBradenScaleOptions.some(
+                  (selectedOption) =>
+                      selectedOption.factor === scaleSegment.factor &&
+                      selectedOption.opcion.valor === option.valor
+              ),
+
+            }"
+            @click="updateBradenScaleValue(scaleSegment.factor, option)"
         >
-          {{ option.value }}
-          {{ `(${option.points})` }}
+          {{ option.valor }}
+          {{ `(${option.puntuacion})` }}
         </td>
       </tr>
     </table>

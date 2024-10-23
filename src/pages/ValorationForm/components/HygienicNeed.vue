@@ -37,10 +37,7 @@ const necesidadDeHigiene = ref<{
       | null;
   riesgoCaidas: "Alto" | "Mediano" | "Bajo" | null;
   puntuacionRiesgoUPP:
-      | {
-    factor: string;
-    puntuacion: number;
-  }[]
+      | { factor: string; opcion: { valor: string; puntuacion: number } }[]
       | null;
   riesgoUPP: "Alto" | "Moderado" | "Bajo" | null;
   tiposDeLesion:
@@ -140,7 +137,7 @@ const otrosDatosRelevantesHigiene = computed({
 const puntuacionTotalRiesgoCaidas = computed(() => {
   if (!necesidadDeHigiene.value.puntuacionRiesgoCaidas
       || necesidadDeHigiene.value.puntuacionRiesgoCaidas.length === 0
-  ) return 0;
+  ) return null;
   return necesidadDeHigiene.value.puntuacionRiesgoCaidas.reduce(
       (acc, curr) => acc + curr.puntuacion, 0
   );
@@ -159,13 +156,37 @@ function handleUpdateFactoresDeRiesgoSeleccionados(factors: {
   necesidadDeHigiene.value.puntuacionRiesgoCaidas = factors;
 }
 
+const puntuacionTotalRiesgoUPP = computed(() => {
+  if (!necesidadDeHigiene.value.puntuacionRiesgoUPP
+      || necesidadDeHigiene.value.puntuacionRiesgoUPP.length === 0
+  ) return null;
+  return necesidadDeHigiene.value.puntuacionRiesgoUPP.reduce(
+      (acc, curr) => acc + curr.opcion.puntuacion, 0
+  );
+});
+const riesgoUPP = computed(() => {
+  if (puntuacionTotalRiesgoUPP.value == null) return null
+  if (puntuacionTotalRiesgoUPP.value <= 12) return "Alto";
+  if (puntuacionTotalRiesgoUPP.value >= 13 && puntuacionTotalRiesgoUPP.value <= 14) return "Moderado";
+  return "Bajo";
+});
+
+function handleUpdatePuntuacionRiesgoUPP(puntuacion: {
+  factor: string;
+  opcion: { valor: string; puntuacion: number };
+}[]) {
+  necesidadDeHigiene.value.puntuacionRiesgoUPP = puntuacion;
+}
+
 watch(
     [
       datosSubjetivosHigiene,
       fueLesionEnPielEspecificada,
       otrosDatosRelevantesHigiene,
       puntuacionTotalRiesgoCaidas,
-      riesgoCaidas
+      riesgoCaidas,
+      puntuacionTotalRiesgoUPP,
+      riesgoUPP,
     ],
     ([
        datosSubjetivosHigiene,
@@ -173,6 +194,8 @@ watch(
        otrosDatosRelevantesHigiene,
        puntuacionTotalRiesgoCaidas,
        riesgoCaidas,
+       puntuacionTotalRiesgoUPP,
+       riesgoUPP,
      ]) => {
       necesidadDeHigiene.value.datosSubjetivos = datosSubjetivosHigiene;
       necesidadDeHigiene.value.otrosDatosRelevantes = otrosDatosRelevantesHigiene;
@@ -183,6 +206,10 @@ watch(
         necesidadDeHigiene.value.riesgoCaidas = null;
       }
       necesidadDeHigiene.value.riesgoCaidas = riesgoCaidas;
+      if (!puntuacionTotalRiesgoUPP) {
+        necesidadDeHigiene.value.riesgoUPP = null;
+      }
+      necesidadDeHigiene.value.riesgoUPP = riesgoUPP;
     }
 );
 </script>
@@ -360,7 +387,7 @@ watch(
     </p>
 
     <p class="text-stone-500 h-max">Escala de riesgo de UPP</p>
-    <BradenScale class="w-full mb-1.5"/>
+    <BradenScale class="w-full mb-1.5" @update:puntuacion-riesgo-u-p-p="handleUpdatePuntuacionRiesgoUPP"/>
     <p class="h-max mb-3">
       Clasificación de riesgo: Alto riesgo: Puntuación total &lt; 12. <br/>
       Riesgo moderado: Puntuación total 13 - 14. <br/>
@@ -369,7 +396,7 @@ watch(
     </p>
 
     <div class="grid grid-cols-2 gap-x-10 gap-y-3 mb-3 w-3/4">
-      <div class="flex flex-col w-full">
+      <div v-if="riesgoCaidas" class="flex flex-col w-full">
         <div class="flex items-center mb-1.5 text-stone-500">
           <label class="min-w-max mr-3">Puntuación</label>
           <input
@@ -398,36 +425,36 @@ watch(
               :value="riesgoCaidas"
           >
         </div>
-        <!--        <VInputText-->
-        <!--            v-model="variable"-->
-        <!--            type="text"-->
-        <!--            label="Riesgo"-->
-        <!--            label-position="side"-->
-        <!--            input-width="16"-->
-        <!--            :center-text="true"-->
-        <!--            place-holder="Auto"-->
-        <!--        />-->
       </div>
-      <div class="flex flex-col w-full">
-        <VInputText
-            v-model="variable"
-            type="text"
-            label="Puntuación"
-            label-position="side"
-            class="mb-1.5"
-            input-width="16"
-            :center-text="true"
-            place-holder="Auto"
-        />
-        <VInputText
-            v-model="variable"
-            type="text"
-            label="Riesgo"
-            label-position="side"
-            input-width="16"
-            :center-text="true"
-            place-holder="Auto"
-        />
+      <div v-if="riesgoUPP" class="flex flex-col w-full">
+        <div class="flex items-center mb-1.5 text-stone-500">
+          <label class="min-w-max mr-3">Puntuación</label>
+          <input
+              type="number"
+              placeholder="Auto"
+              class="w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
+              :class="{
+                'border border-red-800 bg-red-400 text-black': puntuacionTotalRiesgoUPP && puntuacionTotalRiesgoUPP <= 12,
+                'border border-yellow-800 bg-yellow-400 text-black': puntuacionTotalRiesgoUPP && puntuacionTotalRiesgoUPP >= 13 && puntuacionTotalRiesgoUPP <= 14,
+                'border border-green-800 bg-green-400 text-black': puntuacionTotalRiesgoUPP && puntuacionTotalRiesgoUPP >= 15
+              }"
+              :value="puntuacionTotalRiesgoUPP"
+          >
+        </div>
+        <div class="flex items-center mb-1.5 text-stone-500">
+          <label class="min-w-max mr-3">Riesgo UPP</label>
+          <input
+              type="text"
+              placeholder="Auto"
+              class="w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
+              :class="{
+                'border border-red-800 bg-red-400 text-black': riesgoUPP === 'Alto',
+                'border border-yellow-800 bg-yellow-400 text-black': riesgoUPP === 'Moderado',
+                'border border-green-800 bg-green-400 text-black': riesgoUPP === 'Bajo' || !riesgoUPP
+              }"
+              :value="riesgoUPP"
+          >
+        </div>
       </div>
     </div>
 
