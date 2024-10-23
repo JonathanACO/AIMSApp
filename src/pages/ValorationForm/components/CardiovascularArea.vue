@@ -159,9 +159,9 @@ const tensionArterialMedia = computed(() =>
 
 const selectedEdemaPlace = computed(() => {
   if (edemaPlace.value && areaCardiovascular.value.edema) {
-    if (edemaPlace.value !== "Otro" || !specificPlace.value)
-      return edemaPlace.value;
-    else return specificPlace.value;
+    return edemaPlace.value !== "Otro" || !specificPlace.value
+      ? edemaPlace.value
+      : specificPlace.value;
   }
   return null;
 });
@@ -253,7 +253,6 @@ watch(
     edematype,
     specificRythm,
     datosSubjetivos,
-    selectedEdemaPlace,
     painScale,
     apoyoInotropicos,
     apoyoAminas,
@@ -262,7 +261,6 @@ watch(
     edematypeValue,
     specificRythmValue,
     datosSubjetivosValue,
-    selectedEdemaPlaceValue,
     painScaleValue,
     apoyoInotropicosValue,
     apoyoAminasValue,
@@ -272,13 +270,15 @@ watch(
       tipoDeEdema: edematypeValue,
       ritmoEspecífico: specificRythmValue,
       datosSubjetivosMarcapasos: datosSubjetivosValue,
-      sitioDelEdema: selectedEdemaPlaceValue,
       dolorPrecordial: painScaleValue,
       apoyoDeInotropicosEspecificado: apoyoInotropicosValue,
       apoyoDeAminasEspecificado: apoyoAminasValue,
     };
   }
 );
+watch(selectedEdemaPlace, (value) => {
+  areaCardiovascular.value.sitioDelEdema = value;
+});
 </script>
 
 <template>
