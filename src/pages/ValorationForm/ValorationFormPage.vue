@@ -11,13 +11,15 @@ import HygienicNeed from "./components/HygienicNeed.vue";
 import { ref } from "vue";
 import {
   initialMedicalAssesment,
-  MedicalAssesment,
+  MedicalAssesmentDto,
 } from "@/entities/MedicalAssesment";
 import { useAppointmentStore } from "@/stores/useAppointmentStore";
 import router from "@/router";
 
 const appointmentStore = useAppointmentStore();
-const medicalAssesment = ref<MedicalAssesment>({ ...initialMedicalAssesment });
+const medicalAssesment = ref<MedicalAssesmentDto>({
+  ...initialMedicalAssesment,
+});
 
 function saveMedicalAssesment() {
   appointmentStore.medicalAssesment = medicalAssesment.value;

@@ -1,4 +1,9 @@
 export type MedicalAssesment = {
+  id: number;
+  appointmentId: number;
+} & MedicalAssesmentDto;
+
+export type MedicalAssesmentDto = {
   datosPersonales: {
     edad: number | null;
     sexo: "Masculino" | "Femenino" | null;
@@ -375,7 +380,7 @@ export type MedicalAssesment = {
   };
 };
 
-export const initialMedicalAssesment: MedicalAssesment = {
+export const initialMedicalAssesment: MedicalAssesmentDto = {
   datosPersonales: {
     edad: null,
     sexo: null,
