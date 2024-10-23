@@ -1,83 +1,95 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from "vue";
 
 const emits = defineEmits<{
-  (e: "update:puntuacionRiesgoUPP", value: { factor: string; opcion: { valor: string; puntuacion: number } }[]): void;
+  (
+    e: "update:puntuacionRiesgoUPP",
+    value: { factor: string; opcion: { valor: string; puntuacion: number } }[]
+  ): void;
 }>();
 
 const bradenScaleFactors = ref([
   {
     factor: "Percepción sensorial",
     opciones: [
-      {valor: "Completamente limitada", puntuacion: 1},
-      {valor: "Muy limitada", puntuacion: 2},
-      {valor: "Ligeramente limitada", puntuacion: 3},
-      {valor: "Sin limitación", puntuacion: 4},
+      { valor: "Completamente limitada", puntuacion: 1 },
+      { valor: "Muy limitada", puntuacion: 2 },
+      { valor: "Ligeramente limitada", puntuacion: 3 },
+      { valor: "Sin limitación", puntuacion: 4 },
     ],
   },
   {
     factor: "Exposición a la humedad",
     opciones: [
-      {valor: "Constante humedad", puntuacion: 1},
-      {valor: "A menudo humedad", puntuacion: 2},
-      {valor: "Ocasionalmente humedad", puntuacion: 3},
-      {valor: "Raramente humedad", puntuacion: 4},
+      { valor: "Constante humedad", puntuacion: 1 },
+      { valor: "A menudo humedad", puntuacion: 2 },
+      { valor: "Ocasionalmente humedad", puntuacion: 3 },
+      { valor: "Raramente humedad", puntuacion: 4 },
     ],
   },
   {
     factor: "Actividad",
     opciones: [
-      {valor: "Encamado/a", puntuacion: 1},
-      {valor: "En silla", puntuacion: 2},
-      {valor: "Deambula ocasionalmente", puntuacion: 3},
-      {valor: "Deambula frecuentemente", puntuacion: 4},
+      { valor: "Encamado/a", puntuacion: 1 },
+      { valor: "En silla", puntuacion: 2 },
+      { valor: "Deambula ocasionalmente", puntuacion: 3 },
+      { valor: "Deambula frecuentemente", puntuacion: 4 },
     ],
   },
   {
     factor: "Movilidad",
     opciones: [
-      {valor: "Completamente inmóvil", puntuacion: 1},
-      {valor: "Muy limitada", puntuacion: 2},
-      {valor: "Ligeramente limitada", puntuacion: 3},
-      {valor: "Sin limitaciones", puntuacion: 4},
+      { valor: "Completamente inmóvil", puntuacion: 1 },
+      { valor: "Muy limitada", puntuacion: 2 },
+      { valor: "Ligeramente limitada", puntuacion: 3 },
+      { valor: "Sin limitaciones", puntuacion: 4 },
     ],
   },
   {
     factor: "Nutrición",
     opciones: [
-      {valor: "Muy pobre", puntuacion: 1},
-      {valor: "Probablemente inadecuada", puntuacion: 2},
-      {valor: "Adecuada", puntuacion: 3},
-      {valor: "Excelente", puntuacion: 4},
+      { valor: "Muy pobre", puntuacion: 1 },
+      { valor: "Probablemente inadecuada", puntuacion: 2 },
+      { valor: "Adecuada", puntuacion: 3 },
+      { valor: "Excelente", puntuacion: 4 },
     ],
   },
   {
     factor: "Roce y peligro de lesiones",
     opciones: [
-      {valor: "Problema: Requiere moderada y máxima asistencia", puntuacion: 1},
+      {
+        valor: "Problema: Requiere moderada y máxima asistencia",
+        puntuacion: 1,
+      },
       {
         valor:
-            "Potencial problema: Se mueve muy débilmente o requiere de mínima asistencia",
+          "Potencial problema: Se mueve muy débilmente o requiere de mínima asistencia",
         puntuacion: 2,
       },
-      {valor: "Sin problema: Deambula ocasionalmente", puntuacion: 3},
+      { valor: "Sin problema: Deambula ocasionalmente", puntuacion: 3 },
     ],
   },
 ]);
 
-const selectedBradenScaleOptions = ref<{
-  factor: string;
-  opcion: { valor: string; puntuacion: number };
-}[]>([]);
+const selectedBradenScaleOptions = ref<
+  {
+    factor: string;
+    opcion: { valor: string; puntuacion: number };
+  }[]
+>([]);
 
-function updateBradenScaleValue(factor: string, opcion: { valor: string; puntuacion: number }) {
+function updateBradenScaleValue(
+  factor: string,
+  opcion: { valor: string; puntuacion: number }
+) {
   const index = selectedBradenScaleOptions.value.findIndex(
-      (option) => option.factor === factor)
+    (option) => option.factor === factor
+  );
 
   if (index !== -1) {
     selectedBradenScaleOptions.value.splice(index, 1);
   } else {
-    selectedBradenScaleOptions.value.push({factor, opcion});
+    selectedBradenScaleOptions.value.push({ factor, opcion });
   }
 
   emits("update:puntuacionRiesgoUPP", selectedBradenScaleOptions.value);
@@ -95,18 +107,18 @@ function updateBradenScaleValue(factor: string, opcion: { valor: string; puntuac
       <tr v-for="scaleSegment in bradenScaleFactors" :key="scaleSegment.factor">
         <th>{{ scaleSegment.factor }}</th>
         <td
-            v-for="(option, index) in scaleSegment.opciones"
-            :key="index"
-            :colspan="scaleSegment.opciones.length < 4 && index === 1 ? 2 : 1"
-            :class="{
-              'bg-blue-100 transition-colors duration-300 ease-in-out': selectedBradenScaleOptions.some(
-                  (selectedOption) =>
-                      selectedOption.factor === scaleSegment.factor &&
-                      selectedOption.opcion.valor === option.valor
+          v-for="(option, index) in scaleSegment.opciones"
+          :key="index"
+          :colspan="scaleSegment.opciones.length < 4 && index === 1 ? 2 : 1"
+          :class="{
+            'bg-blue-100 transition-colors duration-300 ease-in-out':
+              selectedBradenScaleOptions.some(
+                (selectedOption) =>
+                  selectedOption.factor === scaleSegment.factor &&
+                  selectedOption.opcion.valor === option.valor
               ),
-
-            }"
-            @click="updateBradenScaleValue(scaleSegment.factor, option)"
+          }"
+          @click="updateBradenScaleValue(scaleSegment.factor, option)"
         >
           {{ option.valor }}
           {{ `(${option.puntuacion})` }}

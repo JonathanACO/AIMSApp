@@ -1,38 +1,46 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from "vue";
 
 const emits = defineEmits<{
   (
-      e: "update:puntuacionRiesgoCaidas",
-      factors: { factor: string; puntuacion: number }[]
+    e: "update:puntuacionRiesgoCaidas",
+    factors: { factorDeRiesgo: string; puntuacion: number }[]
   ): void;
 }>();
 
 const patientStateValorationOptions = ref([
-  {factor: "Paciente sin factores de riesgo evidentes", puntuacion: 1},
-  {factor: "Problemas de idioma o socioculturales", puntuacion: 2},
-  {factor: "Tratamiento farmacológico que implica riesgos", puntuacion: 2},
-  {factor: "Limitación fisica", puntuacion: 2},
-  {factor: "Estado mental alterado", puntuacion: 3},
+  { factor: "Paciente sin factores de riesgo evidentes", puntuacion: 1 },
+  { factor: "Problemas de idioma o socioculturales", puntuacion: 2 },
+  { factor: "Tratamiento farmacológico que implica riesgos", puntuacion: 2 },
+  { factor: "Limitación fisica", puntuacion: 2 },
+  { factor: "Estado mental alterado", puntuacion: 3 },
 ]);
 
-const selectedPatientStateValorationOptions = ref<{
-  factor: string;
-  puntuacion: number;
-}[]>([]);
+const selectedPatientStateValorationOptions = ref<
+  {
+    factorDeRiesgo: string;
+    puntuacion: number;
+  }[]
+>([]);
 
-function updatePatientStateValue(factor: string, puntuacion: number) {
+function updatePatientStateValue(factorDeRiesgo: string, puntuacion: number) {
   const index = selectedPatientStateValorationOptions.value.findIndex(
-      (option) => option.factor === factor
+    (option) => option.factorDeRiesgo === factorDeRiesgo
   );
 
   if (index !== -1) {
     selectedPatientStateValorationOptions.value.splice(index, 1);
   } else {
-    selectedPatientStateValorationOptions.value.push({factor, puntuacion});
+    selectedPatientStateValorationOptions.value.push({
+      factorDeRiesgo,
+      puntuacion,
+    });
   }
 
-  emits("update:puntuacionRiesgoCaidas", selectedPatientStateValorationOptions.value);
+  emits(
+    "update:puntuacionRiesgoCaidas",
+    selectedPatientStateValorationOptions.value
+  );
 }
 </script>
 
@@ -49,31 +57,32 @@ function updatePatientStateValue(factor: string, puntuacion: number) {
         <th class="w-2/5">Puntos</th>
       </tr>
       <tbody>
-      <tr
+        <tr
           v-for="option in patientStateValorationOptions"
           :key="option.factor"
           @click="updatePatientStateValue(option.factor, option.puntuacion)"
           :class="{
-            'bg-blue-100 transition-colors duration-300 ease-in-out': selectedPatientStateValorationOptions.some(
-              (selectedOption) => selectedOption.factor === option.factor
-            ),
-
+            'bg-blue-100 transition-colors duration-300 ease-in-out':
+              selectedPatientStateValorationOptions.some(
+                (selectedOption) =>
+                  selectedOption.factorDeRiesgo === option.factor
+              ),
           }"
-      >
-        <td>{{ option.factor }}</td>
-        <td>{{ option.puntuacion }}</td>
-      </tr>
-      <tr>
-        <th>Total</th>
-        <th>
-          {{
-            patientStateValorationOptions.reduce(
+        >
+          <td>{{ option.factor }}</td>
+          <td>{{ option.puntuacion }}</td>
+        </tr>
+        <tr>
+          <th>Total</th>
+          <th>
+            {{
+              patientStateValorationOptions.reduce(
                 (acc, curr) => acc + curr.puntuacion,
                 0
-            )
-          }}
-        </th>
-      </tr>
+              )
+            }}
+          </th>
+        </tr>
       </tbody>
     </table>
   </div>

@@ -247,18 +247,17 @@ watch(
     datosSubjetivosProblemasDeMasticacion,
   ],
   ([
-    datosSubjetivosProblemasDeMasticacion,
     sgEspecificoVal,
-    tipoDeAlteracionDePesoVal,
+    tipoDeAlteracionDePeso,
     valorSondaDeAlimentacionVal,
     tipoDeProtesisDentalVal,
     tipoDeDietaVal,
     otraDietaHabitualVal,
     suplementoAlimenticioVal,
+    datosSubjetivosProblemasDeMasticacion,
   ]) => {
     NecesidadAlimentacion.value.otroSg = sgEspecificoVal;
-    NecesidadAlimentacion.value.siAlteracionesDePeso =
-      tipoDeAlteracionDePesoVal;
+    NecesidadAlimentacion.value.siAlteracionesDePeso = tipoDeAlteracionDePeso;
     NecesidadAlimentacion.value.calibreSonda = valorSondaDeAlimentacionVal;
     NecesidadAlimentacion.value.siprotesisDental = tipoDeProtesisDentalVal;
     NecesidadAlimentacion.value.tipoDeDieta = tipoDeDietaVal;
