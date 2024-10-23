@@ -4,6 +4,13 @@ import VInputRadio from "@/components/VInputRadio.vue";
 import VInputText from "@/components/VInputText.vue";
 import VSelect from "@/components/VSelect.vue";
 
+const emits = defineEmits<{
+  (
+    e: "update:antecedentesPersonales",
+    value: typeof antecedentesPersonales.value
+  ): void;
+}>();
+
 const antecedentesPersonales = ref<{
   habitosToxicos: "Alcohol" | "Tabaco" | "Otras drogas" | "Negadas" | null;
   habitoToxicoEspecificado: string | null;
@@ -56,7 +63,7 @@ const alergiaSeleccionada = ref<string | null>(null);
 const alergiaEspecifica = ref<string | null>(null);
 const otrasEnfermedadesInternal = ref<string | null>(null);
 
-const antecedentesQuirúrgicosOTransfusionalesOptions = [
+const antecedentesQuirurgicosOTransfusionalesOptions = [
   "Quirurgico",
   "Transfusionales",
 ];
@@ -115,6 +122,10 @@ watch(
     antecedentesPersonales.value.tipoDeAlergia = alergiaValue;
   }
 );
+
+function updateAntecedentesPersonales() {
+  emits("update:antecedentesPersonales", antecedentesPersonales.value);
+}
 </script>
 
 <template>
@@ -135,6 +146,7 @@ watch(
         label="Tabaco"
         identifier="HabitosToxicos"
         class="w-max"
+        @input="updateAntecedentesPersonales"
       />
       <VInputRadio
         v-model="antecedentesPersonales.habitosToxicos"
@@ -142,6 +154,7 @@ watch(
         label="Alcohol"
         identifier="HabitosToxicos"
         class="w-max"
+        @input="updateAntecedentesPersonales"
       />
       <VInputRadio
         v-model="antecedentesPersonales.habitosToxicos"
@@ -149,6 +162,7 @@ watch(
         label="Otras drogas"
         identifier="HabitosToxicos"
         class="w-max"
+        @input="updateAntecedentesPersonales"
       />
       <VInputRadio
         v-model="antecedentesPersonales.habitosToxicos"
@@ -156,6 +170,7 @@ watch(
         label="Negadas"
         identifier="HabitosToxicos"
         class="w-max"
+        @input="updateAntecedentesPersonales"
       />
     </div>
     <VInputText
@@ -164,6 +179,7 @@ watch(
       type="text"
       label="Especificar (años de duración del hábito)"
       label-position="side"
+      @input="updateAntecedentesPersonales"
     />
     <p class="col-span-4 text-stone-500 h-max mb-1.5">
       Hospitalizaciones previas
@@ -175,6 +191,7 @@ watch(
         label="Sí"
         identifier="Hospitalizaciones"
         class="w-max"
+        @input="updateAntecedentesPersonales"
       />
       <VInputRadio
         v-model="antecedentesPersonales.hospitalizacionesPrevias"
@@ -182,6 +199,7 @@ watch(
         label="No"
         identifier="Hospitalizaciones"
         class="w-max"
+        @input="updateAntecedentesPersonales"
       />
     </div>
     <p class="col-span-4 text-stone-500 h-max mb-1.5">
@@ -194,6 +212,7 @@ watch(
         label="Diabetes Mellitus"
         identifier="Hospitalizaciones"
         class="w-max"
+        @input="updateAntecedentesPersonales"
       />
       <div class="col-span-2 flex">
         <VInputRadio
@@ -202,6 +221,7 @@ watch(
           label="Otras enfermedades"
           identifier="Hospitalizaciones"
           class="min-w-max mr-2 block"
+          @input="updateAntecedentesPersonales"
         />
         <VInputText
           class="w-full"
@@ -210,6 +230,7 @@ watch(
           :disabled="
             antecedentesPersonales.cronicoDegenerativas !== 'Otras enfermedades'
           "
+          @input="updateAntecedentesPersonales"
         />
       </div>
       <VInputRadio
@@ -218,6 +239,7 @@ watch(
         label="Hipertensión arterial"
         identifier="Hospitalizaciones"
         class="w-max"
+        @input="updateAntecedentesPersonales"
       />
     </div>
     <div class="grid grid-cols-3 grid-rows-2 gap-x-6 gap-y-3 mb-3">
@@ -227,15 +249,16 @@ watch(
         label-position="top"
         type="text"
         unit="años"
-        class=""
+        @input="updateAntecedentesPersonales"
       />
       <VSelect
         v-model="antecedentesPersonales.antecedentesQuirurgicosTransfusionales"
-        :options="antecedentesQuirúrgicosOTransfusionalesOptions"
+        :options="antecedentesQuirurgicosOTransfusionalesOptions"
         label="Antecedentes quirúrgicos/transfusionales"
         label-position="top"
         type="text"
         class="col-span-2"
+        @input="updateAntecedentesPersonales"
       />
       <div class="col-start-2">
         <p
@@ -256,6 +279,7 @@ watch(
           type="date"
           :center-text="true"
           class="w-max"
+          @input="updateAntecedentesPersonales"
         />
       </div>
     </div>
@@ -269,18 +293,21 @@ watch(
         class="col-span-4"
         type="text"
         v-model="antecedentesPersonales.medicamentoEnCasa"
+        @input="updateAntecedentesPersonales"
       />
       <p class="text-stone-500 h-max">Dosis:</p>
       <VInputText
         class="col-span-4"
         type="text"
         v-model="antecedentesPersonales.dosisEnCasa"
+        @input="updateAntecedentesPersonales"
       />
       <p class="text-stone-500 h-max">Horario:</p>
       <VInputText
         class="col-span-4"
         type="text"
         v-model="antecedentesPersonales.horarioEnCasa"
+        @input="updateAntecedentesPersonales"
       />
     </div>
     <p class="text-stone-500 h-max mb-1.5">Administrado por:</p>
@@ -290,6 +317,7 @@ watch(
       value="Enfermero"
       label="Enfermero(a)"
       identifier="administradoPor"
+      @input="updateAntecedentesPersonales"
     />
     <VInputRadio
       class="w-fit mb-3"
@@ -297,6 +325,7 @@ watch(
       value="Paciente"
       label="Paciente"
       identifier="administradoPor"
+      @input="updateAntecedentesPersonales"
     />
     <p class="text-stone-500 h-max mb-1.5">
       Tratamiento farmacológico hospitalario
@@ -307,18 +336,21 @@ watch(
         class="col-span-4"
         type="text"
         v-model="antecedentesPersonales.medicamentoEnHospital"
+        @input="updateAntecedentesPersonales"
       />
       <p class="text-stone-500 h-max">Dosis:</p>
       <VInputText
         class="col-span-4"
         type="text"
         v-model="antecedentesPersonales.dosisEnHospital"
+        @input="updateAntecedentesPersonales"
       />
       <p class="text-stone-500 h-max">Horario:</p>
       <VInputText
         class="col-span-4"
         type="text"
         v-model="antecedentesPersonales.horarioEnHospital"
+        @input="updateAntecedentesPersonales"
       />
     </div>
     <p class="text-stone-500 h-max mb-1.5">Administrado por:</p>
@@ -328,6 +360,7 @@ watch(
       value="Enfermero"
       label="Enfermero(a)"
       identifier="administradoPor"
+      @input="updateAntecedentesPersonales"
     />
     <VInputRadio
       class="w-fit mb-3"
@@ -335,6 +368,7 @@ watch(
       value="Paciente"
       label="Paciente"
       identifier="administradoPor"
+      @input="updateAntecedentesPersonales"
     />
     <p class="text-stone-500 h-max mb-1.5">Alergias</p>
     <div class="flex gap-x-32 mb-3">
@@ -343,12 +377,14 @@ watch(
         :value="true"
         label="Si"
         identifier="tieneAlergias"
+        @input="updateAntecedentesPersonales"
       />
       <VInputRadio
         v-model="antecedentesPersonales.alergias"
         :value="false"
         label="No"
         identifier="tieneAlergias"
+        @input="updateAntecedentesPersonales"
       />
     </div>
     <Transition name="expand">
@@ -359,6 +395,7 @@ watch(
           value="Medicamentosa"
           label="Medicamentosa"
           identifier="opcionesDeAlergia"
+          @input="updateAntecedentesPersonales"
         />
         <VInputRadio
           class="mb-3"
@@ -366,6 +403,7 @@ watch(
           value="Alimenticia"
           label="Alimenticia"
           identifier="opcionesDeAlergia"
+          @input="updateAntecedentesPersonales"
         />
         <VInputRadio
           class="mb-3"
@@ -373,6 +411,7 @@ watch(
           value="Material"
           label="Material"
           identifier="opcionesDeAlergia"
+          @input="updateAntecedentesPersonales"
         />
         <div class="flex gap-x-9">
           <VInputRadio
@@ -380,15 +419,19 @@ watch(
             value="Otro"
             label="Otro"
             identifier="opcionesDeAlergia"
-          /><VInputText
+            @input="updateAntecedentesPersonales"
+          />
+          <VInputText
             class="w-full"
             label="Especificar"
             label-position="side"
             v-model="otraAlergia"
             type="text"
             :disabled="alergiaSeleccionada !== 'Otro'"
+            @input="updateAntecedentesPersonales"
           />
-        </div></div
-    ></Transition>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
