@@ -396,66 +396,68 @@ watch(
     </p>
 
     <div class="grid grid-cols-2 gap-x-10 gap-y-3 mb-3 w-3/4">
-      <div v-if="riesgoCaidas" class="flex flex-col w-full">
-        <div class="flex items-center mb-1.5 text-stone-500">
-          <label class="min-w-max mr-3">Puntuación</label>
-          <input
-              type="number"
-              placeholder="Auto"
-              class="w-16 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
-              :class="{
+      <TransitionGroup name="expand">
+        <div v-if="riesgoCaidas" class="flex flex-col w-full">
+          <div class="flex items-center mb-1.5 text-stone-500">
+            <label class="min-w-max mr-3">Puntuación</label>
+            <input
+                type="number"
+                placeholder="Auto"
+                class="w-16 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
+                :class="{
                 'border border-red-800 bg-red-400 text-black': puntuacionTotalRiesgoCaidas && puntuacionTotalRiesgoCaidas >= 4,
                 'border border-yellow-800 bg-yellow-400 text-black': puntuacionTotalRiesgoCaidas && puntuacionTotalRiesgoCaidas >= 2 && puntuacionTotalRiesgoCaidas < 4,
                 'border border-green-800 bg-green-400 text-black': puntuacionTotalRiesgoCaidas && puntuacionTotalRiesgoCaidas < 2 && puntuacionTotalRiesgoCaidas >= 0 || !puntuacionTotalRiesgoCaidas
               }"
-              :value="puntuacionTotalRiesgoCaidas"
-          >
-        </div>
-        <div class="flex items-center mb-1.5 text-stone-500">
-          <label class="min-w-max mr-3">Riesgo de caídas</label>
-          <input
-              type="text"
-              placeholder="Auto"
-              class="w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
-              :class="{
+                :value="puntuacionTotalRiesgoCaidas"
+            >
+          </div>
+          <div class="flex items-center mb-1.5 text-stone-500">
+            <label class="min-w-max mr-3">Riesgo de caídas</label>
+            <input
+                type="text"
+                placeholder="Auto"
+                class="w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
+                :class="{
                 'border border-red-800 bg-red-400 text-black': riesgoCaidas === 'Alto',
                 'border border-yellow-800 bg-yellow-400 text-black': riesgoCaidas === 'Mediano',
                 'border border-green-800 bg-green-400 text-black': riesgoCaidas === 'Bajo' || !riesgoCaidas
               }"
-              :value="riesgoCaidas"
-          >
+                :value="riesgoCaidas"
+            >
+          </div>
         </div>
-      </div>
-      <div v-if="riesgoUPP" class="flex flex-col w-full">
-        <div class="flex items-center mb-1.5 text-stone-500">
-          <label class="min-w-max mr-3">Puntuación</label>
-          <input
-              type="number"
-              placeholder="Auto"
-              class="w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
-              :class="{
+        <div v-if="riesgoUPP" class="flex flex-col w-full">
+          <div class="flex items-center mb-1.5 text-stone-500">
+            <label class="min-w-max mr-3">Puntuación</label>
+            <input
+                type="number"
+                placeholder="Auto"
+                class="w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
+                :class="{
                 'border border-red-800 bg-red-400 text-black': puntuacionTotalRiesgoUPP && puntuacionTotalRiesgoUPP <= 12,
                 'border border-yellow-800 bg-yellow-400 text-black': puntuacionTotalRiesgoUPP && puntuacionTotalRiesgoUPP >= 13 && puntuacionTotalRiesgoUPP <= 14,
                 'border border-green-800 bg-green-400 text-black': puntuacionTotalRiesgoUPP && puntuacionTotalRiesgoUPP >= 15
               }"
-              :value="puntuacionTotalRiesgoUPP"
-          >
-        </div>
-        <div class="flex items-center mb-1.5 text-stone-500">
-          <label class="min-w-max mr-3">Riesgo UPP</label>
-          <input
-              type="text"
-              placeholder="Auto"
-              class="w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
-              :class="{
+                :value="puntuacionTotalRiesgoUPP"
+            >
+          </div>
+          <div class="flex items-center mb-1.5 text-stone-500">
+            <label class="min-w-max mr-3">Riesgo UPP</label>
+            <input
+                type="text"
+                placeholder="Auto"
+                class="w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-1 h-9 outline-none border border-black bg-white rounded-md"
+                :class="{
                 'border border-red-800 bg-red-400 text-black': riesgoUPP === 'Alto',
                 'border border-yellow-800 bg-yellow-400 text-black': riesgoUPP === 'Moderado',
                 'border border-green-800 bg-green-400 text-black': riesgoUPP === 'Bajo' || !riesgoUPP
               }"
-              :value="riesgoUPP"
-          >
+                :value="riesgoUPP"
+            >
+          </div>
         </div>
-      </div>
+      </TransitionGroup>
     </div>
 
     <p class="text-stone-500 h-max">Tipos de lesión</p>
@@ -465,29 +467,31 @@ watch(
         label="1. Quirúrgica"
         class="w-max mb-1.5"
     />
-    <div
-        class="flex gap-5 mb-1.5"
-        v-if="necesidadDeHigiene.tiposDeLesion === 'Quirúrgica'"
-    >
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="En proceso de cicatrización sin infección"
-          label="En proceso de cicatrización sin infección"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="Infectada"
-          label="Infectada"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="Dehiscente"
-          label="Dehiscente"
-          class="w-max"
-      />
-    </div>
+    <Transition name="expand">
+      <div
+          class="flex gap-5 mb-1.5"
+          v-if="necesidadDeHigiene.tiposDeLesion === 'Quirúrgica'"
+      >
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="En proceso de cicatrización sin infección"
+            label="En proceso de cicatrización sin infección"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="Infectada"
+            label="Infectada"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="Dehiscente"
+            label="Dehiscente"
+            class="w-max"
+        />
+      </div>
+    </Transition>
 
     <VInputRadio
         v-model="necesidadDeHigiene.tiposDeLesion"
@@ -495,46 +499,50 @@ watch(
         label="2. Ulcera por presión"
         class="w-max mb-1.5"
     />
-    <div class="flex gap-5 mb-1.5">
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="G I"
-          label="G I"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="G II"
-          label="G II"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="G III"
-          label="G III"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="G IV"
-          label="G IV"
-          class="w-max"
-      />
-    </div>
-    <div class="flex gap-5 mb-1.5">
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="En proceso de cicatrización"
-          label="En proceso de cicatrización"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="Infectada"
-          label="Infectada"
-          class="w-max"
-      />
-    </div>
+    <Transition name="expand">
+      <div v-if="necesidadDeHigiene.tiposDeLesion=== 'Ulcera por presión'" class="flex gap-5 mb-1.5">
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="G I"
+            label="G I"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="G II"
+            label="G II"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="G III"
+            label="G III"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="G IV"
+            label="G IV"
+            class="w-max"
+        />
+      </div>
+    </Transition>
+    <Transition name="expand">
+      <div v-if="necesidadDeHigiene.tiposDeLesion === 'Ulcera por presión'" class="flex gap-5 mb-1.5">
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="En proceso de cicatrización"
+            label="En proceso de cicatrización"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="Infectada"
+            label="Infectada"
+            class="w-max"
+        />
+      </div>
+    </Transition>
 
     <VInputRadio
         v-model="necesidadDeHigiene.tiposDeLesion"
@@ -542,46 +550,50 @@ watch(
         label="3. Ulcera venosa"
         class="w-max mb-1.5"
     />
-    <div class="flex gap-5 mb-1.5">
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="I"
-          label="I"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="II"
-          label="II"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="III"
-          label="III"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="IV"
-          label="IV"
-          class="w-max"
-      />
-    </div>
-    <div class="flex gap-5 mb-1.5">
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="En proceso de cicatrización"
-          label="En proceso de cicatrización"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="Infectada"
-          label="Infectada"
-          class="w-max"
-      />
-    </div>
+    <Transition name="expand">
+      <div v-if="necesidadDeHigiene.tiposDeLesion === 'Ulcera venosa'" class="flex gap-5 mb-1.5">
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="I"
+            label="I"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="II"
+            label="II"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="III"
+            label="III"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="IV"
+            label="IV"
+            class="w-max"
+        />
+      </div>
+    </Transition>
+    <Transition name="expand">
+      <div v-if="necesidadDeHigiene.tiposDeLesion === 'Ulcera venosa'" class="flex gap-5 mb-1.5">
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="En proceso de cicatrización"
+            label="En proceso de cicatrización"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="Infectada"
+            label="Infectada"
+            class="w-max"
+        />
+      </div>
+    </Transition>
 
     <VInputRadio
         v-model="necesidadDeHigiene.tiposDeLesion"
@@ -589,46 +601,50 @@ watch(
         label="4. Ulcera diabética"
         class="w-max mb-1.5"
     />
-    <div class="flex gap-5 mb-1.5">
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="I"
-          label="I"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="II"
-          label="II"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="III"
-          label="III"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="IV"
-          label="IV"
-          class="w-max"
-      />
-    </div>
-    <div class="flex gap-5 mb-1.5">
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="En proceso de cicatrización"
-          label="En proceso de cicatrización"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="Infectada"
-          label="Infectada"
-          class="w-max"
-      />
-    </div>
+    <Transition name="expand">
+      <div v-if="necesidadDeHigiene.tiposDeLesion === 'Ulcera diabética'" class="flex gap-5 mb-1.5">
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="I"
+            label="I"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="II"
+            label="II"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="III"
+            label="III"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="IV"
+            label="IV"
+            class="w-max"
+        />
+      </div>
+    </Transition>
+    <Transition name="expand">
+      <div v-if="necesidadDeHigiene.tiposDeLesion === 'Ulcera diabética'" class="flex gap-5 mb-1.5">
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="En proceso de cicatrización"
+            label="En proceso de cicatrización"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="Infectada"
+            label="Infectada"
+            class="w-max"
+        />
+      </div>
+    </Transition>
 
     <VInputRadio
         v-model="necesidadDeHigiene.tiposDeLesion"
@@ -636,20 +652,24 @@ watch(
         label="5. Otra"
         class="w-max mb-1.5"
     />
-    <div class="flex gap-5 mb-1.5">
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="Proceso de cicatrización"
-          label="Proceso de cicatrización"
-          class="w-max"
-      />
-      <VInputRadio
-          v-model="necesidadDeHigiene.gradoOTipoEspecifico"
-          value="Infectada"
-          label="Infectada"
-          class="w-max"
-      />
-    </div>
+
+    <Transition>
+      <div v-if="necesidadDeHigiene.tiposDeLesion === 'Otra'" class="flex gap-5 mb-1.5">
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="Proceso de cicatrización"
+            label="Proceso de cicatrización"
+            class="w-max"
+        />
+        <VInputRadio
+            v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+            value="Infectada"
+            label="Infectada"
+            class="w-max"
+        />
+      </div>
+    </Transition>
+
     <VInputRadio
         v-model="necesidadDeHigiene.tiposDeLesion"
         value="N/A"

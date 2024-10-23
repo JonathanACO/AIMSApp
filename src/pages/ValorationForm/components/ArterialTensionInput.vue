@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {ref} from "vue";
 
-const props = defineProps<{
+defineProps<{
   tensionArterialSistolica: number | null;
   tensionArterialDiastolica: number | null;
   afterText?: string;
@@ -29,9 +29,9 @@ const handleInput = (side: "left" | "right", event: Event) => {
   } else {
     rightValue.value = isNaN(numericValue) ? null : numericValue;
     if (
-      rightValue.value !== null &&
-      rightValue.value.toString().length === 3 &&
-      (leftValue.value === null || leftValue.value.toString().length < 3)
+        rightValue.value !== null &&
+        rightValue.value.toString().length === 3 &&
+        (leftValue.value === null || leftValue.value.toString().length < 3)
     ) {
       leftInputRef.value?.focus();
     }
@@ -45,26 +45,26 @@ const handleInput = (side: "left" | "right", event: Event) => {
 <template>
   <div class="relative inline-flex items-center w-full text-stone-500">
     <div
-      class="inline-flex items-center border h-9 bg-white border-stone-500 rounded-md overflow-hidden"
+        class="inline-flex items-center border h-9 bg-white border-stone-500 rounded-md overflow-hidden"
     >
       <input
-        ref="leftInputRef"
-        v-model="leftValue"
-        @input="handleInput('left', $event)"
-        type="number"
-        maxlength="3"
-        placeholder="000"
-        class="w-12 bg-white text-center outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          ref="leftInputRef"
+          v-model="leftValue"
+          @input="handleInput('left', $event)"
+          type="number"
+          maxlength="3"
+          placeholder="000"
+          class="w-12 bg-white text-center outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />
       <span class="px-1 text-gray-700">/</span>
       <input
-        ref="rightInputRef"
-        v-model="rightValue"
-        @input="handleInput('right', $event)"
-        type="number"
-        maxlength="3"
-        placeholder="000"
-        class="w-12 bg-white text-center outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          ref="rightInputRef"
+          v-model="rightValue"
+          @input="handleInput('right', $event)"
+          type="number"
+          maxlength="3"
+          placeholder="000"
+          class="w-12 bg-white text-center outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />
     </div>
 
