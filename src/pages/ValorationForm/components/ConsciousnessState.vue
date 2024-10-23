@@ -7,6 +7,13 @@ import PupillaryReflex from "./PupillaryReflex.vue";
 import RASSTable from "./RASSTable.vue";
 import VSelect from "@/components/VSelect.vue";
 
+const emits = defineEmits<{
+  (
+    e: "update:estadoDeConciencia",
+    value: typeof estadoDeConciencia.value
+  ): void;
+}>();
+
 const estadoDeConciencia = ref<{
   estado: "Consciente" | "Inconsciente" | "Sedado" | null;
   aberturaOcular: number | null;
@@ -81,6 +88,10 @@ const glasgowScaleTotal = computed(() => {
 watch(datosSubjetivos, (value) => {
   estadoDeConciencia.value.datosSubjetivoEstadoDeConciencia = value;
 });
+
+function updateEstadoDeConciencia() {
+  emits("update:estadoDeConciencia", estadoDeConciencia.value);
+}
 </script>
 
 <template>
@@ -99,18 +110,21 @@ watch(datosSubjetivos, (value) => {
         label="Consciente"
         value="Consciente"
         identifier="EstadoDeConciencia"
+        @input="updateEstadoDeConciencia"
       />
       <VInputRadio
         v-model="estadoDeConciencia.estado"
         label="Inconsciente"
         value="Inconsciente"
         identifier="EstadoDeConciencia"
+        @input="updateEstadoDeConciencia"
       />
       <VInputRadio
         v-model="estadoDeConciencia.estado"
         label="Sedado"
         value="Sedado"
         identifier="EstadoDeConciencia"
+        @input="updateEstadoDeConciencia"
       />
     </div>
     <p class="text-stone-500 h-max mb-1.5">Escala de Glasgow</p>
@@ -123,6 +137,9 @@ watch(datosSubjetivos, (value) => {
       v-model:respuesta-verbal="estadoDeConciencia.respuestaVerbal"
       v-model:respuesta-motoral="estadoDeConciencia.respuestaMotoral"
       class="mb-3"
+      @update:abertura-ocular="updateEstadoDeConciencia"
+      @update:respuesta-verbal="updateEstadoDeConciencia"
+      @update:respuesta-motoral="updateEstadoDeConciencia"
     />
     <div class="flex text-stone-500 items-center mb-3 w-56">
       <label class="min-w-max mr-3">Total</label>
@@ -133,6 +150,7 @@ watch(datosSubjetivos, (value) => {
             :value="glasgowScaleTotal"
             type="text"
             class="w-full text-center p-1 h-9 outline-none border bg-white border-stone-500 rounded-md"
+            @input="updateEstadoDeConciencia"
           />
         </div>
       </div>
@@ -143,6 +161,7 @@ watch(datosSubjetivos, (value) => {
       label="Escala de RASS"
       label-position="top"
       class="w-56 mb-3"
+      @input="updateEstadoDeConciencia"
     />
 
     <RASSTable class="mb-3" />
@@ -153,6 +172,7 @@ watch(datosSubjetivos, (value) => {
       label="Reflejo pupilar"
       label-position="top"
       class="mb-3 w-96"
+      @input="updateEstadoDeConciencia"
     />
     <PupillaryReflex />
 
@@ -164,12 +184,14 @@ watch(datosSubjetivos, (value) => {
         label-position="top"
         class="w-full mr-8"
         :disabled="hasSubjectiveData === false"
+        @input="updateEstadoDeConciencia"
       />
       <VInputRadio
         v-model="hasSubjectiveData"
         :value="false"
         label="N/A"
         identifier="datosSubjetivos"
+        @input="updateEstadoDeConciencia"
       />
     </div>
   </div>

@@ -28,7 +28,11 @@ const medicalAssesment = ref<MedicalAssesment>({ ...initialMedicalAssesment });
       <PersonalBackground
         @update:antecedentes-personales="medicalAssesment.antecedentes = $event"
       />
-      <ConsciousnessState />
+      <ConsciousnessState
+        @update:estado-de-conciencia="
+          medicalAssesment.estadoDeConciencia = $event
+        "
+      />
       <OxygenationNeed />
       <FeedingNeed />
       <EliminationNeed />

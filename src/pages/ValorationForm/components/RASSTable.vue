@@ -83,7 +83,7 @@
     </table>
   </div>
 </template>
-<style scoped>
+<style scoped lang="postcss">
 td,
 tr {
   @apply border border-black;
