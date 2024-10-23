@@ -136,7 +136,7 @@ const alteracionDePesoSeleccionado = ref<
   "Sobrepeso" | "Obesidad" | "Obesidad morbida" | null
 >(null);
 const otroSg = ref<string | null>(null);
-
+const tieneDatosSubjetivosProblemasDeMasticacion = ref<false | null>(null);
 const tipoDeDieta = computed(() => {
   if (tipoDeDietaSeleccionada.value) {
     if (tipoDeDietaSeleccionada.value !== "Otra" || !otraDieta.value)
@@ -204,6 +204,19 @@ const sgEspecifico = computed({
   },
 });
 
+const problemasDeMasticacionSubjetivos = ref<string | null>(null);
+const datosSubjetivosProblemasDeMasticacion = computed({
+  get() {
+    return !problemasDeMasticacionSubjetivos.value ||
+      tieneDatosSubjetivosProblemasDeMasticacion.value === false
+      ? null
+      : problemasDeMasticacionSubjetivos.value;
+  },
+  set(value) {
+    problemasDeMasticacionSubjetivos.value = !value ? null : value;
+  },
+});
+
 const handleInputChange = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   if (value) {
@@ -231,8 +244,10 @@ watch(
     tipoDeDieta,
     otraDietaHabitual,
     suplementoAlimenticio,
+    datosSubjetivosProblemasDeMasticacion,
   ],
   ([
+    datosSubjetivosProblemasDeMasticacion,
     sgEspecificoVal,
     tipoDeAlteracionDePesoVal,
     valorSondaDeAlimentacionVal,
@@ -250,6 +265,8 @@ watch(
     NecesidadAlimentacion.value.otraDietaHabitual = otraDietaHabitualVal;
     NecesidadAlimentacion.value.especificarSuplemento =
       suplementoAlimenticioVal;
+    NecesidadAlimentacion.value.datosSubjetivosDeProblemasDeMasticacion =
+      datosSubjetivosProblemasDeMasticacion;
   }
 );
 </script>
@@ -612,7 +629,7 @@ watch(
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.problemasDeMasticacion"
+        v-model="datosSubjetivosProblemasDeMasticacion"
         value="Deglucion"
         label="Deglución"
         identifier="Problemas de masticacion"
@@ -624,6 +641,7 @@ watch(
         label="Intolerancia"
         identifier="Problemas de masticacion"
         class="w-max"
+        :disabled="!tieneDatosSubjetivosProblemasDeMasticacion"
       />
       <VInputRadio
         v-model="NecesidadAlimentacion.problemasDeMasticacion"
@@ -654,10 +672,11 @@ watch(
         type="text"
         label="Datos subjetivos"
         label-position="top"
+        :disabled="tieneDatosSubjetivosProblemasDeMasticacion === false"
       />
       <VInputRadio
-        v-model="NecesidadAlimentacion.datosSubjetivosDeProblemasDeMasticacion"
-        value=""
+        v-model="tieneDatosSubjetivosProblemasDeMasticacion"
+        :value="false"
         label="N/A"
         identifier="Datos subjetivos"
         class="pt-2"
