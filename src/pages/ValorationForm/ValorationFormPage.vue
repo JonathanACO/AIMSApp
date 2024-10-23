@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonContent, IonPage } from "@ionic/vue";
+import {IonContent, IonPage} from "@ionic/vue";
 import PersonalDetails from "./components/PersonalDetails.vue";
 import PersonalBackground from "./components/PersonalBackground.vue";
 import ConsciousnessState from "./components/ConsciousnessState.vue";
@@ -8,7 +8,13 @@ import FeedingNeed from "./components/FeedingNeed.vue";
 import EliminationNeed from "./components/EliminationNeed.vue";
 import ThermoregulationNeed from "./components/ThermoregulationNeed.vue";
 import HygienicNeed from "./components/HygienicNeed.vue";
-//TODO: juntar todos los objetos en uno( y hacer su entidad )
+import {ref} from "vue";
+import {
+  initialMedicalAssesment,
+  MedicalAssesment,
+} from "@/entities/MedicalAssesment";
+
+const medicalAssesment = ref<MedicalAssesment>({...initialMedicalAssesment});
 </script>
 <template>
   <IonPage>
@@ -16,15 +22,14 @@ import HygienicNeed from "./components/HygienicNeed.vue";
       <h1 class="font-medium text-2xl mx-4">
         Valoración Cardiovascular de Enfermería
       </h1>
-      <PersonalDetails />
-      <PersonalBackground />
-      <ConsciousnessState />
-      <OxygenationNeed />
-      <FeedingNeed />
-      <!-- TODO: Make these work -->
-      <EliminationNeed />
-      <ThermoregulationNeed />
-      <HygienicNeed />
+      <PersonalDetails @update:datos-personales="medicalAssesment.datosPersonales = $event"/>
+      <PersonalBackground/>
+      <ConsciousnessState/>
+      <OxygenationNeed/>
+      <FeedingNeed/>
+      <EliminationNeed/>
+      <ThermoregulationNeed/>
+      <HygienicNeed/>
     </IonContent>
   </IonPage>
 </template>
