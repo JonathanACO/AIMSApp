@@ -34,7 +34,7 @@ const routes = [
         path: "valoracion",
         name: "medical-assesment",
         component: () =>
-          import("../pages/ValorationForm/ValorationFormPage.vue"),
+          import("../pages/Consultation/ValorationForm/ValorationFormPage.vue"),
       },
       {
         path: "/sugerencias-de-diagnostico",
