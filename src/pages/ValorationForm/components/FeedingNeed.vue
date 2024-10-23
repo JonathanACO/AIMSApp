@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { IonContent } from "@ionic/vue";
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 import VInputText from "@/components/VInputText.vue";
 import VInputRadio from "@/components/VInputRadio.vue";
 
-const NecesidadOxigenacion = ref<{
+const NecesidadAlimentacion = ref<{
   tipoDeDieta:
     | "Normal"
     | "Liquida"
@@ -15,21 +14,19 @@ const NecesidadOxigenacion = ref<{
     | "Ayuno"
     | "NPT"
     | "Otra"
+    | string
     | null;
-  otraDieta: string | null;
-  dietaHabitual: {
-    Carnes: boolean;
-    Verduras: boolean;
-    Frutas: boolean;
-    Harinas: boolean;
-    Leguminosas: boolean;
-    Lacteos: boolean;
-    Refresco: boolean;
-    Cafe: boolean;
-    Agua: boolean;
-    DietaNoApegadaAEnfermedad: boolean;
-    Otros: boolean;
-  };
+  dietaHabitualCarnes: boolean;
+  dietaHabitualVerduras: boolean;
+  dietaHabitualFrutas: boolean;
+  dietaHabitualHarinas: boolean;
+  dietaHabitualLeguminosas: boolean;
+  dietaHabitualLacteos: boolean;
+  dietaHabitualRefresco: boolean;
+  dietaHabitualCafe: boolean;
+  dietaHabitualAgua: boolean;
+  dietaNoApegadaAEnfermedad: boolean;
+  dietaHabitualOtros: boolean;
   otraDietaHabitual: string | null;
   ingestaDeLiquidos:
     | "Menos de 1 lt."
@@ -76,20 +73,17 @@ const NecesidadOxigenacion = ref<{
   datosSubjetivosBalanceParcial: string | null;
 }>({
   tipoDeDieta: null,
-  otraDieta: null,
-  dietaHabitual: {
-    Carnes: false,
-    Verduras: false,
-    Frutas: false,
-    Harinas: false,
-    Leguminosas: false,
-    Lacteos: false,
-    Refresco: false,
-    Cafe: false,
-    Agua: false,
-    DietaNoApegadaAEnfermedad: false,
-    Otros: false,
-  },
+  dietaHabitualCarnes: false,
+  dietaHabitualVerduras: false,
+  dietaHabitualFrutas: false,
+  dietaHabitualHarinas: false,
+  dietaHabitualLeguminosas: false,
+  dietaHabitualLacteos: false,
+  dietaHabitualRefresco: false,
+  dietaHabitualCafe: false,
+  dietaHabitualAgua: false,
+  dietaNoApegadaAEnfermedad: false,
+  dietaHabitualOtros: false,
   otraDietaHabitual: null,
   ingestaDeLiquidos: null,
   apetito: null,
@@ -118,22 +112,146 @@ const NecesidadOxigenacion = ref<{
   balanceParcial: null,
   datosSubjetivosBalanceParcial: null,
 });
+
+const dietaHabitualEspecifica = ref<string | null>(null);
+const tipoDeDietaSeleccionada = ref<
+  | "Normal"
+  | "Liquida"
+  | "Blanda"
+  | "Vegana"
+  | "Ayuno"
+  | "Libre de gluten"
+  | "Ayuno"
+  | "NPT"
+  | "Otra"
+  | null
+>(null);
+const dietaEspecifica = ref<string | null>(null);
+const suplementoAlimenticioEspecifico = ref<string | null>(null);
+const protesisDentalSeleccionada = ref<"Movil" | "Fija" | null>(null);
+const calibreSeleccionado = ref<"12" | "14" | "16" | "18" | "20" | "22" | null>(
+  null
+);
+const alteracionDePesoSeleccionado = ref<
+  "Sobrepeso" | "Obesidad" | "Obesidad morbida" | null
+>(null);
+const otroSg = ref<string | null>(null);
+
+const tipoDeDieta = computed(() => {
+  if (tipoDeDietaSeleccionada.value) {
+    if (tipoDeDietaSeleccionada.value !== "Otra" || !otraDieta.value)
+      return tipoDeDietaSeleccionada.value;
+    else return otraDieta.value;
+  } else return null;
+});
+
+const otraDieta = computed({
+  get() {
+    if (tipoDeDietaSeleccionada.value == "Otra") return dietaEspecifica.value;
+    return null;
+  },
+  set(value) {
+    dietaEspecifica.value = !value ? null : value;
+  },
+});
+
+const otraDietaHabitual = computed({
+  get() {
+    if (
+      !NecesidadAlimentacion.value.dietaHabitualOtros ||
+      !dietaHabitualEspecifica.value
+    )
+      return null;
+    else {
+      return dietaHabitualEspecifica.value;
+    }
+  },
+  set(value) {
+    dietaHabitualEspecifica.value = !value ? null : value;
+  },
+});
+
+const suplementoAlimenticio = computed(() => {
+  return NecesidadAlimentacion.value.suplementoAlimenticio
+    ? suplementoAlimenticioEspecifico.value
+    : null;
+});
+
+const tipoDeProtesisDental = computed(() => {
+  return NecesidadAlimentacion.value.protesisDental
+    ? protesisDentalSeleccionada.value
+    : null;
+});
+
+const valorSondaDeAlimentacion = computed(() => {
+  return NecesidadAlimentacion.value.sondaDeAlimentacion
+    ? calibreSeleccionado.value
+    : null;
+});
+
+const tipoDeAlteracionDePeso = computed(() => {
+  return NecesidadAlimentacion.value.alteracionesDePeso
+    ? alteracionDePesoSeleccionado.value
+    : null;
+});
+
+const sgEspecifico = computed({
+  get() {
+    return NecesidadAlimentacion.value.sg !== "Otro" ? null : otroSg.value;
+  },
+  set(value) {
+    otroSg.value = !value ? null : value;
+  },
+});
+
 const handleInputChange = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   if (value) {
-    NecesidadOxigenacion.value.datosSubjetivosDeProblemasDeMasticacion = value;
+    NecesidadAlimentacion.value.datosSubjetivosDeProblemasDeMasticacion = value;
   } else {
-    NecesidadOxigenacion.value.datosSubjetivosDeProblemasDeMasticacion = null;
+    NecesidadAlimentacion.value.datosSubjetivosDeProblemasDeMasticacion = null;
   }
 };
+
 const handleInputChangeOne = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   if (value) {
-    NecesidadOxigenacion.value.datosSubjetivosBalanceParcial = value;
+    NecesidadAlimentacion.value.datosSubjetivosBalanceParcial = value;
   } else {
-    NecesidadOxigenacion.value.datosSubjetivosBalanceParcial = null;
+    NecesidadAlimentacion.value.datosSubjetivosBalanceParcial = null;
   }
 };
+
+watch(
+  [
+    sgEspecifico,
+    tipoDeAlteracionDePeso,
+    valorSondaDeAlimentacion,
+    tipoDeProtesisDental,
+    tipoDeDieta,
+    otraDietaHabitual,
+    suplementoAlimenticio,
+  ],
+  ([
+    sgEspecificoVal,
+    tipoDeAlteracionDePesoVal,
+    valorSondaDeAlimentacionVal,
+    tipoDeProtesisDentalVal,
+    tipoDeDietaVal,
+    otraDietaHabitualVal,
+    suplementoAlimenticioVal,
+  ]) => {
+    NecesidadAlimentacion.value.otroSg = sgEspecificoVal;
+    NecesidadAlimentacion.value.siAlteracionesDePeso =
+      tipoDeAlteracionDePesoVal;
+    NecesidadAlimentacion.value.calibreSonda = valorSondaDeAlimentacionVal;
+    NecesidadAlimentacion.value.siprotesisDental = tipoDeProtesisDentalVal;
+    NecesidadAlimentacion.value.tipoDeDieta = tipoDeDietaVal;
+    NecesidadAlimentacion.value.otraDietaHabitual = otraDietaHabitualVal;
+    NecesidadAlimentacion.value.especificarSuplemento =
+      suplementoAlimenticioVal;
+  }
+);
 </script>
 <template>
   <div class="flex justify-between items-center bg-sky-100 px-4 py-1 my-4">
@@ -150,56 +268,56 @@ const handleInputChangeOne = (event: Event) => {
     <p class="h-max mb-1.5">Tipo de dieta</p>
     <div class="flex gap-x-12 gap-y-3 mb-3 flex-wrap">
       <VInputRadio
-        v-model="NecesidadOxigenacion.tipoDeDieta"
+        v-model="tipoDeDietaSeleccionada"
         value="Normal"
         identifier="Tipo de Dieta"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.tipoDeDieta"
+        v-model="tipoDeDietaSeleccionada"
         value="Blanda"
         identifier="Tipo de Dieta"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.tipoDeDieta"
+        v-model="tipoDeDietaSeleccionada"
         value="Liquida"
         label="Líquida"
         identifier="Tipo de Dieta"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.tipoDeDieta"
+        v-model="tipoDeDietaSeleccionada"
         value="Vegana"
         identifier="Tipo de Dieta"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.tipoDeDieta"
+        v-model="tipoDeDietaSeleccionada"
         value="Baja en Sodio"
         identifier="Tipo de Dieta"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.tipoDeDieta"
+        v-model="tipoDeDietaSeleccionada"
         value="Libre de gluten"
         identifier="Tipo de Dieta"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.tipoDeDieta"
+        v-model="tipoDeDietaSeleccionada"
         value="Ayuno"
         identifier="Tipo de Dieta"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.tipoDeDieta"
+        v-model="tipoDeDietaSeleccionada"
         value="NPT"
         identifier="Tipo de Dieta"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.tipoDeDieta"
+        v-model="tipoDeDietaSeleccionada"
         value="Otra"
         identifier="Tipo de Dieta"
         class="w-max"
@@ -207,7 +325,8 @@ const handleInputChangeOne = (event: Event) => {
     </div>
     <VInputText
       class="w-full mb-3"
-      v-model="NecesidadOxigenacion.otraDieta"
+      v-model="otraDieta"
+      :disabled="tipoDeDietaSeleccionada !== 'Otra'"
       type="text"
       label="Especificar"
       label-position="side"
@@ -216,63 +335,63 @@ const handleInputChangeOne = (event: Event) => {
     <p class="h-max mb-1.5">Dieta habitual</p>
     <div class="grid grid-cols-4 gap-y-3 gap-x-4 mb-3">
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Carnes"
+        v-model="NecesidadAlimentacion.dietaHabitualCarnes"
         label="Carnes"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Verduras"
+        v-model="NecesidadAlimentacion.dietaHabitualVerduras"
         label="Verduras"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Frutas"
+        v-model="NecesidadAlimentacion.dietaHabitualFrutas"
         label="Frutas"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Harinas"
+        v-model="NecesidadAlimentacion.dietaHabitualHarinas"
         label="Harinas"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Leguminosas"
+        v-model="NecesidadAlimentacion.dietaHabitualLeguminosas"
         label="Leguminosas"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Lacteos"
+        v-model="NecesidadAlimentacion.dietaHabitualLacteos"
         label="Lácteos"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Refresco"
+        v-model="NecesidadAlimentacion.dietaHabitualRefresco"
         label="Refresco"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Cafe"
+        v-model="NecesidadAlimentacion.dietaHabitualCafe"
         label="Café"
         :value="true"
         identifier="Dieta Habitual"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Agua"
+        v-model="NecesidadAlimentacion.dietaHabitualAgua"
         label="Agua"
         :value="true"
         identifier="Dieta Habitual"
@@ -280,7 +399,7 @@ const handleInputChangeOne = (event: Event) => {
       />
     </div>
     <VInputRadio
-      v-model="NecesidadOxigenacion.dietaHabitual.DietaNoApegadaAEnfermedad"
+      v-model="NecesidadAlimentacion.dietaNoApegadaAEnfermedad"
       :value="true"
       label="Dieta no apegada a su enfermedad"
       identifier="Dieta Habitual"
@@ -288,7 +407,7 @@ const handleInputChangeOne = (event: Event) => {
     />
     <div class="flex gap-x-12">
       <VInputRadio
-        v-model="NecesidadOxigenacion.dietaHabitual.Otros"
+        v-model="NecesidadAlimentacion.dietaHabitualOtros"
         :value="true"
         label="Otros"
         identifier="Dieta Habitual"
@@ -296,7 +415,8 @@ const handleInputChangeOne = (event: Event) => {
       />
       <VInputText
         class="w-full mb-3"
-        v-model="NecesidadOxigenacion.otraDietaHabitual"
+        v-model="otraDietaHabitual"
+        :disabled="!NecesidadAlimentacion.dietaHabitualOtros"
         type="text"
         label="Especificar"
         label-position="side"
@@ -307,21 +427,21 @@ const handleInputChangeOne = (event: Event) => {
       <p class="col-span-4 h-max mb-1.5">Ingesta de líquidos por 24 hrs.</p>
       <div class="grid grid-cols-4 mb-3">
         <VInputRadio
-          v-model="NecesidadOxigenacion.ingestaDeLiquidos"
+          v-model="NecesidadAlimentacion.ingestaDeLiquidos"
           value="Menos de 1 lt."
           label="Menos de 1 lt."
           identifier="Ingesta de liquidos"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.ingestaDeLiquidos"
+          v-model="NecesidadAlimentacion.ingestaDeLiquidos"
           value="De 1 a 2 lts."
           label="De 1 a 2 lts."
           identifier="Ingesta de liquidos"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.ingestaDeLiquidos"
+          v-model="NecesidadAlimentacion.ingestaDeLiquidos"
           value="Mayor de 2 lits."
           label="Mayor de 2 lits."
           identifier="Ingesta de liquidos"
@@ -333,21 +453,21 @@ const handleInputChangeOne = (event: Event) => {
       <p class="col-span-4 h-max mb-1.5">Apetito</p>
       <div class="grid grid-cols-4 mb-3">
         <VInputRadio
-          v-model="NecesidadOxigenacion.apetito"
+          v-model="NecesidadAlimentacion.apetito"
           value="Conservado"
           label="Conservado"
           identifier="Apetito"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.apetito"
+          v-model="NecesidadAlimentacion.apetito"
           value="Aumentado"
           label="Aumentado"
           identifier="Apetito"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.apetito"
+          v-model="NecesidadAlimentacion.apetito"
           value="Disminuido"
           label="Disminuido"
           identifier="Apetito"
@@ -361,84 +481,81 @@ const handleInputChangeOne = (event: Event) => {
       </div>
       <div class="flex flex-wrap gap-x-12">
         <VInputRadio
-          v-model="NecesidadOxigenacion.suplementoAlimenticio"
+          v-model="NecesidadAlimentacion.suplementoAlimenticio"
           :value="true"
           label="Si"
           identifier="Suplemento Alimenticio"
           class="w-max mb-3"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.suplementoAlimenticio"
+          v-model="NecesidadAlimentacion.suplementoAlimenticio"
           :value="false"
           label="No"
           identifier="Suplemento Alimenticio"
           class="w-max mb-3"
         />
-        <!-- v-if -->
-        <VInputText
-          class="w-full mb-3"
-          v-model="NecesidadOxigenacion.especificarSuplemento"
-          type="text"
-          label="Especificar"
-          label-position="side"
-        />
+        <Transition name="expand">
+          <VInputText
+            v-if="NecesidadAlimentacion.suplementoAlimenticio"
+            class="w-full mb-3"
+            v-model="suplementoAlimenticioEspecifico"
+            type="text"
+            label="Especificar"
+            label-position="side"
+        /></Transition>
       </div>
     </div>
 
     <p class="h-max mb-1.5">Estado de cavidad oral</p>
     <div class="flex gap-x-10 mb-3">
       <VInputRadio
-        v-model="NecesidadOxigenacion.estadoCavidadOral"
+        v-model="NecesidadAlimentacion.estadoCavidadOral"
         value="Sin caries"
         identifier="Cavidad Oral"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.estadoCavidadOral"
+        v-model="NecesidadAlimentacion.estadoCavidadOral"
         value="Con caries"
         identifier="Cavidad Oral"
         class="w-max"
       />
     </div>
 
-    <div class="flex gap-x-10">
+    <div class="flex gap-x-10 mb-3">
       <div class="flex h-9 items-center">
         <p class="h-max">Protésis dental</p>
       </div>
       <div class="flex flex-wrap gap-x-10 gap-y-3">
         <VInputRadio
-          v-model="NecesidadOxigenacion.protesisDental"
+          v-model="NecesidadAlimentacion.protesisDental"
           :value="true"
           label="Si"
           identifier="Protesis Dental"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.protesisDental"
+          v-model="NecesidadAlimentacion.protesisDental"
           :value="false"
           label="No"
           identifier="Protesis Dental"
           class="w-max"
         />
         <Transition name="expand">
-          <!-- TODO: en caso de que cambie o quite la respuesta en protesis dental cambiar la variable siprotesisDental a null -->
           <div
-            v-show="
-              NecesidadOxigenacion.protesisDental == true &&
-              NecesidadOxigenacion.protesisDental != null
-            "
-            class="mb-3 w-full"
+            v-if="NecesidadAlimentacion.protesisDental == true"
+            class="w-full"
           >
             <div>
               <VInputRadio
-                v-model="NecesidadOxigenacion.siprotesisDental"
+                v-model="protesisDentalSeleccionada"
                 value="Fija"
                 label="Fija"
                 identifier="Protesis Dental"
                 class="w-max mb-3"
               />
               <VInputRadio
-                v-model="NecesidadOxigenacion.siprotesisDental"
+                v-model="protesisDentalSeleccionada"
                 value="Movil"
                 label="Móvil"
                 identifier="Protesis Dental"
@@ -452,14 +569,14 @@ const handleInputChangeOne = (event: Event) => {
     <p class="h-max mb-1.5">Mucosas orales</p>
     <div class="flex gap-x-10 mb-3">
       <VInputRadio
-        v-model="NecesidadOxigenacion.mucosasOrales"
+        v-model="NecesidadAlimentacion.mucosasOrales"
         value="Hidratadas"
         label="Hidratadas"
         identifier="Mucosas Orales"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.mucosasOrales"
+        v-model="NecesidadAlimentacion.mucosasOrales"
         value="Deshidratadas"
         label="Deshidratadas"
         identifier="Mucosas Orales"
@@ -468,16 +585,16 @@ const handleInputChangeOne = (event: Event) => {
     </div>
 
     <p class="h-max mb-1.5">Adoncia</p>
-    <div class="flex gap-x-10">
+    <div class="flex gap-x-10 mb-3">
       <VInputRadio
-        v-model="NecesidadOxigenacion.adoncia"
+        v-model="NecesidadAlimentacion.adoncia"
         value="Total"
         label="Total"
         identifier="Adoncia"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.adoncia"
+        v-model="NecesidadAlimentacion.adoncia"
         value="Parcial"
         label="Parcial"
         identifier="Adoncia"
@@ -488,42 +605,42 @@ const handleInputChangeOne = (event: Event) => {
     <p class="h-max mb-1.5">Problemas de masticación y deglución</p>
     <div class="flex gap-y-3 gap-x-10 flex-wrap mb-3">
       <VInputRadio
-        v-model="NecesidadOxigenacion.problemasDeMasticacion"
+        v-model="NecesidadAlimentacion.problemasDeMasticacion"
         value="Masticacion"
         label="Masticación"
         identifier="Progblemas de masticacion"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.problemasDeMasticacion"
+        v-model="NecesidadAlimentacion.problemasDeMasticacion"
         value="Deglucion"
         label="Deglución"
         identifier="Problemas de masticacion"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.problemasDeMasticacion"
+        v-model="NecesidadAlimentacion.problemasDeMasticacion"
         value="Intolerancia"
         label="Intolerancia"
         identifier="Problemas de masticacion"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.problemasDeMasticacion"
+        v-model="NecesidadAlimentacion.problemasDeMasticacion"
         value="Nauseas"
         label="Náuseas"
         identifier="Problemas de masticacion"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.problemasDeMasticacion"
+        v-model="NecesidadAlimentacion.problemasDeMasticacion"
         value="Vomito"
         label="Vómito"
         identifier="Problemas de masticacion"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.problemasDeMasticacion"
+        v-model="NecesidadAlimentacion.problemasDeMasticacion"
         value="No aplica"
         label="N/A"
         identifier="Problemas de masticacion"
@@ -533,13 +650,13 @@ const handleInputChangeOne = (event: Event) => {
     <div class="flex items-end mb-3">
       <VInputText
         class="w-full mr-8"
-        v-model="NecesidadOxigenacion.datosSubjetivosDeProblemasDeMasticacion"
+        v-model="NecesidadAlimentacion.datosSubjetivosDeProblemasDeMasticacion"
         type="text"
         label="Datos subjetivos"
         label-position="top"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.datosSubjetivosDeProblemasDeMasticacion"
+        v-model="NecesidadAlimentacion.datosSubjetivosDeProblemasDeMasticacion"
         value=""
         label="N/A"
         identifier="Datos subjetivos"
@@ -551,121 +668,115 @@ const handleInputChangeOne = (event: Event) => {
     <div class="flex gap-x-10 items-center">
       <p class="h-max">Sonda de alimentación</p>
       <VInputRadio
-        v-model="NecesidadOxigenacion.sondaDeAlimentacion"
+        v-model="NecesidadAlimentacion.sondaDeAlimentacion"
         :value="true"
         label="Si"
         identifier="Sonda de Alimentacion"
         class="w-max"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.sondaDeAlimentacion"
+        v-model="NecesidadAlimentacion.sondaDeAlimentacion"
         :value="false"
         label="No"
         identifier="Sonda de Alimentacion"
         class="w-max"
       />
     </div>
-    <div
-      v-show="
-        NecesidadOxigenacion.sondaDeAlimentacion == true &&
-        NecesidadOxigenacion.sondaDeAlimentacion != null
-      "
-    >
-      <p class="h-max mb-1.5">Calibre</p>
-      <div class="w-1/3 flex flex-wrap gap-x-10 gap-y-1.5">
-        <VInputRadio
-          v-model="NecesidadOxigenacion.calibreSonda"
-          value="12"
-          label="12 fr"
-          identifier="Calibre de la sonda de alimentacion"
-          class="w-max"
-        />
-        <VInputRadio
-          v-model="NecesidadOxigenacion.calibreSonda"
-          value="18"
-          label="18 fr"
-          identifier="Calibre de la sonda de alimentacion"
-          class="w-max"
-        />
-        <VInputRadio
-          v-model="NecesidadOxigenacion.calibreSonda"
-          value="14"
-          label="14 fr"
-          identifier="Calibre de la sonda de alimentacion"
-          class="w-max"
-        />
-        <VInputRadio
-          v-model="NecesidadOxigenacion.calibreSonda"
-          value="20"
-          label="20 fr"
-          identifier="Calibre de la sonda de alimentacion"
-          class="w-max"
-        />
-        <VInputRadio
-          v-model="NecesidadOxigenacion.calibreSonda"
-          value="16"
-          label="16 fr"
-          identifier="Calibre de la sonda de alimentacion"
-          class="w-max"
-        />
-        <VInputRadio
-          v-model="NecesidadOxigenacion.calibreSonda"
-          value="22"
-          label="22 fr"
-          identifier="Calibre de la sonda de alimentacion"
-          class="w-max"
-        />
-      </div>
-    </div>
+    <Transition name="expand">
+      <div v-if="NecesidadAlimentacion.sondaDeAlimentacion == true">
+        <p class="h-max mb-1.5">Calibre</p>
+        <div class="w-1/3 flex flex-wrap gap-x-10 gap-y-1.5">
+          <VInputRadio
+            v-model="calibreSeleccionado"
+            value="12"
+            label="12 fr"
+            identifier="Calibre de la sonda de alimentacion"
+            class="w-max"
+          />
+          <VInputRadio
+            v-model="calibreSeleccionado"
+            value="18"
+            label="18 fr"
+            identifier="Calibre de la sonda de alimentacion"
+            class="w-max"
+          />
+          <VInputRadio
+            v-model="calibreSeleccionado"
+            value="14"
+            label="14 fr"
+            identifier="Calibre de la sonda de alimentacion"
+            class="w-max"
+          />
+          <VInputRadio
+            v-model="calibreSeleccionado"
+            value="20"
+            label="20 fr"
+            identifier="Calibre de la sonda de alimentacion"
+            class="w-max"
+          />
+          <VInputRadio
+            v-model="calibreSeleccionado"
+            value="16"
+            label="16 fr"
+            identifier="Calibre de la sonda de alimentacion"
+            class="w-max"
+          />
+          <VInputRadio
+            v-model="calibreSeleccionado"
+            value="22"
+            label="22 fr"
+            identifier="Calibre de la sonda de alimentacion"
+            class="w-max"
+          />
+        </div></div
+    ></Transition>
 
     <div class="flex gap-x-10 my-3">
       <p class="h-max mb-1.5">Alteraciones de peso</p>
       <div>
         <div class="w-full flex gap-x-10">
           <VInputRadio
-            v-model="NecesidadOxigenacion.alteracionesDePeso"
+            v-model="NecesidadAlimentacion.alteracionesDePeso"
             :value="true"
             label="Si"
             identifier="Alteraciones de Peso"
             class="w-max"
           />
           <VInputRadio
-            v-model="NecesidadOxigenacion.alteracionesDePeso"
+            v-model="NecesidadAlimentacion.alteracionesDePeso"
             :value="false"
             label="No"
             identifier="Alteraciones de Peso"
             class="w-max"
           />
         </div>
-        <div
-          v-show="
-            NecesidadOxigenacion.alteracionesDePeso == true &&
-            NecesidadOxigenacion.alteracionesDePeso != null
-          "
-          class="flex flex-col gap-y-1.5 mt-1.5"
-        >
-          <VInputRadio
-            v-model="NecesidadOxigenacion.siAlteracionesDePeso"
-            value="Sobrepeso"
-            label="Sobrepeso"
-            identifier="Alteraciones de Peso"
-            class="w-max"
-          />
-          <VInputRadio
-            v-model="NecesidadOxigenacion.siAlteracionesDePeso"
-            value="Obesidad"
-            label="Obesidad"
-            identifier="Alteraciones de Peso"
-            class="w-max"
-          />
-          <VInputRadio
-            v-model="NecesidadOxigenacion.siAlteracionesDePeso"
-            value="Obesidad morbida"
-            label="Obesidad mórbida"
-            identifier="Alteraciones de Peso"
-            class="w-max"
-          />
-        </div>
+        <Transition name="expand">
+          <div
+            v-if="NecesidadAlimentacion.alteracionesDePeso == true"
+            class="flex flex-col gap-y-1.5 mt-1.5"
+          >
+            <VInputRadio
+              v-model="alteracionDePesoSeleccionado"
+              value="Sobrepeso"
+              label="Sobrepeso"
+              identifier="Alteraciones de Peso"
+              class="w-max"
+            />
+            <VInputRadio
+              v-model="alteracionDePesoSeleccionado"
+              value="Obesidad"
+              label="Obesidad"
+              identifier="Alteraciones de Peso"
+              class="w-max"
+            />
+            <VInputRadio
+              v-model="alteracionDePesoSeleccionado"
+              value="Obesidad morbida"
+              label="Obesidad mórbida"
+              identifier="Alteraciones de Peso"
+              class="w-max"
+            /></div
+        ></Transition>
       </div>
     </div>
 
@@ -673,7 +784,7 @@ const handleInputChangeOne = (event: Event) => {
       <p class="h-max">Solución base/Plan de líquidos</p>
       <VInputText
         class="w-60"
-        v-model="NecesidadOxigenacion.solucionBase"
+        v-model="NecesidadAlimentacion.solucionBase"
         type="number"
         label="Frecuencia"
         label-position="side"
@@ -684,14 +795,14 @@ const handleInputChangeOne = (event: Event) => {
       <p class="h-max mb-1.5">SF:</p>
       <div class="grid grid-cols-4">
         <VInputRadio
-          v-model="NecesidadOxigenacion.sf"
+          v-model="NecesidadAlimentacion.sf"
           value="1000"
           label="1000 ml: 0.9%"
           identifier="sf"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.sf"
+          v-model="NecesidadAlimentacion.sf"
           value="500"
           label="500 ml: 0.9%"
           identifier="sf"
@@ -703,14 +814,14 @@ const handleInputChangeOne = (event: Event) => {
       <p class="h-max mb-1.5">SG:</p>
       <div class="grid grid-cols-4 mb-1.5">
         <VInputRadio
-          v-model="NecesidadOxigenacion.sg"
+          v-model="NecesidadAlimentacion.sg"
           value="5"
           label="5% 1000 ml"
           identifier="sg"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.sg"
+          v-model="NecesidadAlimentacion.sg"
           value="10"
           label="10% 1000 ml"
           identifier="sg"
@@ -719,7 +830,7 @@ const handleInputChangeOne = (event: Event) => {
       </div>
       <div class="flex space-x-10">
         <VInputRadio
-          v-model="NecesidadOxigenacion.sg"
+          v-model="NecesidadAlimentacion.sg"
           value="Otro"
           label="Otro"
           identifier="sg"
@@ -727,7 +838,8 @@ const handleInputChangeOne = (event: Event) => {
         />
         <VInputText
           class="w-full"
-          v-model="NecesidadOxigenacion.otroSg"
+          v-model="sgEspecifico"
+          :disabled="NecesidadAlimentacion.sg != 'Otro'"
           type="text"
           label="Especificar"
           label-position="side"
@@ -737,7 +849,7 @@ const handleInputChangeOne = (event: Event) => {
     <p class="h-max mb-1.5">Infusion o infusiones</p>
     <VInputText
       class="w-full mb-3 mt-1"
-      v-model="NecesidadOxigenacion.infusiones"
+      v-model="NecesidadAlimentacion.infusiones"
       type="text"
       label="Especificar"
       label-position="side"
@@ -746,35 +858,35 @@ const handleInputChangeOne = (event: Event) => {
       <p class="h-max mb-1.5 mt-1">Accesos Venosos</p>
       <div class="flex gap-x-10">
         <VInputRadio
-          v-model="NecesidadOxigenacion.accesosVenosos"
+          v-model="NecesidadAlimentacion.accesosVenosos"
           value="CVPC"
           label="CVPC"
           identifier="Accesos Venosos"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.accesosVenosos"
+          v-model="NecesidadAlimentacion.accesosVenosos"
           value="CVC"
           label="CVC"
           identifier="Accesos Venosos"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.accesosVenosos"
+          v-model="NecesidadAlimentacion.accesosVenosos"
           value="C. Swan Ganz"
           label="C. Swan Ganz"
           identifier="Accesos Venosos"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.accesosVenosos"
+          v-model="NecesidadAlimentacion.accesosVenosos"
           value="C. Tenckhoff"
           label="C. Tenckhoff"
           identifier="Accesos Venosos"
           class="w-max"
         />
         <VInputRadio
-          v-model="NecesidadOxigenacion.accesosVenosos"
+          v-model="NecesidadAlimentacion.accesosVenosos"
           value="C. HD"
           label="C. HD"
           identifier="Accesos Venosos"
@@ -782,12 +894,12 @@ const handleInputChangeOne = (event: Event) => {
         />
       </div>
       <div
-        v-show="NecesidadOxigenacion.accesosVenosos != null"
+        v-show="NecesidadAlimentacion.accesosVenosos != null"
         class="grid grid-cols-3 mt-1.5 mb-3"
       >
         <VInputText
           class="w-full"
-          v-model="NecesidadOxigenacion.calibreAccesoVenoso"
+          v-model="NecesidadAlimentacion.calibreAccesoVenoso"
           type="number"
           label="Calibre"
           label-position="side"
@@ -798,13 +910,13 @@ const handleInputChangeOne = (event: Event) => {
       <label class="min-w-max">Fr Fecha de colocación</label>
       <VInputText
         class="w-max"
-        v-model="NecesidadOxigenacion.fechaDeColocacion"
+        v-model="NecesidadAlimentacion.fechaDeColocacion"
         type="date"
         :center-text="true"
       /><label class="min-w-max row-start-2">Fr Fecha de curación</label>
       <VInputText
         class="w-max col-start-2 row-start-2"
-        v-model="NecesidadOxigenacion.fechaDeCuracion"
+        v-model="NecesidadAlimentacion.fechaDeCuracion"
         type="date"
         :center-text="true"
       />
@@ -813,20 +925,20 @@ const handleInputChangeOne = (event: Event) => {
     <p class="h-max mb-1.5">Balance parcial por turno</p>
     <VInputText
       class="w-2/6 mb-3"
-      v-model="NecesidadOxigenacion.balanceParcial"
+      v-model="NecesidadAlimentacion.balanceParcial"
       type="text"
       label="+"
       label-position="side"
     />
     <VInputText
       class="w-2/6 mb-3"
-      v-model="NecesidadOxigenacion.balanceParcial"
+      v-model="NecesidadAlimentacion.balanceParcial"
       type="text"
       label="-"
       label-position="side"
     />
     <VInputRadio
-      v-model="NecesidadOxigenacion.balanceParcial"
+      v-model="NecesidadAlimentacion.balanceParcial"
       value="Neutro"
       identifier="Balance parcial por turno"
       class="w-max mb-3"
@@ -834,13 +946,13 @@ const handleInputChangeOne = (event: Event) => {
     <div class="flex items-end">
       <VInputText
         class="w-full mr-8"
-        v-model="NecesidadOxigenacion.datosSubjetivosBalanceParcial"
+        v-model="NecesidadAlimentacion.datosSubjetivosBalanceParcial"
         type="text"
         label="Datos subjetivos"
         label-position="top"
       />
       <VInputRadio
-        v-model="NecesidadOxigenacion.datosSubjetivosBalanceParcial"
+        v-model="NecesidadAlimentacion.datosSubjetivosBalanceParcial"
         value=""
         label="N/A"
         identifier="Datos subjetivos"
