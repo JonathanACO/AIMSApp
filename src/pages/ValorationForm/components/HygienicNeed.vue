@@ -1,40 +1,152 @@
 <script setup lang="ts">
 import VInputRadio from "@/components/VInputRadio.vue";
 import VInputText from "@/components/VInputText.vue";
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import { IonButton, IonIcon } from "@ionic/vue";
 import { arrowForward } from "ionicons/icons";
 import PatientStateTable from "./PatientStateTable.vue";
 import FaillingRiskInfoTable from "./FaillingRiskInfoTable.vue";
 import BradenScale from "./BradenScale.vue";
 
-const variable = ref<any>(null);
-// const canvasRef = ref<HTMLCanvasElement | null>(null);
-// const showCommentInput = ref(false);
-// const comment = ref('');
+const necesidadDeHigiene = ref<{
+  estadoDeLaPiel: string | null;
+  especificarLesionEnPiel: string | null;
+  coloracionDeLaPiel:
+    | "Pálida"
+    | "Robicunda"
+    | "Marmórea"
+    | "Ictérica"
+    | "Equimosis"
+    | "Hematomas"
+    | "Cianótica"
+    | null;
+  dispositivoCateteres: boolean | null;
+  dispositivoCVPC: boolean | null;
+  dispositivoCVC: boolean | null;
+  dispositivoSondas: boolean | null;
+  dispositivoSondaVesical: boolean | null;
+  dispositivoHeridas: boolean | null;
+  dispositivoUPP: boolean | null;
+  dispositivoFlictemas: boolean | null;
+  // lugarDeDispositivos: {};
+  puntuacionRiesgoCaídas:
+    | {
+        factorDeRiesgo: string;
+        puntuacion: number;
+      }[]
+    | null;
+  riesgoCaídas: "Alto" | "Moderado" | "Bajo" | null;
+  puntuacionRiesgoUPP:
+    | {
+        factor: string;
+        puntuacion: number;
+      }[]
+    | null;
+  riesgoUPP: "Alto" | "Moderado" | "Bajo" | null;
+  tiposDeLesion:
+    | "Quirúrgica"
+    | "En proceso de cicatrización sin infección"
+    | "Infectada"
+    | "Dehiscente"
+    | "Ulcera por presión"
+    | "Ulcera venosa"
+    | "Ulcera diabética"
+    | "Otra"
+    | "Proceso de cicatrización"
+    | null;
+  gradoOTipoEspecifico: string | null;
+  estadio: number | null;
+  caracteristicas: string | null;
+  fechaDeCuracion: string | null;
+  suplenciaParaElBaño:
+    | "Independiente"
+    | "Baño de regadera asistido"
+    | "Baño de esponja en cama"
+    | null;
+  datosSubjetivos: string | null;
+  otrosDatosRelevantes: string | null;
+  notaDeEnfermeria: {
+    situacionDelPaciente: string | null;
+    informacionClinica: string | null;
+    evaluacion: string | null;
+    recomendaciones: string | null;
+  };
+  firmaDelEnfermero: string | null;
+}>({
+  estadoDeLaPiel: null,
+  coloracionDeLaPiel: null,
+  dispositivos: null,
+  // lugarDeDispositivos: null,
+  puntuacionRiesgoCaídas: null,
+  riesgoCaídas: null,
+  puntuacionRiesgoUPP: null,
+  riesgoUPP: null,
+  tiposDeLesion: null,
+  gradoOTipoEspecifico: null,
+  estadio: null,
+  caracteristicas: null,
+  fechaDeCuracion: null,
+  suplenciaParaElBaño: null,
+  datosSubjetivos: null,
+  otrosDatosRelevantes: null,
+  notaDeEnfermeria: {
+    situacionDelPaciente: null,
+    informacionClinica: null,
+    evaluacion: null,
+    recomendaciones: null,
+  },
+  firmaDelEnfermero: null,
+});
 
-// onMounted(() => {
-//   const canvas = canvasRef.value;
-//   if (canvas) {
-//     const ctx = canvas.getContext("2d");
-//     const img = new Image();
-//     img.src = "../../../assets/images/human-shape.png";
-//     img.onload = () => {
-//       if (ctx) {
-//         canvas.width = img.width;
-//         canvas.height = img.height;
-//         ctx.drawImage(img, 0, 0, img.width, img.height);
-//       }
-//       console.log(img)
-//     };
-//   }
-// });
+const fueLesionEnPielEspecificada = computed(() => {
+  return necesidadDeHigiene.value.estadoDeLaPiel === "Con lesion";
+});
 
-// const submitComment = () => {
-//   console.log(comment.value);
-//   showCommentInput.value = false;
-//   comment.value = '';
-// };
+const datoSubjetivo = ref<string | null>(null);
+const tieneDatosSubjetivos = ref<false | null>(null);
+const datosSubjetivosHigiene = computed({
+  get() {
+    return !datoSubjetivo.value || tieneDatosSubjetivos.value == false
+      ? null
+      : datoSubjetivo.value;
+  },
+  set(value) {
+    datoSubjetivo.value = !value ? null : value;
+  },
+});
+
+const otrosDatosRelevantes = ref<string | null>(null);
+const tieneOtrosDatosRelevantes = ref<false | null>(null);
+const otrosDatosRelevantesHigiene = computed({
+  get() {
+    return !otrosDatosRelevantes.value ||
+      tieneOtrosDatosRelevantes.value == false
+      ? null
+      : otrosDatosRelevantes.value;
+  },
+  set(value) {
+    otrosDatosRelevantes.value = !value ? null : value;
+  },
+});
+
+watch(
+  [
+    datosSubjetivosHigiene,
+    fueLesionEnPielEspecificada,
+    otrosDatosRelevantesHigiene,
+  ],
+  ([
+    datosSubjetivosHigiene,
+    fueLesionEnPielEspecificada,
+    otrosDatosRelevantesHigiene,
+  ]) => {
+    necesidadDeHigiene.value.datosSubjetivos = datosSubjetivosHigiene;
+    necesidadDeHigiene.value.otrosDatosRelevantes = otrosDatosRelevantesHigiene;
+    if (!fueLesionEnPielEspecificada) {
+      necesidadDeHigiene.value.especificarLesionEnPiel = null;
+    }
+  }
+);
 </script>
 
 <template>
@@ -47,79 +159,80 @@ const variable = ref<any>(null);
     <p class="text-stone-500 h-max mb-1.5">Estado de la piel</p>
     <div class="grid grid-cols-3 gap-y-3 mb-3">
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.estadoDeLaPiel"
         value="Hidratada"
         label="Hidratada"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.estadoDeLaPiel"
         value="Deshidratada"
         label="Deshidratada"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.estadoDeLaPiel"
         value="Integra"
         label="Integra"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.estadoDeLaPiel"
         value="Con lesion"
         label="Con lesion"
         class="w-max"
       />
       <VInputText
-        v-model="variable"
+        v-model="necesidadDeHigiene.especificarLesionEnPiel"
         type="text"
         label="Especificar"
         label-position="side"
         class="col-span-2"
         :center-text="true"
+        :disabled="!fueLesionEnPielEspecificada"
       />
     </div>
 
     <p class="text-stone-500 h-max mb-1.5">Coloración de la piel</p>
     <div class="flex gap-y-3 gap-x-10 flex-wrap mb-3">
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Pálida"
         label="Pálida"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Robicunda"
         label="Robicunda"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Marmórea"
         label="Marmórea"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Ictérica"
         label="Ictérica"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Equimosis"
         label="Equimosis"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Hematomas"
         label="Hematomas"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.coloracionDeLaPiel"
         value="Cianótica"
         label="Cianótica"
         class="w-max"
@@ -135,35 +248,50 @@ const variable = ref<any>(null);
     </p>
     <div class="grid grid-cols-3 gap-y-3 mb-3 w-3/4">
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.dispositivoCateteres"
         value="Cateteres"
         label="Cateteres"
         class="w-max"
       />
-      <VInputRadio v-model="variable" value="CVPC" label="CVPC" class="w-max" />
-      <VInputRadio v-model="variable" value="CVC" label="CVC" class="w-max" />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.dispositivoCVPC"
+        value="CVPC"
+        label="CVPC"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.dispositivoCVC"
+        value="CVC"
+        label="CVC"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.dispositivoSondas"
         value="Sondas"
         label="Sondas"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.dispositivoSondaVesical"
         value="Sonda vesical"
         label="Sonda vesical"
         class="w-max"
       />
       <div></div>
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.dispositivoHeridas"
         value="Heridas"
         label="Heridas"
         class="w-max"
       />
-      <VInputRadio v-model="variable" value="UPP" label="UPP" class="w-max" />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.dispositivoUPP"
+        value="UPP"
+        label="UPP"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.dispositivoFlictemas"
         value="Flictemas"
         label="Flictemas"
         class="w-max"
@@ -246,26 +374,29 @@ const variable = ref<any>(null);
 
     <p class="text-stone-500 h-max">Tipos de lesión</p>
     <VInputRadio
-      v-model="variable"
+      v-model="necesidadDeHigiene.tiposDeLesion"
       value="Quirúrgica"
       label="1. Quirúrgica"
       class="w-max mb-1.5"
     />
-    <div class="flex gap-5 mb-1.5">
+    <div
+      class="flex gap-5 mb-1.5"
+      v-if="necesidadDeHigiene.tiposDeLesion === 'Quirúrgica'"
+    >
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="En proceso de cicatrización sin infección"
         label="En proceso de cicatrización sin infección"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="Infectada"
         label="Infectada"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="Dehiscente"
         label="Dehiscente"
         class="w-max"
@@ -273,31 +404,46 @@ const variable = ref<any>(null);
     </div>
 
     <VInputRadio
-      v-model="variable"
+      v-model="necesidadDeHigiene.tiposDeLesion"
       value="Ulcera por presión"
       label="2. Ulcera por presión"
       class="w-max mb-1.5"
     />
     <div class="flex gap-5 mb-1.5">
-      <VInputRadio v-model="variable" value="G I" label="G I" class="w-max" />
-      <VInputRadio v-model="variable" value="G II" label="G II" class="w-max" />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="G I"
+        label="G I"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="G II"
+        label="G II"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="G III"
         label="G III"
         class="w-max"
       />
-      <VInputRadio v-model="variable" value="G IV" label="G IV" class="w-max" />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="G IV"
+        label="G IV"
+        class="w-max"
+      />
     </div>
     <div class="flex gap-5 mb-1.5">
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="En proceso de cicatrización"
         label="En proceso de cicatrización"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="Infectada"
         label="Infectada"
         class="w-max"
@@ -305,26 +451,46 @@ const variable = ref<any>(null);
     </div>
 
     <VInputRadio
-      v-model="variable"
+      v-model="necesidadDeHigiene.tiposDeLesion"
       value="Ulcera venosa"
       label="3. Ulcera venosa"
       class="w-max mb-1.5"
     />
     <div class="flex gap-5 mb-1.5">
-      <VInputRadio v-model="variable" value="I" label="I" class="w-max" />
-      <VInputRadio v-model="variable" value="II" label="II" class="w-max" />
-      <VInputRadio v-model="variable" value="III" label="III" class="w-max" />
-      <VInputRadio v-model="variable" value="IV" label="IV" class="w-max" />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="I"
+        label="I"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="II"
+        label="II"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="III"
+        label="III"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="IV"
+        label="IV"
+        class="w-max"
+      />
     </div>
     <div class="flex gap-5 mb-1.5">
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="En proceso de cicatrización"
         label="En proceso de cicatrización"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="Infectada"
         label="Infectada"
         class="w-max"
@@ -332,26 +498,46 @@ const variable = ref<any>(null);
     </div>
 
     <VInputRadio
-      v-model="variable"
+      v-model="necesidadDeHigiene.tiposDeLesion"
       value="Ulcera diabética"
       label="4. Ulcera diabética"
       class="w-max mb-1.5"
     />
     <div class="flex gap-5 mb-1.5">
-      <VInputRadio v-model="variable" value="I" label="I" class="w-max" />
-      <VInputRadio v-model="variable" value="II" label="II" class="w-max" />
-      <VInputRadio v-model="variable" value="III" label="III" class="w-max" />
-      <VInputRadio v-model="variable" value="IV" label="IV" class="w-max" />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="I"
+        label="I"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="II"
+        label="II"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="III"
+        label="III"
+        class="w-max"
+      />
+      <VInputRadio
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
+        value="IV"
+        label="IV"
+        class="w-max"
+      />
     </div>
     <div class="flex gap-5 mb-1.5">
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="En proceso de cicatrización"
         label="En proceso de cicatrización"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="Infectada"
         label="Infectada"
         class="w-max"
@@ -359,26 +545,31 @@ const variable = ref<any>(null);
     </div>
 
     <VInputRadio
-      v-model="variable"
+      v-model="necesidadDeHigiene.tiposDeLesion"
       value="Otra"
       label="5. Otra"
       class="w-max mb-1.5"
     />
     <div class="flex gap-5 mb-1.5">
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="Proceso de cicatrización"
         label="Proceso de cicatrización"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.gradoOTipoEspecifico"
         value="Infectada"
         label="Infectada"
         class="w-max"
       />
     </div>
-    <VInputRadio v-model="variable" value="N/A" label="6. N/A" class="w-max" />
+    <VInputRadio
+      v-model="necesidadDeHigiene.tiposDeLesion"
+      value="N/A"
+      label="6. N/A"
+      class="w-max"
+    />
 
     <img src="../../../assets/images/upp.png" alt="UPP" />
 
@@ -391,7 +582,7 @@ const variable = ref<any>(null);
         </td>
         <td>
           <VInputText
-            v-model="variable"
+            v-model="necesidadDeHigiene.estadio"
             type="text"
             input-width="32"
             :center-text="true"
@@ -406,7 +597,7 @@ const variable = ref<any>(null);
         </td>
         <td>
           <VInputText
-            v-model="variable"
+            v-model="necesidadDeHigiene.caracteristicas"
             type="text"
             input-width="32"
             :center-text="true"
@@ -425,7 +616,7 @@ const variable = ref<any>(null);
             <div class="relative inline-flex items-center w-full">
               <div class="relative w-full">
                 <VInputText
-                  v-model="variable"
+                  v-model="necesidadDeHigiene.fechaDeCuracion"
                   type="date"
                   input-width="32"
                   :center-text="true"
@@ -440,19 +631,19 @@ const variable = ref<any>(null);
     <p class="text-stone-500 h-max">Suplencia para el baño</p>
     <div class="flex gap-5 mb-1.5">
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.suplenciaParaElBaño"
         value="Independiente"
         label="Independiente"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.suplenciaParaElBaño"
         value="Baño de regadera asistido"
         label="Baño de regadera asistido"
         class="w-max"
       />
       <VInputRadio
-        v-model="variable"
+        v-model="necesidadDeHigiene.suplenciaParaElBaño"
         value="Baño de esponja en cama"
         label="Baño de esponja en cama"
         class="w-max"
@@ -462,14 +653,15 @@ const variable = ref<any>(null);
     <div class="flex items-end mb-3">
       <VInputText
         class="w-full mr-8"
-        v-model="variable"
+        v-model="datosSubjetivosHigiene"
         type="text"
         label="Datos subjetivos"
         label-position="top"
+        :disabled="tieneDatosSubjetivos === false"
       />
       <VInputRadio
-        v-model="variable"
-        value=""
+        v-model="tieneDatosSubjetivos"
+        :value="false"
         label="N/A"
         identifier="Datos subjetivos"
         class="pt-2"
@@ -479,14 +671,15 @@ const variable = ref<any>(null);
     <div class="flex items-end mb-3">
       <VInputText
         class="w-full mr-8"
-        v-model="variable"
+        v-model="otrosDatosRelevantesHigiene"
         type="text"
         label="Otros datos relevantes"
         label-position="top"
+        :disabled="tieneOtrosDatosRelevantes === false"
       />
       <VInputRadio
-        v-model="variable"
-        value=""
+        v-model="tieneOtrosDatosRelevantes"
+        :value="false"
         label="N/A"
         identifier="Otros datos relevantes"
         class="pt-2"
@@ -496,28 +689,28 @@ const variable = ref<any>(null);
     <p class="text-stone-500 h-max mb-1.5">Nota de enfermería/Observaciones</p>
     <VInputText
       class="w-full mr-8 mb-3"
-      v-model="variable"
+      v-model="necesidadDeHigiene.notaDeEnfermeria.situacionDelPaciente"
       type="text"
       label="(S) Situación del paciente:"
       label-position="top"
     />
     <VInputText
       class="w-full mr-8 mb-3"
-      v-model="variable"
+      v-model="necesidadDeHigiene.notaDeEnfermeria.informacionClinica"
       type="text"
       label="(B) Información clínica:"
       label-position="top"
     />
     <VInputText
       class="w-full mr-8 mb-3"
-      v-model="variable"
+      v-model="necesidadDeHigiene.notaDeEnfermeria.evaluacion"
       type="text"
       label="(A) Evaluación:"
       label-position="top"
     />
     <VInputText
       class="w-full mr-8 mb-3"
-      v-model="variable"
+      v-model="necesidadDeHigiene.notaDeEnfermeria.recomendaciones"
       type="text"
       label="(R) Recomendaciones:"
       label-position="top"
@@ -526,7 +719,7 @@ const variable = ref<any>(null);
     <div class="grid grid-cols-2 gap-3 gap-x-10 justify-center content-center">
       <VInputText
         class="w-full mr-8 mb-3"
-        v-model="variable"
+        v-model="necesidadDeHigiene.firmaDelEnfermero"
         type="text"
         label="Firma del enfermero(a)"
         label-position="top"
