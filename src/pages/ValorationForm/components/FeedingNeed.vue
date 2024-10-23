@@ -72,7 +72,7 @@ const necesidadAlimentacion = ref<{
     | null;
   calibreAccesoVenoso: number | null;
   fechaDeColocacion: Date | null;
-  fechaDeCuracion: Date | null;
+  fechaDeCuracionAlimentacion: Date | null;
   balanceParcial: "Neutro" | string | null;
   datosSubjetivosBalanceParcial: string | null;
 }>({
@@ -112,7 +112,7 @@ const necesidadAlimentacion = ref<{
   accesosVenosos: null,
   calibreAccesoVenoso: null,
   fechaDeColocacion: null,
-  fechaDeCuracion: null,
+  fechaDeCuracionAlimentacion: null,
   balanceParcial: null,
   datosSubjetivosBalanceParcial: null,
 });
@@ -1022,7 +1022,7 @@ function updateFeedingNeed() {
       /><label class="min-w-max row-start-2">Fr Fecha de curación</label>
       <VInputText
         class="w-max col-start-2 row-start-2"
-        v-model="necesidadAlimentacion.fechaDeCuracion"
+        v-model="necesidadAlimentacion.fechaDeCuracionAlimentacion"
         type="date"
         :center-text="true"
         @input="updateFeedingNeed"

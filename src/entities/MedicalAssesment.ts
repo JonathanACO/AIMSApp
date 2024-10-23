@@ -245,7 +245,7 @@ export type MedicalAssesmentDto = {
       | null;
     calibreAccesoVenoso: number | null;
     fechaDeColocacion: Date | null;
-    fechaDeCuracion: Date | null;
+    fechaDeCuracionAlimentacion: Date | null;
     balanceParcial: "Neutro" | string | null;
     datosSubjetivosBalanceParcial: string | null;
   };
@@ -267,7 +267,7 @@ export type MedicalAssesmentDto = {
     sondaVesical: boolean | null;
     calibreSondaVesical: number | null;
     cantidadH2O: number | null;
-    fechaDeColocacion: Date | null;
+    fechaDeColocacionEliminacion: Date | null;
     usoDeDiureticos: boolean | null;
     especificarUsoDiureticos: string | null;
     apoyoParcial:
@@ -525,7 +525,7 @@ export const initialMedicalAssesment: MedicalAssesmentDto = {
     accesosVenosos: null,
     calibreAccesoVenoso: null,
     fechaDeColocacion: null,
-    fechaDeCuracion: null,
+    fechaDeCuracionAlimentacion: null,
     balanceParcial: null,
     datosSubjetivosBalanceParcial: null,
   },
@@ -539,7 +539,7 @@ export const initialMedicalAssesment: MedicalAssesmentDto = {
     sondaVesical: null,
     calibreSondaVesical: null,
     cantidadH2O: null,
-    fechaDeColocacion: null,
+    fechaDeColocacionEliminacion: null,
     usoDeDiureticos: null,
     especificarUsoDiureticos: null,
     apoyoParcial: null,

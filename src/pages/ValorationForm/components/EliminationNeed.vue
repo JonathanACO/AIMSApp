@@ -28,7 +28,7 @@ const necesidadDeEliminacion = ref<{
   sondaVesical: boolean | null;
   calibreSondaVesical: number | null;
   cantidadH2O: number | null;
-  fechaDeColocacion: Date | null;
+  fechaDeColocacionEliminacion: Date | null;
   usoDeDiureticos: boolean | null;
   especificarUsoDiureticos: string | null;
   apoyoParcial:
@@ -75,7 +75,7 @@ const necesidadDeEliminacion = ref<{
   sondaVesical: null,
   calibreSondaVesical: null,
   cantidadH2O: null,
-  fechaDeColocacion: null,
+  fechaDeColocacionEliminacion: null,
   usoDeDiureticos: null,
   especificarUsoDiureticos: null,
   apoyoParcial: null,
@@ -498,7 +498,7 @@ function updateEliminationNeed() {
       </div>
     </div>
     <VInputText
-      v-model="necesidadDeEliminacion.fechaDeColocacion"
+      v-model="necesidadDeEliminacion.fechaDeColocacionEliminacion"
       type="date"
       :center-text="true"
       label="Fecha de colocación"
