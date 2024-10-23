@@ -31,6 +31,12 @@ const routes = [
       //   name: "attend-patient",
       //   children: [
       {
+        path: "valoracion",
+        name: "medical-assesment",
+        component: () =>
+          import("../pages/ValorationForm/ValorationFormPage.vue"),
+      },
+      {
         path: "/sugerencias-de-diagnostico",
         name: "suggestions",
         component: () =>
