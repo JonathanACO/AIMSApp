@@ -1,6 +1,15 @@
+body {
+  font-family: "Inter", sans-serif;
+}
+
 .title {
   font-size: 2rem;
-  font-weight: 400;
+  font-weight: 500;
+}
+
+.dfont {
+  font-style: normal;
+  font-weight: 300;
 }
 .expand-enter-active,
 .expand-leave-active {
