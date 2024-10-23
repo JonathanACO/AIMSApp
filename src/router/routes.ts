@@ -45,7 +45,7 @@ const routes = [
       {
         path: "/informacion-sobre-guias-de-practica",
         name: "practice-guides-info",
-        component: () => import("../pages/PracticeGuides/PracticeGuides.vue"),
+        component: () => import("../pages/Consultation/GPC/GPCInfoPage.vue"),
       },
       // ],
       // },
